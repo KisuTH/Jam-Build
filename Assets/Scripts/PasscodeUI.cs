@@ -108,7 +108,7 @@ public class PasscodeUI : MonoBehaviour
         nextAttackIn = firstAttackDelay;
         stare = 0f;
         if (cueText != null) cueText.text = "";
-        if (messageText != null) messageText.text = "Enter the " + LoopManager.CodeLength + "-digit code";
+        if (messageText != null) messageText.text = Loc.Thai ? "ใส่รหัส " + LoopManager.CodeLength + " หลัก" : "Enter the " + LoopManager.CodeLength + "-digit code";
         UpdateDisplay();
         panel.SetActive(true);
         SetView(0);
@@ -184,7 +184,7 @@ public class PasscodeUI : MonoBehaviour
         attackSide = 0;
         stare = 0f;
         nextAttackIn = Random.Range(minInterval, maxInterval);
-        if (cueText != null) cueText.text = "He backs away into the dark. Keep going...";
+        if (cueText != null) cueText.text = Loc.T("He backs away into the dark. Keep going...");
         cueClearTime = Time.time + 2.5f;
         UpdateThreats();
     }
@@ -227,7 +227,7 @@ public class PasscodeUI : MonoBehaviour
         if (busy) return;
         if (entered.Length < LoopManager.CodeLength)
         {
-            if (messageText != null) messageText.text = "Enter all " + LoopManager.CodeLength + " digits";
+            if (messageText != null) messageText.text = Loc.Thai ? "ใส่ให้ครบ " + LoopManager.CodeLength + " หลัก" : "Enter all " + LoopManager.CodeLength + " digits";
             return;
         }
 
@@ -238,7 +238,7 @@ public class PasscodeUI : MonoBehaviour
 
     private IEnumerator Correct()
     {
-        if (messageText != null) messageText.text = "CLICK. Unlocked.";
+        if (messageText != null) messageText.text = Loc.T("CLICK. Unlocked.");
         if (StoryFlags.Instance != null) StoryFlags.Instance.Set(SolvedFlag);
         attackSide = 0;
         yield return new WaitForSeconds(0.8f);
@@ -249,7 +249,7 @@ public class PasscodeUI : MonoBehaviour
 
     private void Wrong()
     {
-        if (messageText != null) messageText.text = "WRONG.";
+        if (messageText != null) messageText.text = Loc.T("WRONG.");
         attackSide = 0;
         panel.SetActive(false);
         busy = false;

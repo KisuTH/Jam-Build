@@ -14,6 +14,8 @@ public class Interactable2D : MonoBehaviour
     [Header("Info")]
     public string displayName = "Object";
     [TextArea] public string description = "";
+    [TextArea] [Tooltip("Thai version of the description (used when the language is Thai). Empty = English.")]
+    public string descriptionThai = "";
 
     [Header("Range")]
     [Tooltip("Max distance between the player and this object. 0 = no limit.")]
@@ -116,7 +118,7 @@ public class Interactable2D : MonoBehaviour
 
     public void SayDescription()
     {
-        Say(description);
+        Say(Loc.Thai && !string.IsNullOrEmpty(descriptionThai) ? descriptionThai : description);
     }
 
     public void Say(string text)

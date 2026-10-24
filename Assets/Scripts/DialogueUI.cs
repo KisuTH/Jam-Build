@@ -68,6 +68,7 @@ public class DialogueUI : MonoBehaviour
         if (string.IsNullOrEmpty(text)) return;
         if (routine != null) StopCoroutine(routine);
 
+        text = Loc.T(text);
         shownFrame = Time.frameCount;
         panel.SetActive(true);
         routine = StartCoroutine(Typewriter(text));

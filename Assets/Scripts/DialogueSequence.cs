@@ -18,6 +18,10 @@ public class DialogueLine
     [Tooltip("0 = wait for the player to click / press Space. More than 0 = go on by itself after this many seconds.")]
     public float autoAdvanceAfter = 0f;
 
+    [Header("Thai (optional - used when the language is Thai)")]
+    public string speakerThai = "";
+    [TextArea(1, 4)] public string textThai = "";
+
     [Tooltip("Optional: runs when this line appears (shake the camera, play a sound, turn something on...).")]
     public UnityEvent onLineShown = new UnityEvent();
 }
@@ -183,8 +187,10 @@ public class DialogueSequence : MonoBehaviour
 
     private string Format(DialogueLine line)
     {
-        if (string.IsNullOrEmpty(line.speaker)) return line.text;
-        return string.Format(speakerFormat, line.speaker, line.text);
+        string sp = Loc.Thai && !string.IsNullOrEmpty(line.speakerThai) ? Loc.Shape(line.speakerThai) : line.speaker;
+        string tx = Loc.Thai && !string.IsNullOrEmpty(line.textThai) ? Loc.Shape(line.textThai) : Loc.T(line.text);
+        if (string.IsNullOrEmpty(sp)) return tx;
+        return string.Format(speakerFormat, sp, tx);
     }
 
     private bool PressedAdvance()

@@ -99,7 +99,7 @@ public class AICaller : MonoBehaviour
 
         // Ringing
         if (panel != null) panel.SetActive(true);
-        if (callerText != null) callerText.text = "INCOMING CALL...";
+        if (callerText != null) callerText.text = Loc.T("INCOMING CALL...");
         if (lineText != null) lineText.text = "";
         if (ringSound != null)
         {
@@ -110,14 +110,14 @@ public class AICaller : MonoBehaviour
         CameraShake2D.Shake(ringTime, 0.05f);
         yield return new WaitForSeconds(ringTime);
 
-        if (callerText != null) callerText.text = callerName;
+        if (callerText != null) callerText.text = Loc.T(callerName);
 
         // The lines
         List<string> lines = PickLines(situation, lineCount);
         if (!string.IsNullOrEmpty(finalLine)) lines.Add(finalLine);   // e.g. the hint itself
         foreach (string line in lines)
         {
-            yield return Type(line.Replace("{loop}", LoopManager.LoopCount.ToString()));
+            yield return Type(Loc.T(line).Replace("{loop}", LoopManager.LoopCount.ToString()));
             yield return new WaitForSeconds(holdAfterLine);
         }
 
