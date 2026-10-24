@@ -248,6 +248,8 @@ public static class Loc
         { "A dark stain. Someone dragged a finger through it:", "คราบสีเข้ม มีคนเอานิ้วลากผ่านมัน:" },
         { "Numbers are scratched into the wall:", "ตัวเลขถูกขูดไว้บนผนัง:" },
         { "Just old scratches and dust. Nothing useful here.", "มีแค่รอยขีดข่วนเก่าๆ กับฝุ่น ไม่มีอะไรมีประโยชน์" },
+        { "DOOR PASSCODE", "รหัสผ่านประตู" },
+        { "DOOR PASSCODE\n? - ? - ? - ?", "รหัสผ่านประตู\n? - ? - ? - ?" },
         { "Too far away...", "ไกลเกินไป..." },
         { "I can't use this yet... I need something first.", "ยังใช้ไม่ได้... ต้องมีอะไรบางอย่างก่อน" },
         { "I still don't understand enough to do this...", "ฉันยังไม่เข้าใจพอที่จะทำสิ่งนี้..." },

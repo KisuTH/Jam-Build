@@ -402,7 +402,7 @@ public static class LoopSystemBuilder
         phrt.anchoredPosition = new Vector2(30f, -30f);
         phrt.sizeDelta = new Vector2(430f, 150f);
         phone.AddComponent<Image>().color = new Color(0.1f, 0.03f, 0.03f, 0.95f);
-        TextMeshProUGUI phoneText = MakeText(phone.transform, "PhoneText", "PHONE CALL\n? - ? - ? - ?", 54f, new Color(0.4f, 1f, 0.6f),
+        TextMeshProUGUI phoneText = MakeText(phone.transform, "PhoneText", "DOOR PASSCODE\n? - ? - ? - ?", 54f, new Color(0.4f, 1f, 0.6f),
             Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
 
         // Look Left / Look Right (left and right middle of the screen)

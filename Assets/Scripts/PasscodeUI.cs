@@ -35,7 +35,7 @@ public class PasscodeUI : MonoBehaviour
     [Header("Texts")]
     [SerializeField] private TMP_Text displayText;
     [SerializeField] private TMP_Text messageText;
-    [SerializeField] private TMP_Text phoneText;      // "PHONE CALL 0 - 9 - ? - ?"
+    [SerializeField] private TMP_Text phoneText;      // "DOOR PASSCODE 0 - 9 - ? - ?"
     [SerializeField] private TMP_Text cueText;        // "...footsteps..." / "He backs away"
 
     [Header("The addict's attacks")]
@@ -60,6 +60,11 @@ public class PasscodeUI : MonoBehaviour
     private float attackTimer;
     private float stare;
     private float cueClearTime;
+
+    private void Start()
+    {
+        UpdatePhone();   // replaces the text saved in the scene
+    }
 
     private void Awake()
     {
@@ -277,6 +282,6 @@ public class PasscodeUI : MonoBehaviour
             s += (known ? LoopManager.Code[i].ToString() : "?");
             if (i < LoopManager.CodeLength - 1) s += " - ";
         }
-        phoneText.text = "<size=60%><color=#FF6060>PHONE CALL</color></size>\n" + s;
+        phoneText.text = "<size=60%><color=#FF6060>" + Loc.T("DOOR PASSCODE") + "</color></size>\n" + s;
     }
 }
