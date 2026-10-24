@@ -1,0 +1,349 @@
+fileFormatVersion: 2
+guid: ae320395670f8754c829a80a2692b3c4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2308848312472209220
+    second: uufgjh_0
+  - first:
+      213: -5902571170785948608
+    second: uufgjh_1
+  - first:
+      213: 2619958477330982296
+    second: uufgjh_2
+  - first:
+      213: -8459276963881294695
+    second: uufgjh_3
+  - first:
+      213: -917440746969257508
+    second: uufgjh_4
+  - first:
+      213: 8551385134919591258
+    second: uufgjh_5
+  - first:
+      213: -3866711815477251268
+    second: uufgjh_6
+  - first:
+      213: -2280717172685838886
+    second: uufgjh_7
+  - first:
+      213: 5130826309931025548
+    second: uufgjh_8
+  - first:
+      213: -1160579663128033836
+    second: uufgjh_9
+  - first:
+      213: 3100899885517593176
+    second: uufgjh_10
+  - first:
+      213: -257866769343505465
+    second: uufgjh_11
+  - first:
+      213: 3775661818740475438
+    second: uufgjh_12
+  - first:
+      213: 4478583670947325624
+    second: uufgjh_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: uufgjh_4
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 3829
+        width: 645
+        height: 1725
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd9ad6e50889443f0800000000000000
+      internalID: -917440746969257508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_7
+      rect:
+        serializedVersion: 2
+        x: 1246
+        y: 3839
+        width: 628
+        height: 1729
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad56de0b0d34950e0800000000000000
+      internalID: -2280717172685838886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_8
+      rect:
+        serializedVersion: 2
+        x: 2163
+        y: 3842
+        width: 995
+        height: 1747
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84caa7385b543740800000000000000
+      internalID: 5130826309931025548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_9
+      rect:
+        serializedVersion: 2
+        x: 3252
+        y: 3840
+        width: 999
+        height: 1755
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d506b502fac4efe0800000000000000
+      internalID: -1160579663128033836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_10
+      rect:
+        serializedVersion: 2
+        x: 4480
+        y: 3849
+        width: 980
+        height: 1756
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85a5350440c980b20800000000000000
+      internalID: 3100899885517593176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_11
+      rect:
+        serializedVersion: 2
+        x: 2005
+        y: 1910
+        width: 980
+        height: 1756
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cb17ed1a8fdb6cf0800000000000000
+      internalID: -257866769343505465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_12
+      rect:
+        serializedVersion: 2
+        x: 3214
+        y: 1901
+        width: 999
+        height: 1755
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e26080a7b68d56430800000000000000
+      internalID: 3775661818740475438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: uufgjh_13
+      rect:
+        serializedVersion: 2
+        x: 4307
+        y: 1903
+        width: 995
+        height: 1747
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b62ea3ce10272e30800000000000000
+      internalID: 4478583670947325624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bae7e399ad6e6044d860846367dbb414
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      uufgjh_0: -2308848312472209220
+      uufgjh_1: -5902571170785948608
+      uufgjh_10: 3100899885517593176
+      uufgjh_11: -257866769343505465
+      uufgjh_12: 3775661818740475438
+      uufgjh_13: 4478583670947325624
+      uufgjh_2: 2619958477330982296
+      uufgjh_3: -8459276963881294695
+      uufgjh_4: -917440746969257508
+      uufgjh_5: 8551385134919591258
+      uufgjh_6: -3866711815477251268
+      uufgjh_7: -2280717172685838886
+      uufgjh_8: 5130826309931025548
+      uufgjh_9: -1160579663128033836
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
