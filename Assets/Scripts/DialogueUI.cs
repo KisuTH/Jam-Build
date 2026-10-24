@@ -19,6 +19,15 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private float charsPerSecond = 40f;
     [SerializeField] private float autoCloseDelay = 3f;
 
+    /// <summary>
+    /// ON = a DialogueSequence is in charge: this box ignores clicks and never closes by itself.
+    /// (Set by DialogueSequence. Normal one-line messages are not affected.)
+    /// </summary>
+    public bool ManualMode { get; set; }
+
+    /// <summary>The text is still being typed out.</summary>
+    public bool IsTyping => typing;
+
     private Coroutine routine;
     private bool typing;
     private int shownFrame = -1;
@@ -31,7 +40,7 @@ public class DialogueUI : MonoBehaviour
 
     private void Update()
     {
-        if (panel == null || !panel.activeSelf) return;
+        if (panel == null || !panel.activeSelf || ManualMode) return;
 
         Mouse mouse = Mouse.current;
         if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
@@ -64,6 +73,15 @@ public class DialogueUI : MonoBehaviour
         routine = StartCoroutine(Typewriter(text));
     }
 
+    /// <summary>Show all the text right now (skip the typing).</summary>
+    public void SkipTyping()
+    {
+        if (!typing) return;
+        if (routine != null) StopCoroutine(routine);
+        dialogueText.maxVisibleCharacters = int.MaxValue;
+        typing = false;
+    }
+
     public void Hide()
     {
         if (routine != null) StopCoroutine(routine);
@@ -88,7 +106,7 @@ public class DialogueUI : MonoBehaviour
 
         dialogueText.maxVisibleCharacters = int.MaxValue;
         typing = false;
-        routine = StartCoroutine(AutoClose());
+        if (!ManualMode) routine = StartCoroutine(AutoClose());
     }
 
     private IEnumerator AutoClose()
