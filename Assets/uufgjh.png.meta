@@ -139,94 +139,6 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: uufgjh_0
-      rect:
-        serializedVersion: 2
-        x: 987
-        y: 5615
-        width: 86
-        height: 126
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: cb875de41b255ffd0800000000000000
-      internalID: -2308848312472209220
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: uufgjh_1
-      rect:
-        serializedVersion: 2
-        x: 1093
-        y: 5619
-        width: 63
-        height: 114
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 04c87d71bcad51ea0800000000000000
-      internalID: -5902571170785948608
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: uufgjh_2
-      rect:
-        serializedVersion: 2
-        x: 1166
-        y: 5624
-        width: 64
-        height: 109
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 895269f9a56fb5420800000000000000
-      internalID: 2619958477330982296
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: uufgjh_3
-      rect:
-        serializedVersion: 2
-        x: 1237
-        y: 5606
-        width: 60
-        height: 127
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 994e537ab6c9a9a80800000000000000
-      internalID: -8459276963881294695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: uufgjh_4
       rect:
         serializedVersion: 2
@@ -235,7 +147,7 @@ TextureImporter:
         width: 645
         height: 1725
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -249,50 +161,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: uufgjh_5
-      rect:
-        serializedVersion: 2
-        x: 1073
-        y: 5460
-        width: 57
-        height: 109
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a552078197f9ca670800000000000000
-      internalID: 8551385134919591258
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: uufgjh_6
-      rect:
-        serializedVersion: 2
-        x: 1166
-        y: 5473
-        width: 92
-        height: 122
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c333cad271ea65ac0800000000000000
-      internalID: -3866711815477251268
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: uufgjh_7
       rect:
         serializedVersion: 2
@@ -301,7 +169,7 @@ TextureImporter:
         width: 628
         height: 1729
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -323,7 +191,7 @@ TextureImporter:
         width: 995
         height: 1747
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -345,7 +213,7 @@ TextureImporter:
         width: 999
         height: 1755
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -367,7 +235,7 @@ TextureImporter:
         width: 980
         height: 1756
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -389,7 +257,7 @@ TextureImporter:
         width: 980
         height: 1756
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -411,7 +279,7 @@ TextureImporter:
         width: 999
         height: 1755
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -433,7 +301,7 @@ TextureImporter:
         width: 995
         height: 1747
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -450,7 +318,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: bae7e399ad6e6044d860846367dbb414
     internalID: 0
     vertices: []
     indices: 
