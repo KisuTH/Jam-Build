@@ -7,18 +7,20 @@ public class InventoryItem
 {
     public string id;
     public string displayName;
+    public string description;
     public Sprite icon;
 
-    public InventoryItem(string id, string displayName, Sprite icon)
+    public InventoryItem(string id, string displayName, string description, Sprite icon)
     {
         this.id = id;
         this.displayName = displayName;
+        this.description = description;
         this.icon = icon;
     }
 }
 
 /// <summary>
-/// ระบบกระเป๋าไอเท็ม (Singleton) วางไว้ใน GameObject ว่างๆ ใน Scene
+/// Holds the items the player has collected. Put ONE in the scene.
 /// </summary>
 public class Inventory : MonoBehaviour
 {
@@ -41,7 +43,7 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(InventoryItem item)
     {
-        if (HasItem(item.id)) return; // ไม่เก็บซ้ำ
+        if (HasItem(item.id)) return;
         items.Add(item);
         OnInventoryChanged?.Invoke();
     }
@@ -53,7 +55,7 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(string id)
     {
-        int removed = items.RemoveAll(i => i.id == id);
-        if (removed > 0) OnInventoryChanged?.Invoke();
+        if (items.RemoveAll(i => i.id == id) > 0)
+            OnInventoryChanged?.Invoke();
     }
 }

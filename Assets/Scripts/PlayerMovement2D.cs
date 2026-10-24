@@ -2,23 +2,71 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Simple 2D keyboard walking (New Input System): A/D = left/right, W/S = up/down.
-/// Attach to a Player with a Rigidbody2D (Gravity Scale = 0, Freeze Rotation Z).
+/// 2D side-scroller movement (New Input System).
+///   A / D = walk left / right
+///   W     = jump
+///   S     = crouch (hold). Slower, and the player gets shorter.
+///
+/// Setup: Rigidbody2D (Gravity Scale above 0, e.g. 3, Freeze Rotation Z) + a Collider2D
+/// (BoxCollider2D is fine). The ground needs a Collider2D that is NOT a trigger.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement2D : MonoBehaviour
 {
+    [Header("Walking")]
     [SerializeField] private float moveSpeed = 4f;
 
-    [Tooltip("OFF: only one direction at a time (left/right wins if both axes are pressed). ON: diagonals allowed.")]
-    [SerializeField] private bool allowDiagonal = false;
+    [Header("Jump")]
+    [Tooltip("How high the jump goes, in world units.")]
+    [SerializeField] private float jumpHeight = 2.2f;
+
+    [Header("Crouch")]
+    [Tooltip("0.6 = crouching makes the player 60% as tall.")]
+    [SerializeField] private float crouchHeightMultiplier = 0.6f;
+    [Tooltip("0.5 = half walking speed while crouched.")]
+    [SerializeField] private float crouchSpeedMultiplier = 0.5f;
+
+    [Header("Ground Check")]
+    [Tooltip("Which layers count as ground. Default = everything (triggers are always ignored).")]
+    [SerializeField] private LayerMask groundLayers = ~0;
+    [SerializeField] private float groundCheckDistance = 0.08f;
 
     private Rigidbody2D rb;
-    private Vector2 input;
+    private Collider2D col;
+    private Vector3 standingScale;
+
+    private float moveInput;
+    private bool jumpQueued;
+    private bool crouchHeld;
+    private bool isCrouching;
+    private bool isGrounded;
+
+    public bool IsGrounded => isGrounded;
+    public bool IsCrouching => isCrouching;
+
+    // Runs when you first add the script in the Editor: sets sensible Rigidbody2D values.
+    private void Reset()
+    {
+        Rigidbody2D body = GetComponent<Rigidbody2D>();
+        body.gravityScale = 3f;
+        body.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+        standingScale = transform.localScale;
+
+        if (col == null)
+            Debug.LogError("PlayerMovement2D needs a Collider2D (for example BoxCollider2D) on the Player.", this);
+
+        if (rb.gravityScale <= 0f)
+            Debug.LogWarning("PlayerMovement2D: Gravity Scale is 0, so jumping will not work. Set it above 0 (e.g. 3).", this);
+
+        // Zero friction so the player does not stick to walls while pushing against them in the air
+        if (col != null && col.sharedMaterial == null)
+            col.sharedMaterial = new PhysicsMaterial2D("NoFriction") { friction = 0f, bounciness = 0f };
     }
 
     private void Update()
@@ -26,25 +74,98 @@ public class PlayerMovement2D : MonoBehaviour
         Keyboard kb = Keyboard.current;
         if (kb == null)
         {
-            input = Vector2.zero;
+            moveInput = 0f;
+            crouchHeld = false;
             return;
         }
 
-        float x = 0f;
-        float y = 0f;
+        moveInput = 0f;
+        if (kb.aKey.isPressed) moveInput -= 1f;
+        if (kb.dKey.isPressed) moveInput += 1f;
 
-        if (kb.aKey.isPressed) x -= 1f;
-        if (kb.dKey.isPressed) x += 1f;
-        if (kb.wKey.isPressed) y += 1f;
-        if (kb.sKey.isPressed) y -= 1f;
-
-        if (!allowDiagonal && x != 0f) y = 0f;
-
-        input = new Vector2(x, y).normalized;
+        crouchHeld = kb.sKey.isPressed;
+        if (kb.wKey.wasPressedThisFrame) jumpQueued = true;
     }
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + input * moveSpeed * Time.fixedDeltaTime);
+        if (col == null) return;
+
+        isGrounded = CheckGrounded();
+        UpdateCrouch();
+
+        // Walk
+        float speed = moveSpeed * (isCrouching ? crouchSpeedMultiplier : 1f);
+        Vector2 v = rb.linearVelocity;
+        v.x = moveInput * speed;
+
+        // Jump (only from the ground, and not while crouching)
+        if (jumpQueued && isGrounded && !isCrouching)
+        {
+            float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
+            v.y = Mathf.Sqrt(2f * gravity * jumpHeight);
+        }
+        jumpQueued = false;
+
+        rb.linearVelocity = v;
+    }
+
+    // ---------- Crouch ----------
+
+    private void UpdateCrouch()
+    {
+        // Crouch only on the ground (so you can't shrink in mid-air)
+        if (crouchHeld && isGrounded && !isCrouching)
+            SetCrouch(true);
+        else if (isCrouching && !crouchHeld && !HasCeilingAbove())
+            SetCrouch(false);
+    }
+
+    private void SetCrouch(bool crouch)
+    {
+        float feetY = col.bounds.min.y;
+
+        Vector3 s = standingScale;
+        if (crouch) s.y = standingScale.y * crouchHeightMultiplier;
+        transform.localScale = s;
+        isCrouching = crouch;
+
+        // Keep the feet on the same spot: scaling happens around the center, so shift back
+        Physics2D.SyncTransforms();
+        float shift = feetY - col.bounds.min.y;
+        transform.position += new Vector3(0f, shift, 0f);
+        Physics2D.SyncTransforms();
+    }
+
+    // True if standing up now would put the head inside something solid
+    private bool HasCeilingAbove()
+    {
+        Bounds b = col.bounds;
+        float extra = b.size.y * (1f / crouchHeightMultiplier - 1f);
+        Vector2 center = new Vector2(b.center.x, b.max.y + extra * 0.5f);
+        Vector2 size = new Vector2(b.size.x * 0.9f, extra);
+        return AnySolidInBox(center, size);
+    }
+
+    // ---------- Ground check ----------
+
+    private bool CheckGrounded()
+    {
+        Bounds b = col.bounds;
+        Vector2 center = new Vector2(b.center.x, b.min.y - groundCheckDistance * 0.5f);
+        Vector2 size = new Vector2(b.size.x * 0.9f, groundCheckDistance);
+        return AnySolidInBox(center, size);
+    }
+
+    // Looks for a solid (non-trigger) collider in the box that is not the player itself
+    private bool AnySolidInBox(Vector2 center, Vector2 size)
+    {
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f, groundLayers);
+        foreach (Collider2D h in hits)
+        {
+            if (h == col || h.isTrigger) continue;
+            return true;
+        }
+        return false;
     }
 }

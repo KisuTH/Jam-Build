@@ -1,23 +1,27 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 /// <summary>
-/// กล่องข้อความด้านล่างจอ พิมพ์ทีละตัวอักษร คลิกเพื่อข้ามหรือปิด
-/// ใช้ Text ธรรมดา (UnityEngine.UI.Text) ถ้าใช้ TextMeshPro ให้เปลี่ยนเป็น TMP_Text
+/// Text box at the bottom of the screen. Types text out letter by letter.
+/// Click once to show all the text, click again to close (or it closes by itself).
+///
+/// Setup: put this script on an object that stays ACTIVE (e.g. the Canvas),
+/// and assign "panel" to a child Panel that holds the TMP text.
 /// </summary>
 public class DialogueUI : MonoBehaviour
 {
     public static DialogueUI Instance { get; private set; }
 
     [SerializeField] private GameObject panel;
-    [SerializeField] private Text dialogueText;
+    [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private float charsPerSecond = 40f;
-    [SerializeField] private float autoCloseDelay = 2.5f;
+    [SerializeField] private float autoCloseDelay = 3f;
 
     private Coroutine routine;
-    private string fullText;
     private bool typing;
+    private int shownFrame = -1;
 
     private void Awake()
     {
@@ -29,16 +33,24 @@ public class DialogueUI : MonoBehaviour
     {
         if (panel == null || !panel.activeSelf) return;
 
-        if (Input.GetMouseButtonDown(0))
+        Mouse mouse = Mouse.current;
+        if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+
+        // Ignore the same click that opened the box
+        if (Time.frameCount == shownFrame) return;
+
+        if (typing)
         {
-            if (typing)
-            {
-                // ข้ามการพิมพ์ แสดงข้อความเต็ม
-                StopCoroutine(routine);
-                dialogueText.text = fullText;
-                typing = false;
-                routine = StartCoroutine(AutoClose());
-            }
+            // First click: show all the text right away
+            if (routine != null) StopCoroutine(routine);
+            dialogueText.maxVisibleCharacters = int.MaxValue;
+            typing = false;
+            routine = StartCoroutine(AutoClose());
+        }
+        else
+        {
+            // Second click: close
+            Hide();
         }
     }
 
@@ -47,9 +59,9 @@ public class DialogueUI : MonoBehaviour
         if (string.IsNullOrEmpty(text)) return;
         if (routine != null) StopCoroutine(routine);
 
-        fullText = text;
+        shownFrame = Time.frameCount;
         panel.SetActive(true);
-        routine = StartCoroutine(Typewriter());
+        routine = StartCoroutine(Typewriter(text));
     }
 
     public void Hide()
@@ -59,18 +71,22 @@ public class DialogueUI : MonoBehaviour
         panel.SetActive(false);
     }
 
-    private IEnumerator Typewriter()
+    private IEnumerator Typewriter(string text)
     {
         typing = true;
-        dialogueText.text = "";
+        dialogueText.text = text;
+        dialogueText.ForceMeshUpdate();
+
+        int total = dialogueText.textInfo.characterCount;
         float delay = 1f / charsPerSecond;
 
-        foreach (char c in fullText)
+        for (int i = 0; i <= total; i++)
         {
-            dialogueText.text += c;
+            dialogueText.maxVisibleCharacters = i;
             yield return new WaitForSeconds(delay);
         }
 
+        dialogueText.maxVisibleCharacters = int.MaxValue;
         typing = false;
         routine = StartCoroutine(AutoClose());
     }
