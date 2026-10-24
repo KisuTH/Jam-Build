@@ -23,6 +23,9 @@ public class ClickInteractor2D : MonoBehaviour
         Mouse mouse = Mouse.current;
         if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
 
+        // Ignore all clicks while a door transition runs (and its short cooldown)
+        if (RoomTransition.Instance != null && RoomTransition.Instance.IsBusy) return;
+
         // Ignore clicks on UI (inventory slots, dialogue box)
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 

@@ -58,6 +58,22 @@ public class CameraFollow2D : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, desired, ref velocity, smoothTime);
     }
 
+    /// <summary>Changes the area the camera may show (e.g. when the player enters another room).</summary>
+    public void SetBounds(Vector2 min, Vector2 max)
+    {
+        useBounds = true;
+        boundsMin = min;
+        boundsMax = max;
+    }
+
+    /// <summary>Jumps the camera straight to the player (no sliding), e.g. after entering a room.</summary>
+    public void SnapToTarget()
+    {
+        if (target == null) return;
+        velocity = Vector3.zero;
+        transform.position = Clamp(GetDesiredPosition());
+    }
+
     /// <summary>Change who the camera follows (e.g. when switching characters).</summary>
     public void SetTarget(Transform newTarget)
     {

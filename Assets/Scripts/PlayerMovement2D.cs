@@ -35,12 +35,20 @@ public class PlayerMovement2D : MonoBehaviour
     private Collider2D col;
     private Vector3 standingScale;
 
+    // Used by room transitions: the game can lock the keys and walk the player by itself
+    private bool controlLocked;
+    private bool autoWalking;
+    private float autoTargetX;
+    private float autoStopDistance;
+    private float autoTimeLeft;
+
     private float moveInput;
     private bool jumpQueued;
     private bool crouchHeld;
     private bool isCrouching;
     private bool isGrounded;
 
+    public bool IsAutoWalking => autoWalking;
     public bool IsGrounded => isGrounded;
     public bool IsCrouching => isCrouching;
 
@@ -69,8 +77,59 @@ public class PlayerMovement2D : MonoBehaviour
             col.sharedMaterial = new PhysicsMaterial2D("NoFriction") { friction = 0f, bounciness = 0f };
     }
 
+    /// <summary>Locks or unlocks the keyboard (the player stands still while locked).</summary>
+    public void SetControlLocked(bool locked)
+    {
+        controlLocked = locked;
+        if (locked)
+        {
+            moveInput = 0f;
+            jumpQueued = false;
+        }
+    }
+
+    /// <summary>
+    /// Walks the player to targetX by itself (keys are ignored meanwhile).
+    /// It stops when within stopDistance of targetX, or after maxSeconds (e.g. if something blocks the way).
+    /// Wait for it with:  while (player.IsAutoWalking) yield return null;
+    /// </summary>
+    public void AutoWalkTo(float targetX, float stopDistance, float maxSeconds)
+    {
+        autoTargetX = targetX;
+        autoStopDistance = stopDistance;
+        autoTimeLeft = maxSeconds;
+        autoWalking = true;
+        jumpQueued = false;
+    }
+
     private void Update()
     {
+        if (autoWalking)
+        {
+            crouchHeld = false;
+            autoTimeLeft -= Time.deltaTime;
+            float dx = autoTargetX - transform.position.x;
+
+            if (Mathf.Abs(dx) <= autoStopDistance || autoTimeLeft <= 0f)
+            {
+                autoWalking = false;
+                moveInput = 0f;
+            }
+            else
+            {
+                moveInput = Mathf.Sign(dx);
+            }
+            return;
+        }
+
+        if (controlLocked)
+        {
+            moveInput = 0f;
+            crouchHeld = false;
+            jumpQueued = false;
+            return;
+        }
+
         Keyboard kb = Keyboard.current;
         if (kb == null)
         {

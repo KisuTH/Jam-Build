@@ -4,6 +4,9 @@ using UnityEngine.Events;
 /// <summary>
 /// Anything the player can click and inspect: windows, tables, pictures, doors, items.
 /// Needs a Collider2D. Set what happens in the "On Interact" event in the Inspector.
+///
+/// Order of checks when the player clicks: distance -> required item -> required story flags.
+/// If all pass: the clue is logged (if any), the flag is set (if any), then "On Interact" runs.
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class Interactable2D : MonoBehaviour
@@ -15,13 +18,30 @@ public class Interactable2D : MonoBehaviour
     [Header("Range")]
     [Tooltip("Max distance between the player and this object. 0 = no limit.")]
     public float maxDistance = 2.5f;
-    [TextArea] public string tooFarMessage = "ไกลเกินไป...";
+    [TextArea] public string tooFarMessage = "Too far away...";
 
-    [Header("Requirement (optional)")]
+    [Header("Requirement: item (optional)")]
     [Tooltip("Item id needed to use this (e.g. 'old_key'). Leave empty if nothing is needed.")]
     public string requiredItemId = "";
     public bool consumeRequiredItem = true;
-    [TextArea] public string missingItemMessage = "ใช้ไม่ได้... ต้องมีอะไรบางอย่างก่อน";
+    [TextArea] public string missingItemMessage = "I can't use this yet... I need something first.";
+
+    [Header("Requirement: story flags (optional)")]
+    [Tooltip("Story flags that must ALL be on before this works, e.g. got_register. Leave empty for none.")]
+    public string[] requiredFlags = new string[0];
+    [TextArea] public string missingFlagsMessage = "I still don't understand enough to do this...";
+
+    [Header("Clue (optional)")]
+    [Tooltip("If filled in, inspecting this object adds a page to the Case Book and turns on a story flag with this name. Leave empty for no clue.")]
+    public string clueId = "";
+    [Tooltip("Title of the Case Book page. Empty = use Display Name.")]
+    public string clueTitle = "";
+    [TextArea] [Tooltip("Text of the Case Book page. Empty = use Description.")]
+    public string clueText = "";
+
+    [Header("Result (optional)")]
+    [Tooltip("Turns this story flag on when the interaction works.")]
+    public string setsFlag = "";
 
     [Header("Events")]
     public UnityEvent onInteract = new UnityEvent();
@@ -45,18 +65,51 @@ public class Interactable2D : MonoBehaviour
             }
         }
 
-        if (!string.IsNullOrEmpty(requiredItemId))
+        // Check everything first, so nothing is used up if something is still missing
+        bool needsItem = !string.IsNullOrEmpty(requiredItemId);
+        if (needsItem && (Inventory.Instance == null || !Inventory.Instance.HasItem(requiredItemId)))
         {
-            Inventory inv = Inventory.Instance;
-            if (inv == null || !inv.HasItem(requiredItemId))
-            {
-                Say(missingItemMessage);
-                return;
-            }
-            if (consumeRequiredItem) inv.RemoveItem(requiredItemId);
+            Say(missingItemMessage);
+            return;
         }
 
+        if (!HasAllRequiredFlags())
+        {
+            Say(missingFlagsMessage);
+            return;
+        }
+
+        if (needsItem && consumeRequiredItem) Inventory.Instance.RemoveItem(requiredItemId);
+
+        LogClue();
+        if (!string.IsNullOrEmpty(setsFlag) && StoryFlags.Instance != null)
+            StoryFlags.Instance.Set(setsFlag);
+
         onInteract?.Invoke();
+    }
+
+    private bool HasAllRequiredFlags()
+    {
+        if (requiredFlags == null) return true;
+
+        foreach (string flag in requiredFlags)
+        {
+            if (string.IsNullOrEmpty(flag)) continue;
+            if (StoryFlags.Instance == null || !StoryFlags.Instance.Has(flag)) return false;
+        }
+        return true;
+    }
+
+    // Adds this object's clue to the Case Book (if it has one) and turns on its story flag
+    private void LogClue()
+    {
+        if (string.IsNullOrEmpty(clueId)) return;
+
+        string title = string.IsNullOrEmpty(clueTitle) ? displayName : clueTitle;
+        string text = string.IsNullOrEmpty(clueText) ? description : clueText;
+
+        if (CaseNotebook.Instance != null) CaseNotebook.Instance.AddClue(clueId, title, text);
+        if (StoryFlags.Instance != null) StoryFlags.Instance.Set(clueId);
     }
 
     // ===== Ready-made functions to hook into "On Interact" in the Inspector =====

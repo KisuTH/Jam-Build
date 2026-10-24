@@ -16,7 +16,7 @@ using UnityEngine.UI;
 
 public static class BlockoutSceneBuilder
 {
-    private const string Folder = "Assets/BlockoutTest";
+    internal const string Folder = "Assets/BlockoutTest";
 
     [MenuItem("Tools/Point and Click/Create Blockout Test Scene (New Scene)")]
     public static void BuildNewScene()
@@ -105,7 +105,7 @@ public static class BlockoutSceneBuilder
 
         if (newScene)
         {
-            Light dirLight = Object.FindFirstObjectByType<Light>();
+            Light dirLight = Object.FindAnyObjectByType<Light>();
             if (dirLight != null) Object.DestroyImmediate(dirLight.gameObject);
         }
 
@@ -155,6 +155,9 @@ public static class BlockoutSceneBuilder
         pictureI.displayName = "Picture";
         pictureI.maxDistance = 6f;
         pictureI.description = "A faded family portrait. Every face has been scratched out.";
+        pictureI.clueId = "family_portrait";
+        pictureI.clueTitle = "Family portrait";
+        pictureI.clueText = "A faded family portrait in the room. Every face has been scratched out. Who did this?";
         UnityEventTools.AddVoidPersistentListener(pictureI.onInteract, pictureI.SayDescription);
 
         // Old key: pickup
@@ -182,7 +185,9 @@ public static class BlockoutSceneBuilder
         UnityEventTools.AddVoidPersistentListener(photoI.onInteract, photoP.Pickup);
 
         // Door: needs the key
-        GameObject door = MakeBlock("Door", root, new Vector2(7f, -0.2f), new Vector2(2f, 4.6f), new Color(0.25f, 0.35f, 0.6f), sprite, 0, true, true);
+        GameObject door = MakeBlock("Door", root, new Vector2(7f, -0.2f), new Vector2(2f, 4.6f), new Color(0.25f, 0.35f, 0.6f), sprite, 0, true, false);
+        // The door is SOLID (not a trigger) so it blocks the player until it is opened.
+        // Opening it hides the whole object, which removes the collider too.
         Interactable2D doorI = door.AddComponent<Interactable2D>();
         doorI.displayName = "Door";
         doorI.maxDistance = 3f;
@@ -196,10 +201,14 @@ public static class BlockoutSceneBuilder
         GameObject systems = new GameObject("GameSystems");
         systems.transform.SetParent(root, false);
 
-        if (Object.FindFirstObjectByType<Inventory>() == null)
+        if (Object.FindAnyObjectByType<Inventory>() == null)
             systems.AddComponent<Inventory>();
+        if (Object.FindAnyObjectByType<StoryFlags>() == null)
+            systems.AddComponent<StoryFlags>();
+        if (Object.FindAnyObjectByType<CaseNotebook>() == null)
+            systems.AddComponent<CaseNotebook>();
 
-        ClickInteractor2D clicker = Object.FindFirstObjectByType<ClickInteractor2D>();
+        ClickInteractor2D clicker = Object.FindAnyObjectByType<ClickInteractor2D>();
         if (clicker == null) clicker = systems.AddComponent<ClickInteractor2D>();
 
         SerializedObject clickerSO = new SerializedObject(clicker);
@@ -210,10 +219,13 @@ public static class BlockoutSceneBuilder
         clickerSO.ApplyModifiedPropertiesWithoutUndo();
 
         // ---------- UI ----------
-        if (Object.FindFirstObjectByType<DialogueUI>() == null)
+        if (Object.FindAnyObjectByType<DialogueUI>() == null)
             BuildUI(root);
         else
             Debug.Log("Found an existing DialogueUI in the scene, so the test UI was not created.");
+
+        if (Object.FindAnyObjectByType<CaseNotebookUI>() == null)
+            BuildNotebookUI();
 
         // ---------- Finish ----------
         if (newScene)
@@ -233,7 +245,7 @@ public static class BlockoutSceneBuilder
 
     // =====================================================================
 
-    private static Camera SetupCamera(bool configure)
+    internal static Camera SetupCamera(bool configure)
     {
         Camera cam = Camera.main;
 
@@ -261,7 +273,7 @@ public static class BlockoutSceneBuilder
         return cam;
     }
 
-    private static void BuildUI(Transform root)
+    internal static void BuildUI(Transform root, string hintText = null)
     {
         // Canvas
         GameObject canvasGO = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
@@ -274,7 +286,7 @@ public static class BlockoutSceneBuilder
         scaler.matchWidthOrHeight = 0.5f;
 
         // EventSystem (New Input System), only if the scene has none
-        if (Object.FindFirstObjectByType<EventSystem>() == null)
+        if (Object.FindAnyObjectByType<EventSystem>() == null)
         {
             GameObject es = new GameObject("EventSystem", typeof(EventSystem));
             es.transform.SetParent(root, false);
@@ -310,31 +322,59 @@ public static class BlockoutSceneBuilder
         dialogueSO.FindProperty("dialogueText").objectReferenceValue = dialogueText;
         dialogueSO.ApplyModifiedPropertiesWithoutUndo();
 
-        // Inventory bar
-        GameObject bar = UIObject("InventoryBar", canvasGO.transform);
+        // Inventory: a bag button (top left). Clicking it opens / closes the item grid.
+        GameObject invRoot = UIObject("Inventory UI", canvasGO.transform);   // always active, holds the script
+        GameObject bagGO = UIObject("BagButton", invRoot.transform);
+        RectTransform bagRT = (RectTransform)bagGO.transform;
+        bagRT.anchorMin = new Vector2(0f, 1f);
+        bagRT.anchorMax = new Vector2(0f, 1f);
+        bagRT.pivot = new Vector2(0f, 1f);
+        bagRT.anchoredPosition = new Vector2(20f, -20f);
+        bagRT.sizeDelta = new Vector2(260f, 80f);
+        Image bagImg = bagGO.AddComponent<Image>();   // tip: put your bag picture in this Image's Source Image
+        bagImg.color = new Color(0.25f, 0.2f, 0.12f, 0.95f);
+        Button bagBtn = bagGO.AddComponent<Button>();
+        bagBtn.targetGraphic = bagImg;
+
+        GameObject bagLblGO = UIObject("Label", bagGO.transform);
+        RectTransform bagLblRT = (RectTransform)bagLblGO.transform;
+        bagLblRT.anchorMin = Vector2.zero;
+        bagLblRT.anchorMax = Vector2.one;
+        bagLblRT.offsetMin = Vector2.zero;
+        bagLblRT.offsetMax = Vector2.zero;
+        TextMeshProUGUI bagLabel = bagLblGO.AddComponent<TextMeshProUGUI>();
+        bagLabel.fontSize = 32f;
+        bagLabel.alignment = TextAlignmentOptions.Center;
+        bagLabel.color = Color.white;
+        bagLabel.raycastTarget = false;
+        bagLabel.text = "Bag [I] (0)";
+
+        // The item grid (starts closed)
+        GameObject bar = UIObject("InventoryPanel", invRoot.transform);
         RectTransform brt = (RectTransform)bar.transform;
         brt.anchorMin = new Vector2(0f, 1f);
-        brt.anchorMax = new Vector2(1f, 1f);
-        brt.pivot = new Vector2(0.5f, 1f);
-        brt.sizeDelta = new Vector2(0f, 120f);
-        brt.anchoredPosition = Vector2.zero;
-        bar.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.5f);
+        brt.anchorMax = new Vector2(0f, 1f);
+        brt.pivot = new Vector2(0f, 1f);
+        brt.anchoredPosition = new Vector2(20f, -110f);
+        brt.sizeDelta = new Vector2(460f, 330f);
+        bar.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.7f);
 
-        HorizontalLayoutGroup hlg = bar.AddComponent<HorizontalLayoutGroup>();
-        hlg.padding = new RectOffset(15, 15, 15, 15);
-        hlg.spacing = 15f;
-        hlg.childAlignment = TextAnchor.MiddleLeft;
-        hlg.childControlWidth = false;
-        hlg.childControlHeight = false;
-        hlg.childForceExpandWidth = false;
-        hlg.childForceExpandHeight = false;
+        GridLayoutGroup grid = bar.AddComponent<GridLayoutGroup>();
+        grid.padding = new RectOffset(15, 15, 15, 15);
+        grid.cellSize = new Vector2(90f, 90f);
+        grid.spacing = new Vector2(15f, 15f);
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = 4;
 
         GameObject slotPrefab = CreateSlotPrefab();
 
-        InventoryUI invUI = bar.AddComponent<InventoryUI>();
+        InventoryUI invUI = invRoot.AddComponent<InventoryUI>();
         SerializedObject invSO = new SerializedObject(invUI);
         invSO.FindProperty("slotContainer").objectReferenceValue = bar.transform;
         invSO.FindProperty("slotPrefab").objectReferenceValue = slotPrefab;
+        invSO.FindProperty("panel").objectReferenceValue = bar;
+        invSO.FindProperty("bagButton").objectReferenceValue = bagBtn;
+        invSO.FindProperty("bagLabel").objectReferenceValue = bagLabel;
         invSO.ApplyModifiedPropertiesWithoutUndo();
 
         // Hint text
@@ -343,13 +383,176 @@ public static class BlockoutSceneBuilder
         hrt.anchorMin = new Vector2(0f, 1f);
         hrt.anchorMax = new Vector2(0f, 1f);
         hrt.pivot = new Vector2(0f, 1f);
-        hrt.anchoredPosition = new Vector2(20f, -135f);
+        hrt.anchoredPosition = new Vector2(300f, -35f);
         hrt.sizeDelta = new Vector2(1400f, 50f);
         TextMeshProUGUI hint = hintGO.AddComponent<TextMeshProUGUI>();
         hint.fontSize = 28f;
         hint.color = new Color(0.8f, 0.8f, 0.8f, 0.9f);
         hint.raycastTarget = false;
-        hint.text = "A/D = walk  |  W = jump  |  S = crouch  |  Click objects to inspect  |  Find the key, open the door";
+        hint.text = string.IsNullOrEmpty(hintText) ? "A/D = walk  |  W = jump  |  S = crouch  |  Tab = Case Book (arrows turn pages)  |  Click objects to inspect  |  Find the key, open the door" : hintText;
+    }
+
+    // Case Book: a button (top right) and a panel with the clue pages. Added to the scene's Canvas.
+    internal static void BuildNotebookUI()
+    {
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("No Canvas in the scene, so the Case Book UI was not created.");
+            return;
+        }
+        Transform parent = canvas.transform;
+
+        // Always-active object that holds the CaseNotebookUI script
+        GameObject uiGO = UIObject("CaseBookUI", parent);
+
+        // Open / close button
+        GameObject btnGO = UIObject("CaseBookButton", parent);
+        RectTransform brt = (RectTransform)btnGO.transform;
+        brt.anchorMin = new Vector2(1f, 1f);
+        brt.anchorMax = new Vector2(1f, 1f);
+        brt.pivot = new Vector2(1f, 1f);
+        brt.anchoredPosition = new Vector2(-20f, -20f);
+        brt.sizeDelta = new Vector2(380f, 80f);
+        Image btnImg = btnGO.AddComponent<Image>();
+        btnImg.color = new Color(0.25f, 0.2f, 0.12f, 0.95f);
+        Button btn = btnGO.AddComponent<Button>();
+        btn.targetGraphic = btnImg;
+
+        GameObject lblGO = UIObject("Label", btnGO.transform);
+        RectTransform lrt = (RectTransform)lblGO.transform;
+        lrt.anchorMin = Vector2.zero;
+        lrt.anchorMax = Vector2.one;
+        lrt.offsetMin = Vector2.zero;
+        lrt.offsetMax = Vector2.zero;
+        TextMeshProUGUI label = lblGO.AddComponent<TextMeshProUGUI>();
+        label.fontSize = 32f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = Color.white;
+        label.raycastTarget = false;
+        label.text = "Case Book [Tab] (0)";
+
+        // The book page (starts hidden)
+        GameObject panel = UIObject("CaseBookPanel", parent);
+        RectTransform prt = (RectTransform)panel.transform;
+        prt.anchorMin = new Vector2(0.2f, 0.15f);
+        prt.anchorMax = new Vector2(0.8f, 0.85f);
+        prt.offsetMin = Vector2.zero;
+        prt.offsetMax = Vector2.zero;
+        panel.AddComponent<Image>().color = new Color(0.14f, 0.11f, 0.08f, 0.96f);
+
+        GameObject titleGO = UIObject("Title", panel.transform);
+        RectTransform trt = (RectTransform)titleGO.transform;
+        trt.anchorMin = new Vector2(0f, 1f);
+        trt.anchorMax = new Vector2(1f, 1f);
+        trt.pivot = new Vector2(0.5f, 1f);
+        trt.anchoredPosition = new Vector2(0f, -20f);
+        trt.sizeDelta = new Vector2(0f, 70f);
+        TextMeshProUGUI title = titleGO.AddComponent<TextMeshProUGUI>();
+        title.fontSize = 48f;
+        title.fontStyle = FontStyles.Bold;
+        title.alignment = TextAlignmentOptions.Center;
+        title.color = new Color(0.9f, 0.8f, 0.55f);
+        title.raycastTarget = false;
+        title.text = "CASE BOOK";
+
+        // Clue title (big, one clue per page)
+        GameObject clueTitleGO = UIObject("ClueTitle", panel.transform);
+        RectTransform ctr = (RectTransform)clueTitleGO.transform;
+        ctr.anchorMin = new Vector2(0f, 1f);
+        ctr.anchorMax = new Vector2(1f, 1f);
+        ctr.pivot = new Vector2(0.5f, 1f);
+        ctr.anchoredPosition = new Vector2(0f, -110f);
+        ctr.sizeDelta = new Vector2(-80f, 60f);
+        TextMeshProUGUI clueTitle = clueTitleGO.AddComponent<TextMeshProUGUI>();
+        clueTitle.fontSize = 40f;
+        clueTitle.fontStyle = FontStyles.Bold;
+        clueTitle.alignment = TextAlignmentOptions.Left;
+        clueTitle.color = Color.white;
+        clueTitle.raycastTarget = false;
+        clueTitle.text = "";
+
+        // Clue text
+        GameObject entriesGO = UIObject("Entries", panel.transform);
+        RectTransform ert = (RectTransform)entriesGO.transform;
+        ert.anchorMin = Vector2.zero;
+        ert.anchorMax = Vector2.one;
+        ert.offsetMin = new Vector2(40f, 120f);
+        ert.offsetMax = new Vector2(-40f, -180f);
+        TextMeshProUGUI entries = entriesGO.AddComponent<TextMeshProUGUI>();
+        entries.fontSize = 32f;
+        entries.alignment = TextAlignmentOptions.TopLeft;
+        entries.color = Color.white;
+        entries.overflowMode = TextOverflowModes.Truncate;
+        entries.raycastTarget = false;
+        entries.text = "";
+
+        // Page number, bottom centre
+        GameObject pageGO = UIObject("PageNumber", panel.transform);
+        RectTransform pgr = (RectTransform)pageGO.transform;
+        pgr.anchorMin = new Vector2(0.5f, 0f);
+        pgr.anchorMax = new Vector2(0.5f, 0f);
+        pgr.pivot = new Vector2(0.5f, 0f);
+        pgr.anchoredPosition = new Vector2(0f, 40f);
+        pgr.sizeDelta = new Vector2(240f, 50f);
+        TextMeshProUGUI pageNumber = pageGO.AddComponent<TextMeshProUGUI>();
+        pageNumber.fontSize = 34f;
+        pageNumber.alignment = TextAlignmentOptions.Center;
+        pageNumber.color = new Color(0.9f, 0.8f, 0.55f);
+        pageNumber.raycastTarget = false;
+        pageNumber.text = "0 / 0";
+
+        // Prev / Next buttons, bottom left and right (like turning a page)
+        Button prev = MakeUIButton(panel.transform, "PrevButton", "<  Prev",
+            new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(40f, 25f), new Vector2(190f, 70f));
+        Button next = MakeUIButton(panel.transform, "NextButton", "Next  >",
+            new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-40f, 25f), new Vector2(190f, 70f));
+
+        CaseNotebookUI ui = uiGO.AddComponent<CaseNotebookUI>();
+        SerializedObject so = new SerializedObject(ui);
+        so.FindProperty("panel").objectReferenceValue = panel;
+        so.FindProperty("titleText").objectReferenceValue = clueTitle;
+        so.FindProperty("entriesText").objectReferenceValue = entries;
+        so.FindProperty("pageText").objectReferenceValue = pageNumber;
+        so.FindProperty("prevButton").objectReferenceValue = prev;
+        so.FindProperty("nextButton").objectReferenceValue = next;
+        so.FindProperty("openButton").objectReferenceValue = btn;
+        so.FindProperty("buttonLabel").objectReferenceValue = label;
+        so.ApplyModifiedPropertiesWithoutUndo();
+
+        panel.SetActive(false);
+    }
+
+    // A simple text button (dark brown, white text)
+    private static Button MakeUIButton(Transform parent, string name, string text,
+        Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size)
+    {
+        GameObject go = UIObject(name, parent);
+        RectTransform rt = (RectTransform)go.transform;
+        rt.anchorMin = anchor;
+        rt.anchorMax = anchor;
+        rt.pivot = pivot;
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = size;
+
+        Image img = go.AddComponent<Image>();
+        img.color = new Color(0.3f, 0.23f, 0.14f, 1f);
+        Button b = go.AddComponent<Button>();
+        b.targetGraphic = img;
+
+        GameObject lblGO = UIObject("Label", go.transform);
+        RectTransform lrt = (RectTransform)lblGO.transform;
+        lrt.anchorMin = Vector2.zero;
+        lrt.anchorMax = Vector2.one;
+        lrt.offsetMin = Vector2.zero;
+        lrt.offsetMax = Vector2.zero;
+        TextMeshProUGUI lbl = lblGO.AddComponent<TextMeshProUGUI>();
+        lbl.fontSize = 34f;
+        lbl.alignment = TextAlignmentOptions.Center;
+        lbl.color = Color.white;
+        lbl.raycastTarget = false;
+        lbl.text = text;
+        return b;
     }
 
     private static GameObject CreateSlotPrefab()
@@ -367,14 +570,14 @@ public static class BlockoutSceneBuilder
         return prefab;
     }
 
-    private static GameObject UIObject(string name, Transform parent)
+    internal static GameObject UIObject(string name, Transform parent)
     {
         GameObject go = new GameObject(name, typeof(RectTransform));
         go.transform.SetParent(parent, false);
         return go;
     }
 
-    private static GameObject MakeBlock(string name, Transform parent, Vector2 localPos, Vector2 scale, Color color, Sprite sprite, int order, bool withCollider, bool isTrigger = false)
+    internal static GameObject MakeBlock(string name, Transform parent, Vector2 localPos, Vector2 scale, Color color, Sprite sprite, int order, bool withCollider, bool isTrigger = false)
     {
         GameObject go = new GameObject(name);
         go.transform.SetParent(parent, false);
@@ -397,7 +600,7 @@ public static class BlockoutSceneBuilder
     }
 
     // Makes a 1x1 unit white square sprite asset so colored blocks can be drawn
-    private static Sprite CreateWhiteSquareSprite()
+    internal static Sprite CreateWhiteSquareSprite()
     {
         string assetPath = Folder + "/WhiteSquare.png";
         string diskPath = Application.dataPath + "/BlockoutTest/WhiteSquare.png";
