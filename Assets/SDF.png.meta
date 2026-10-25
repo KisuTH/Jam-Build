@@ -1,19 +1,64 @@
 fileFormatVersion: 2
-guid: a957bf99f8bc5384c87a95f66d0b786c
+guid: a8d31efc1bd91d34086a11cf46bc489a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7236178590630883744
-    second: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_0"
+      213: 5521317374806288088
+    second: SDF_0
   - first:
-      213: 2196767277808203560
-    second: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_1"
+      213: -7012053784196139813
+    second: SDF_1
   - first:
-      213: -565592116776063930
-    second: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_2"
+      213: 7775659613262843132
+    second: SDF_2
   - first:
-      213: 6911297314562654000
-    second: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_3"
+      213: -568998982038294118
+    second: SDF_3
+  - first:
+      213: 5982675284833786619
+    second: SDF_4
+  - first:
+      213: 2380678734507726985
+    second: SDF_5
+  - first:
+      213: -4348642353840287664
+    second: SDF_6
+  - first:
+      213: 1984143002242780892
+    second: SDF_7
+  - first:
+      213: 2585166836353291835
+    second: SDF_8
+  - first:
+      213: -5383830811951015246
+    second: SDF_9
+  - first:
+      213: -7215080624180054893
+    second: SDF_10
+  - first:
+      213: -5648358443831267269
+    second: SDF_11
+  - first:
+      213: -5522598902941574973
+    second: SDF_12
+  - first:
+      213: 5945014466444841677
+    second: SDF_13
+  - first:
+      213: 163264444464523565
+    second: SDF_14
+  - first:
+      213: -9172509162014881193
+    second: SDF_15
+  - first:
+      213: -5216207515761917489
+    second: SDF_16
+  - first:
+      213: -7662961319649770534
+    second: SDF_17
+  - first:
+      213: 9091095178088733732
+    second: SDF_18
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,89 +154,133 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_0"
+      name: SDF_1
       rect:
         serializedVersion: 2
-        x: 6
-        y: 545
-        width: 2398
-        height: 549
+        x: 331
+        y: 7719
+        width: 14507
+        height: 3608
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 06ec82629ede39b90800000000000000
-      internalID: -7236178590630883744
+      spriteID: bd43e071c3e20be90800000000000000
+      internalID: -7012053784196139813
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_1"
+      name: SDF_4
       rect:
         serializedVersion: 2
-        x: 231
-        y: 250
-        width: 196
-        height: 253
+        x: 199
+        y: 3540
+        width: 9626
+        height: 3403
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 827b5ff333c7c7e10800000000000000
-      internalID: 2196767277808203560
+      spriteID: bfad607597bb60350800000000000000
+      internalID: 5982675284833786619
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_2"
+      name: SDF_5
       rect:
         serializedVersion: 2
-        x: 469
-        y: 250
-        width: 209
-        height: 251
+        x: 9915
+        y: 5304
+        width: 1063
+        height: 1977
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 64c2dc767fc9628f0800000000000000
-      internalID: -565592116776063930
+      spriteID: 988d8a612bed90120800000000000000
+      internalID: 2380678734507726985
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_3"
+      name: SDF_6
       rect:
         serializedVersion: 2
-        x: 190
-        y: 47
-        width: 488
-        height: 139
+        x: 11315
+        y: 5290
+        width: 522
+        height: 1970
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 03f3e9b3a4cd9ef50800000000000000
-      internalID: 6911297314562654000
+      spriteID: 050912cb1d486a3c0800000000000000
+      internalID: -4348642353840287664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SDF_7
+      rect:
+        serializedVersion: 2
+        x: 12070
+        y: 5298
+        width: 1062
+        height: 1975
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cde02405c87198b10800000000000000
+      internalID: 1984143002242780892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SDF_0
+      rect:
+        serializedVersion: 2
+        x: 9950
+        y: 3719
+        width: 2631
+        height: 1490
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7eff9c8e849711448ffbdaa21f020e6
+      internalID: 5521317374806288088
       vertices: []
       indices: 
       edges: []
@@ -200,7 +289,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: fe3243dc3665bea4ea9f291fdb22f230
     internalID: 0
     vertices: []
     indices: 
@@ -210,10 +299,25 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_0": -7236178590630883744
-      "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_1": 2196767277808203560
-      "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_2": -565592116776063930
-      "\u0E20\u0E32\u0E1E\u0E27\u0E32\u0E14 20261024_3": 6911297314562654000
+      SDF_0: 5521317374806288088
+      SDF_1: -7012053784196139813
+      SDF_10: -7215080624180054893
+      SDF_11: -5648358443831267269
+      SDF_12: -5522598902941574973
+      SDF_13: 5945014466444841677
+      SDF_14: 163264444464523565
+      SDF_15: -9172509162014881193
+      SDF_16: -5216207515761917489
+      SDF_17: -7662961319649770534
+      SDF_18: 9091095178088733732
+      SDF_2: 7775659613262843132
+      SDF_3: -568998982038294118
+      SDF_4: 5982675284833786619
+      SDF_5: 2380678734507726985
+      SDF_6: -4348642353840287664
+      SDF_7: 1984143002242780892
+      SDF_8: 2585166836353291835
+      SDF_9: -5383830811951015246
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
