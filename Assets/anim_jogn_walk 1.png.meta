@@ -1,0 +1,401 @@
+fileFormatVersion: 2
+guid: bf9b0b25fd08783438e34ccd7b1f60bf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1621316032521537210
+    second: anim_jogn_walk 1_0
+  - first:
+      213: 2541287236212818225
+    second: anim_jogn_walk 1_1
+  - first:
+      213: 2882716439998250525
+    second: anim_jogn_walk 1_2
+  - first:
+      213: -5843711783135642227
+    second: anim_jogn_walk 1_3
+  - first:
+      213: -7053305817501019858
+    second: anim_jogn_walk 1_4
+  - first:
+      213: -5881864567420068522
+    second: anim_jogn_walk 1_5
+  - first:
+      213: -6538808758244021087
+    second: anim_jogn_walk 1_6
+  - first:
+      213: -8740526782325566012
+    second: anim_jogn_walk 1_7
+  - first:
+      213: -6910819149665905615
+    second: anim_jogn_walk 1_8
+  - first:
+      213: -4524777579001552507
+    second: anim_jogn_walk 1_9
+  - first:
+      213: -4133345863292452851
+    second: anim_jogn_walk 1_10
+  - first:
+      213: 389346647064481549
+    second: anim_jogn_walk 1_11
+  - first:
+      213: 5560915627169113489
+    second: anim_jogn_walk 1_12
+  - first:
+      213: -556455464043589812
+    second: anim_jogn_walk 1_13
+  - first:
+      213: -2856706159824703719
+    second: anim_jogn_walk 1_14
+  - first:
+      213: -7265188208233929317
+    second: anim_jogn_walk 1_15
+  - first:
+      213: 9050652392145928169
+    second: anim_jogn_walk 1_16
+  - first:
+      213: -8080054518563729778
+    second: anim_jogn_walk 1_17
+  - first:
+      213: 7756935668083475486
+    second: anim_jogn_walk 1_18
+  - first:
+      213: 7695770235640928003
+    second: anim_jogn_walk 1_19
+  - first:
+      213: 2444523480105764826
+    second: anim_jogn_walk 1_20
+  - first:
+      213: -1137842745077872594
+    second: anim_jogn_walk 1_21
+  - first:
+      213: 8912654761280719832
+    second: anim_jogn_walk 1_22
+  - first:
+      213: -8870784906116247328
+    second: anim_jogn_walk 1_23
+  - first:
+      213: -7484573598825262942
+    second: anim_jogn_walk 1_24
+  - first:
+      213: 5999864251131942071
+    second: anim_jogn_walk 1_25
+  - first:
+      213: -4131908121167457592
+    second: anim_jogn_walk 1_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_0
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1649
+        width: 488
+        height: 1356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64978e498adef79e0800000000000000
+      internalID: -1621316032521537210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_1
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 1653
+        width: 347
+        height: 1398
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13103bae647744320800000000000000
+      internalID: 2541287236212818225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_2
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1649
+        width: 506
+        height: 1356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1e36423457710820800000000000000
+      internalID: 2882716439998250525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_3
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 1648
+        width: 672
+        height: 1361
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8d7f643817f6eea0800000000000000
+      internalID: -5843711783135642227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_5
+      rect:
+        serializedVersion: 2
+        x: 2607
+        y: 1649
+        width: 495
+        height: 1356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65d58f1e65b6f5ea0800000000000000
+      internalID: -5881864567420068522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_6
+      rect:
+        serializedVersion: 2
+        x: 3315
+        y: 1652
+        width: 349
+        height: 1399
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ace6a6141c7145a0800000000000000
+      internalID: -6538808758244021087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_7
+      rect:
+        serializedVersion: 2
+        x: 3867
+        y: 1649
+        width: 506
+        height: 1356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c552b5633963b680800000000000000
+      internalID: -8740526782325566012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk 1_8
+      rect:
+        serializedVersion: 2
+        x: 4450
+        y: 1648
+        width: 682
+        height: 1361
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13452353996d710a0800000000000000
+      internalID: -6910819149665905615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 3a429b06de5875b40b0d01d3aa3268e4
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      anim_jogn_walk 1_0: -1621316032521537210
+      anim_jogn_walk 1_1: 2541287236212818225
+      anim_jogn_walk 1_10: -4133345863292452851
+      anim_jogn_walk 1_11: 389346647064481549
+      anim_jogn_walk 1_12: 5560915627169113489
+      anim_jogn_walk 1_13: -556455464043589812
+      anim_jogn_walk 1_14: -2856706159824703719
+      anim_jogn_walk 1_15: -7265188208233929317
+      anim_jogn_walk 1_16: 9050652392145928169
+      anim_jogn_walk 1_17: -8080054518563729778
+      anim_jogn_walk 1_18: 7756935668083475486
+      anim_jogn_walk 1_19: 7695770235640928003
+      anim_jogn_walk 1_2: 2882716439998250525
+      anim_jogn_walk 1_20: 2444523480105764826
+      anim_jogn_walk 1_21: -1137842745077872594
+      anim_jogn_walk 1_22: 8912654761280719832
+      anim_jogn_walk 1_23: -8870784906116247328
+      anim_jogn_walk 1_24: -7484573598825262942
+      anim_jogn_walk 1_25: 5999864251131942071
+      anim_jogn_walk 1_26: -4131908121167457592
+      anim_jogn_walk 1_3: -5843711783135642227
+      anim_jogn_walk 1_4: -7053305817501019858
+      anim_jogn_walk 1_5: -5881864567420068522
+      anim_jogn_walk 1_6: -6538808758244021087
+      anim_jogn_walk 1_7: -8740526782325566012
+      anim_jogn_walk 1_8: -6910819149665905615
+      anim_jogn_walk 1_9: -4524777579001552507
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
