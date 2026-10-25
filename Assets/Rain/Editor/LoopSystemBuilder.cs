@@ -405,6 +405,8 @@ public static class LoopSystemBuilder
         TextMeshProUGUI phoneText = MakeText(phone.transform, "PhoneText", "DOOR PASSCODE\n? - ? - ? - ?", 54f, new Color(0.4f, 1f, 0.6f),
             Vector2.zero, Vector2.one, new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
 
+        phone.SetActive(false);   // the door passcode box is not used any more
+
         // Look Left / Look Right (left and right middle of the screen)
         Button lookL = MakeSideArrow(center.transform, "LookLeft", "<  LOOK LEFT", true);
         Button lookR = MakeSideArrow(center.transform, "LookRight", "LOOK RIGHT  >", false);

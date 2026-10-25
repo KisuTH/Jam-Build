@@ -61,6 +61,11 @@ public class PasscodeUI : MonoBehaviour
     private float stare;
     private float cueClearTime;
 
+    [Header("Mistakes")]
+    [Tooltip("This many wrong codes in one life = the player dies.")]
+    [SerializeField] private int maxWrongTries = 3;
+    private int wrongCount;   // resets by itself when the scene reloads after a death
+
     private void Start()
     {
         UpdatePhone();   // replaces the text saved in the scene
@@ -254,11 +259,39 @@ public class PasscodeUI : MonoBehaviour
 
     private void Wrong()
     {
-        if (messageText != null) messageText.text = Loc.T("WRONG.");
+        wrongCount++;
+        if (wrongCount >= maxWrongTries)
+        {
+            // Too many mistakes: the AI phones, the player dies and the loop restarts
+            if (messageText != null) messageText.text = Loc.T("WRONG.");
+            attackSide = 0;
+            panel.SetActive(false);
+            busy = false;
+            LoopManager.Ensure().FailPuzzle(CallSituation.WrongCode);
+            return;
+        }
+
+        // Still alive: clear the digits, the AI phones to scold, then try again
+        int left = maxWrongTries - wrongCount;
+        if (messageText != null) messageText.text = Loc.T("WRONG. " + left + " left");
+        entered = "";
+        UpdateDisplay();
+        CameraShake2D.Shake(0.25f, 0.05f);
+        StartCoroutine(ScoldThenContinue());
+    }
+
+    private IEnumerator ScoldThenContinue()
+    {
+        busy = true;   // no typing while the AI talks
         attackSide = 0;
-        panel.SetActive(false);
+        // Hide the keypad while the phone box is on screen, so the two do not overlap
+        if (panel != null) panel.SetActive(false);
+        if (AICaller.Instance != null)
+            yield return AICaller.Instance.CallRoutine(CallSituation.WrongCode, 1, true);   // true = keep the keys locked
+        if (panel != null) panel.SetActive(true);
+        SetView(0);
+        nextAttackIn = firstAttackDelay;
         busy = false;
-        LoopManager.Ensure().FailPuzzle(CallSituation.WrongCode);
     }
 
     private void UpdateDisplay()
@@ -270,18 +303,13 @@ public class PasscodeUI : MonoBehaviour
         displayText.text = s.Trim();
     }
 
-    // The digits the player has found so far, like "0 - 9 - ? - ?"
+    // The "door passcode" box (digits found so far) is switched off: the player writes the digits down
+    // from the Case Book. The reference is kept so the old scene object does not break.
     private void UpdatePhone()
     {
         if (phoneText == null) return;
-        LoopManager loop = LoopManager.Ensure();
-        string s = "";
-        for (int i = 0; i < LoopManager.CodeLength; i++)
-        {
-            bool known = loop.IsPositionFound(i) && LoopManager.Code != null;
-            s += (known ? LoopManager.Code[i].ToString() : "?");
-            if (i < LoopManager.CodeLength - 1) s += " - ";
-        }
-        phoneText.text = "<size=60%><color=#FF6060>" + Loc.T("DOOR PASSCODE") + "</color></size>\n" + s;
+        Transform box = phoneText.transform.parent;
+        if (box != null && box.name == "PhoneBox") box.gameObject.SetActive(false);
+        else phoneText.gameObject.SetActive(false);
     }
 }
