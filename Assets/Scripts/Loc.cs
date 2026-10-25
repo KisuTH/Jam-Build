@@ -110,7 +110,7 @@ public static class Loc
         if (m.Success) return "คุณตายแล้ว\n<size=50%>กลับมาด้วยความตาย... รอบที่ " + m.Groups[1].Value + "</size>";
         m = System.Text.RegularExpressions.Regex.Match(s, @"^<b>(.+)</b>\n\n(.+)$", System.Text.RegularExpressions.RegexOptions.Singleline);
         if (m.Success) return "<b>" + T(m.Groups[1].Value) + "</b>\n\n" + T(m.Groups[2].Value);
-        m = System.Text.RegularExpressions.Regex.Match(s, @"^(.+): (.+)$", System.Text.RegularExpressions.RegexOptions.Singleline);
+        m = System.Text.RegularExpressions.Regex.Match(s, @"^(.+?): (.+)$", System.Text.RegularExpressions.RegexOptions.Singleline);
         if (m.Success && Dict.ContainsKey(m.Groups[1].Value)) return T(m.Groups[1].Value) + ": " + T(m.Groups[2].Value);
         return s;
     }
@@ -255,6 +255,28 @@ public static class Loc
         { "A photo of a girl. Someone tore away the other half.", "รูปถ่ายของเด็กผู้หญิง มีคนฉีกอีกครึ่งหนึ่งทิ้งไป" },
         { "A rusty old key. It looks like it fits a heavy door.", "กุญแจเก่าขึ้นสนิม ดูเหมือนจะใช้ไขประตูบานหนักได้" },
         { "The last entry is dated three years ago. One name is circled in red: 'Mali'.", "รายการสุดท้ายลงวันที่เมื่อสามปีก่อน มีชื่อหนึ่งถูกวงสีแดงไว้: 'มะลิ'" },
+        { "A photo of the health station staff from years ago. Part of it has been torn away.", "ภาพถ่ายเจ้าหน้าที่สถานีอนามัยในอดีต ถูกฉีกออกบางส่วน" },
+        { "A cabinet labelled 'M'. A torn document fragment is stuck in the drawer. A page of the case report is missing.", "ตู้เก็บเอกสารติดป้าย 'M' มีชิ้นส่วนเอกสารติดอยู่ในลิ้นชัก ข้อมูลบางส่วนในรายงานคดีขาดหายไป" },
+        { "A tray of old medical instruments. Something abnormal once happened inside this health station.", "ถาดอุปกรณ์แพทย์เก่า บ่งบอกถึงเหตุการณ์ผิดปกติที่เคยเกิดขึ้นภายในสถานีอนามัย" },
+        { "A board pinned with photos, scraps of paper and instruments. Put them together and analyse them.", "กระดานติดภาพถ่าย เศษเอกสาร และอุปกรณ์ ลองนำมาวิเคราะห์ร่วมกัน" },
+        { "Old medical records. Some patients' names are crossed out, next to their treatment dates. One name is circled in red: 'Mali'.", "เวชระเบียนผู้ป่วยเก่า ชื่อผู้ป่วยบางคนถูกขีดฆ่า พร้อมวันที่รับการรักษา มีชื่อหนึ่งถูกวงสีแดงไว้: 'มะลิ'" },
+        { "An old key. It opens a locked room.", "กุญแจเก่าๆ ใช้เปิดห้อง" },
+        { "A direct line phone. A call came in from inside the building, yet the outside line looks cut.", "โทรศัพท์สายตรง มีสายเรียกเข้าจากภายในอาคาร ทั้งที่สายภายนอกดูเหมือนถูกตัด" },
+        { "Picked up: Old Patient Records", "เก็บแล้ว: เวชระเบียนผู้ป่วยเก่า" },
+        { "Old Patient Records", "เวชระเบียนผู้ป่วยเก่า" },
+        { "Medical Equipment", "อุปกรณ์แพทย์" },
+        { "Medical equipment", "อุปกรณ์แพทย์" },
+        { "Evidence Board", "กระดานเอกสาร" },
+        { "Evidence board", "กระดานเอกสาร" },
+        { "Direct Line", "โทรศัพท์สายตรง" },
+        { "Direct line", "โทรศัพท์สายตรง" },
+        { "Document fragment", "ชิ้นส่วนเอกสาร" },
+        { "To be continued...", "โปรดติดตามตอนต่อไป..." },
+        { "...footsteps. Someone is coming. Look around!", "...เสียงฝีเท้า มีใครบางคนกำลังมา มองรอบๆ!" },
+        { "Door A (Room 1 side)", "ประตู A (ฝั่งห้อง 1)" },
+        { "Door A (Room 2 side)", "ประตู A (ฝั่งห้อง 2)" },
+        { "Door B (Room 2 side)", "ประตู B (ฝั่งห้อง 2)" },
+        { "Door B (Room 3 side)", "ประตู B (ฝั่งห้อง 3)" },
         { "Too far away...", "ไกลเกินไป..." },
         { "I can't use this yet... I need something first.", "ยังใช้ไม่ได้... ต้องมีอะไรบางอย่างก่อน" },
         { "I still don't understand enough to do this...", "ฉันยังไม่เข้าใจพอที่จะทำสิ่งนี้..." },

@@ -583,6 +583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Hospital Bed
   description: A hospital bed. The sheets are crumpled, as if someone just got up.
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -1378,7 +1379,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: torn_photo
   itemName: Torn Photo
-  itemDescription: A photo of a girl. Someone tore away the other half.
+  itemDescription: A photo of the health station staff from years ago. Part of it
+    has been torn away.
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
   pickupMessage: 'Picked up: Torn Photo'
 --- !u!114 &112712819
@@ -1395,6 +1397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Torn Photo
   description: 
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -2641,8 +2644,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Phone
-  description: The phone is dead. The cord was cut years ago.
+  displayName: Direct Line
+  description: A direct line phone. A call came in from inside the building, yet
+    the outside line looks cut.
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -2651,7 +2656,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: dead_phone
-  clueTitle: Dead phone
+  clueTitle: Direct line
   clueText: 
   setsFlag: 
   onInteract:
@@ -3732,6 +3737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Cabinet Tag
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -5822,6 +5828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Portrait (changed)
   description: The faces are not scratched out anymore. Now they all stare at you.
+  descriptionThai: 
   maxDistance: 5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -6341,6 +6348,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Portrait
   description: A faded family portrait. Every face has been scratched out.
+  descriptionThai: 
   maxDistance: 5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -8098,8 +8106,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Cabinet 'M'
-  description: A cabinet labelled 'M'. The folder for 'Mali' has been cut out with
-    scissors.
+  description: A cabinet labelled 'M'. A torn document fragment is stuck in the drawer.
+    A page of the case report is missing.
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -8108,7 +8117,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: filing_cabinet
-  clueTitle: Missing folder
+  clueTitle: Document fragment
   clueText: 
   setsFlag: 
   onInteract:
@@ -8759,6 +8768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Door B (Room 2 side)
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -9705,7 +9715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: old_key
   itemName: Old Key
-  itemDescription: A rusty old key. It looks like it fits a heavy door.
+  itemDescription: An old key. It opens a locked room.
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
   pickupMessage: 'Picked up: Old Key'
 --- !u!114 &936787762
@@ -9722,6 +9732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Old Key
   description: 
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -10114,8 +10125,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Medicine Cabinet
-  description: The medicine bottles are empty. Every label has been scratched off.
+  displayName: Medical Equipment
+  description: A tray of old medical instruments. Something abnormal once happened
+    inside this health station.
+  descriptionThai: 
   maxDistance: 4
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -10124,7 +10137,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: cabinet
-  clueTitle: Medicine cabinet
+  clueTitle: Medical equipment
   clueText: 
   setsFlag: 
   onInteract:
@@ -10848,6 +10861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Bedside Note
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -11182,6 +11196,7 @@ MonoBehaviour:
   displayName: Reception Desk
   description: A reception desk covered in dust. Something was dragged across it
     a long time ago.
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -11952,6 +11967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Faded Poster
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -12257,18 +12273,24 @@ MonoBehaviour:
   - speaker: "\u0E01\u0E33\u0E19\u0E31\u0E19"
     text: "\u0E2B\u0E34\u0E27\u0E27\u0E27\u0E27\u0E27"
     autoAdvanceAfter: 0
+    speakerThai: 
+    textThai: 
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
   - speaker: Detective
     text: Press + under Lines to add more.
     autoAdvanceAfter: 0
+    speakerThai: 
+    textThai: 
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
   - speaker: 
     text: A line with no speaker is narration.
     autoAdvanceAfter: 0
+    speakerThai: 
+    textThai: 
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
@@ -12300,6 +12322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Dialogue NPC
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -12495,6 +12518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Filing Cabinets
   description: Rows of filing cabinets. Every drawer is open and empty.
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -13212,6 +13236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Door A (Room 1 side)
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: old_key
@@ -13597,6 +13622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Wall Writing
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -14101,6 +14127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Door A (Room 2 side)
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -14434,6 +14461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Wall Clock
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -15644,11 +15672,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: register
-  itemName: Patient Register
-  itemDescription: 'The last entry is dated three years ago. One name is circled
-    in red: ''Mali''.'
+  itemName: Old Patient Records
+  itemDescription: 'Old medical records. Some patients'' names are crossed out, next
+    to their treatment dates. One name is circled in red: ''Mali''.'
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
-  pickupMessage: 'Picked up: Patient Register'
+  pickupMessage: 'Picked up: Old Patient Records'
 --- !u!114 &1482400116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15661,8 +15689,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Patient Register
+  displayName: Old Patient Records
   description: 
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -16189,9 +16218,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Notice Board
-  description: 'A notice pinned to the wall: ''Clinic closed until further notice.
-    Do not remove any records.'''
+  displayName: Evidence Board
+  description: A board pinned with photos, scraps of paper and instruments. Put them
+    together and analyse them.
+  descriptionThai: 
   maxDistance: 6
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -16200,7 +16230,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: notice_board
-  clueTitle: Closure notice
+  clueTitle: Evidence board
   clueText: 
   setsFlag: 
   onInteract:
@@ -16838,6 +16868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Calendar
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -17125,6 +17156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Bench
   description: A wooden bench. Someone carved 'HELP' into the seat.
+  descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -17960,6 +17992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Mirror
   description: The mirror shows the room behind you. But you are not in it.
+  descriptionThai: 
   maxDistance: 6
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -18321,6 +18354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Keypad
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -18518,6 +18552,7 @@ MonoBehaviour:
   maxInterval: 12
   reactionTime: 4
   stareTime: 0.6
+  maxWrongTries: 3
 --- !u!1 &1790473778
 GameObject:
   m_ObjectHideFlags: 0
@@ -18586,6 +18621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Door B (Room 3 side)
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -19016,6 +19052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Basement Door
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -19212,6 +19249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Stain on the Floor
   description: 
+  descriptionThai: 
   maxDistance: 3
   tooFarMessage: Too far away...
   requiredItemId: 
@@ -19681,6 +19719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Exit Door
   description: 
+  descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
   requiredItemId: 
