@@ -16,6 +16,12 @@ public class PlayerMovement2D : MonoBehaviour
     [Header("Walking")]
     [SerializeField] private float moveSpeed = 4f;
 
+    [Header("Running (hold Left Shift)")]
+    [Tooltip("OFF for now. Tick this to let Left Shift make the player run.")]
+    [SerializeField] private bool allowRunning = false;
+    [Tooltip("2 = twice the walking speed while Left Shift is held.")]
+    [SerializeField] private float runSpeedMultiplier = 1.8f;
+
     [Header("Jump")]
     [Tooltip("How high the jump goes, in world units.")]
     [SerializeField] private float jumpHeight = 2.2f;
@@ -47,10 +53,13 @@ public class PlayerMovement2D : MonoBehaviour
     private bool crouchHeld;
     private bool isCrouching;
     private bool isGrounded;
+    private bool runHeld;
 
     public bool IsAutoWalking => autoWalking;
     public bool IsGrounded => isGrounded;
     public bool IsCrouching => isCrouching;
+    /// <summary>True while Left Shift is held and the player is moving on foot (not crouching).</summary>
+    public bool IsRunning => runHeld && !isCrouching && Mathf.Abs(moveInput) > 0.01f;
 
     // Runs when you first add the script in the Editor: sets sensible Rigidbody2D values.
     private void Reset()
@@ -106,6 +115,7 @@ public class PlayerMovement2D : MonoBehaviour
     {
         if (autoWalking)
         {
+            runHeld = false;
             crouchHeld = false;
             autoTimeLeft -= Time.deltaTime;
             float dx = autoTargetX - transform.position.x;
@@ -124,6 +134,7 @@ public class PlayerMovement2D : MonoBehaviour
 
         if (controlLocked)
         {
+            runHeld = false;
             moveInput = 0f;
             crouchHeld = false;
             jumpQueued = false;
@@ -133,6 +144,7 @@ public class PlayerMovement2D : MonoBehaviour
         Keyboard kb = Keyboard.current;
         if (kb == null)
         {
+            runHeld = false;
             moveInput = 0f;
             crouchHeld = false;
             return;
@@ -143,6 +155,7 @@ public class PlayerMovement2D : MonoBehaviour
         if (kb.dKey.isPressed) moveInput += 1f;
 
         crouchHeld = kb.sKey.isPressed;
+        runHeld = allowRunning && kb.leftShiftKey.isPressed;
         if (kb.wKey.wasPressedThisFrame) jumpQueued = true;
     }
 
@@ -154,7 +167,7 @@ public class PlayerMovement2D : MonoBehaviour
         UpdateCrouch();
 
         // Walk
-        float speed = moveSpeed * (isCrouching ? crouchSpeedMultiplier : 1f);
+        float speed = moveSpeed * (isCrouching ? crouchSpeedMultiplier : (runHeld ? runSpeedMultiplier : 1f));
         Vector2 v = rb.linearVelocity;
         v.x = moveInput * speed;
 

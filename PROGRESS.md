@@ -86,3 +86,16 @@ This file is the summary. Claude Code reads it at the start of every session and
 - Button is at the bottom-left. `Localizer` re-translates every TMP text on screen (dictionary + number patterns); code clues, hints, case book included.
 - Thai font: `Assets/Resources/Fonts/Sarabun-Regular.ttf` (OFL, `Sarabun-OFL.txt` next to it). It is MODIFIED: narrow tone marks added at U+F713..F716; `Loc.Shape()` swaps the tone mark after ป ฝ ฟ ฬ. Do not replace the font file with the original. Commit `Assets/Resources` with its `.meta` files.
 - New Thai text: add to `Loc.Dict`, or fill `Description Thai` (Interactable2D) / `Text Thai` (DialogueLine).
+
+## Passcode and evidence (built, KisuTH ran the evidence script; passcode not fully tested)
+- "PHONE CALL" box removed; the door box title is "DOOR PASSCODE". Wrong code is no longer instant death: `maxWrongTries = 3` (PasscodeUI), each wrong try makes the AI phone and scold (`ScoldThenContinue`); the keypad hides while the call box is on screen.
+- `Assets/Rain/Editor/EvidenceUpdater.cs` puts the team's 7-item evidence list into the map objects (menu item, run once).
+- `Assets/Rain/Editor/ScriptOrganizer.cs` moves `Assets/Scripts` into category folders (menu item; keeps .meta/GUIDs).
+- Git: friend's branch `SETTING-Scene-Gim` was merged into `Coding-Rain` and pushed. Never push Gim from here.
+
+## Player animation (built, NOT tested yet) — Gameplay scene only
+- Friend's clips: `Assets/New Animation.anim` (= Idle, but its PNG `d9d556b5…` is MISSING from the repo, so it is blank), `Assets/New Animation2.anim` (= Walk, sheet `anim_jogn_walk 1.png`), `Assets/test_anim/New Animation_{jump,crouch,crouch_walk,enter,exit}.anim`.
+- `Assets/Scripts/Player&Camera/PlayerAnimation.cs`: drag-and-drop slots (Idle / Walk / Jump / Crouch / Crouch Walk, each with Right + Left clip; empty Left = mirror of Right). Plays clips through Playables, no Animator Controller. No Idle clip = first frame of Walk is frozen. Also keeps the art at a fixed size (`Sprite World Scale`) with the feet on the collider bottom.
+- `Assets/Rain/Editor/PlayerAnimationBuilder.cs`: menu Tools > Rain > Hook Up Player Animation. Creates the child `Visual` under the Player (SpriteRenderer + Animator + PlayerAnimation), fills the slots, disables the Player's old SpriteRenderer. Safe to run again.
+- Art is ~10 units tall (camera in GAME 1 is 17.8, in Gameplay 5), so it is scaled down to the collider height (1.6). Tune `Sprite World Scale` on `Visual`.
+- TODO: ask friend to push the Idle PNG; `enter`/`exit` clips are not hooked to RoomTransition yet; GAME 1 is the friend's test scene (one clip per object), not changed.

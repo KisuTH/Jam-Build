@@ -88,6 +88,7 @@ public class RoomTransition : MonoBehaviour
         SpriteRenderer[] sprites = player.GetComponentsInChildren<SpriteRenderer>();
         Vector3 baseScale = player.transform.localScale;
         Vector3 startPos = player.transform.position;
+        PlayerAnimation pa = player.GetComponentInChildren<PlayerAnimation>();
 
         // try/finally: whatever goes wrong inside (an error, the object being disabled...),
         // the player and the click lock are always given back, so a door can never get "stuck".
@@ -118,6 +119,7 @@ public class RoomTransition : MonoBehaviour
             startPos = new Vector3(doorX, startPos.y, startPos.z);
             player.transform.position = startPos;
 
+            if (pa != null) pa.SetDoorPose(PlayerAnimation.DoorPose.Enter);   // back view: walking into the door
             yield return DepthWalk(player.transform, sprites, startPos, baseScale, door, 1f, 0f, stepIntoDoorTime);
 
             // 3. Screen to black
@@ -133,6 +135,7 @@ public class RoomTransition : MonoBehaviour
             player.transform.position = new Vector3(arrive.x, arrive.y + door.depthDistance, startPos.z);
             player.transform.localScale = baseScale * door.depthScale;
             EnterRoom(door.arriveRoom);
+            if (pa != null) pa.SetDoorPose(PlayerAnimation.DoorPose.Exit);   // front view: walking out toward the camera
 
             yield return new WaitForSeconds(stayBlackTime);
 
@@ -140,6 +143,8 @@ public class RoomTransition : MonoBehaviour
             if (ScreenFlash.Instance != null) ScreenFlash.Instance.FadeToClear(fadeInTime);
             Vector3 outStart = new Vector3(arrive.x, arrive.y + door.depthDistance, startPos.z);
             yield return DepthWalk(player.transform, sprites, outStart, baseScale, door, 0f, 1f, fadeInTime, true);
+
+            if (pa != null) pa.SetDoorPose(PlayerAnimation.DoorPose.None);
 
             // Back to the real position and physics
             player.transform.position = new Vector3(arrive.x, arrive.y, startPos.z);
@@ -169,6 +174,7 @@ public class RoomTransition : MonoBehaviour
             // Always runs: give everything back
             if (player != null)
             {
+                if (pa != null) pa.SetDoorPose(PlayerAnimation.DoorPose.None);
                 player.transform.localScale = baseScale;
                 SetPlayerAlpha(sprites, 1f);
                 if (body != null) body.simulated = true;
