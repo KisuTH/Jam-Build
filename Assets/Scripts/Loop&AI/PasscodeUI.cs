@@ -169,7 +169,7 @@ public class PasscodeUI : MonoBehaviour
                 attackSide = Random.value < 0.5f ? -1 : 1;
                 attackTimer = reactionTime;
                 stare = 0f;
-                if (cueText != null) cueText.text = "...footsteps. Someone is coming. Look around!";
+                if (cueText != null) cueText.text = Loc.T("...footsteps. Someone is coming. Look around!");
                 UpdateThreats();
             }
             return;

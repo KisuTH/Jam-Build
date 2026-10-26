@@ -720,7 +720,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: torn_photo
   itemName: Torn Photo
-  itemDescription: A photo of a girl. Someone tore away the other half.
+  itemDescription: A photo of the health station staff from years ago. Part of it
+    has been torn away.
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
   pickupMessage: 'Picked up: Torn Photo'
 --- !u!114 &112712819
@@ -1103,8 +1104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Phone
-  description: The phone is dead. The cord was cut years ago.
+  displayName: Direct Line
+  description: A direct line phone. A call came in from inside the building, yet
+    the outside line looks cut.
   descriptionThai: 
   maxDistance: 2.5
   tooFarMessage: Too far away...
@@ -1114,7 +1116,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: dead_phone
-  clueTitle: Dead phone
+  clueTitle: Direct line
   clueText: 
   setsFlag: 
   onInteract:
@@ -3277,8 +3279,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
   displayName: Cabinet 'M'
-  description: A cabinet labelled 'M'. The folder for 'Mali' has been cut out with
-    scissors.
+  description: A cabinet labelled 'M'. A torn document fragment is stuck in the drawer.
+    A page of the case report is missing.
   descriptionThai: 
   maxDistance: 3.5
   tooFarMessage: Too far away...
@@ -3288,7 +3290,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: filing_cabinet
-  clueTitle: Missing folder
+  clueTitle: Document fragment
   clueText: 
   setsFlag: 
   onInteract:
@@ -4083,7 +4085,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: old_key
   itemName: Old Key
-  itemDescription: A rusty old key. It looks like it fits a heavy door.
+  itemDescription: An old key. It opens a locked room.
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
   pickupMessage: 'Picked up: Old Key'
 --- !u!114 &936787762
@@ -4279,8 +4281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Medicine Cabinet
-  description: The medicine bottles are empty. Every label has been scratched off.
+  displayName: Medical Equipment
+  description: A tray of old medical instruments. Something abnormal once happened
+    inside this health station.
   descriptionThai: 
   maxDistance: 4
   tooFarMessage: Too far away...
@@ -4290,7 +4293,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: cabinet
-  clueTitle: Medicine cabinet
+  clueTitle: Medical equipment
   clueText: 
   setsFlag: 
   onInteract:
@@ -7530,11 +7533,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   itemId: register
-  itemName: Patient Register
-  itemDescription: 'The last entry is dated three years ago. One name is circled
-    in red: ''Mali''.'
+  itemName: Old Patient Records
+  itemDescription: 'Old medical records. Some patients'' names are crossed out, next
+    to their treatment dates. One name is circled in red: ''Mali''.'
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
-  pickupMessage: 'Picked up: Patient Register'
+  pickupMessage: 'Picked up: Old Patient Records'
 --- !u!114 &1482400116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7547,7 +7550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Patient Register
+  displayName: Old Patient Records
   description: 
   descriptionThai: 
   maxDistance: 2.5
@@ -7867,9 +7870,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b2f8e52f59b504eb75721897a014d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable2D
-  displayName: Notice Board
-  description: 'A notice pinned to the wall: ''Clinic closed until further notice.
-    Do not remove any records.'''
+  displayName: Evidence Board
+  description: A board pinned with photos, scraps of paper and instruments. Put them
+    together and analyse them.
   descriptionThai: 
   maxDistance: 6
   tooFarMessage: Too far away...
@@ -7879,7 +7882,7 @@ MonoBehaviour:
   requiredFlags: []
   missingFlagsMessage: I still don't understand enough to do this...
   clueId: notice_board
-  clueTitle: Closure notice
+  clueTitle: Evidence board
   clueText: 
   setsFlag: 
   onInteract:
