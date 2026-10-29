@@ -152,9 +152,9 @@ MonoBehaviour:
   anon: {fileID: 1596225075}
   ghost: {fileID: 1011904876}
   firstSpawnPoint: {fileID: 1621444116}
-  ghostSpeed: 7
+  ghostSpeed: 10
   spawnDistance: 7
-  spawnDelay: 0.7
+  spawnDelay: 0.5
   edgeMargin: 3
   minSpawnGap: 9
   catchDistance: 1
@@ -170,6 +170,14 @@ MonoBehaviour:
   endMessage: THE END
   endSceneName: CreditsScene
   fadeTime: 2
+  chaseStartSound: {fileID: 0}
+  ghostAppearSound: {fileID: 0}
+  chaseLoopSound: {fileID: 0}
+  catchSound: {fileID: 0}
+  sfxVolume: 1
+  loopMaxVolume: 0.8
+  loopMinVolume: 0.15
+  loopHearDistance: 14
 --- !u!4 &15131427
 Transform:
   m_ObjectHideFlags: 0
@@ -511,7 +519,7 @@ GameObject:
   - component: {fileID: 111969913}
   m_Layer: 0
   m_Name: BoardClue 0
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -662,7 +670,7 @@ GameObject:
   - component: {fileID: 112693520}
   m_Layer: 0
   m_Name: Bedside Drawer 2
-  m_TagString: Untagged
+  m_TagString: Key
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1420,7 +1428,7 @@ GameObject:
   - component: {fileID: 300904306}
   m_Layer: 0
   m_Name: Pinned Document
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1791,7 +1799,7 @@ GameObject:
   - component: {fileID: 326076711}
   m_Layer: 0
   m_Name: BoardClue 2
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3487,7 +3495,7 @@ GameObject:
   - component: {fileID: 777342302}
   m_Layer: 0
   m_Name: BoardClue 1
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3739,7 +3747,7 @@ GameObject:
   - component: {fileID: 861292431}
   m_Layer: 0
   m_Name: RedFolder
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3776,6 +3784,8 @@ MonoBehaviour:
   itemDescription: A red folder. The label is torn off.
   icon: {fileID: 1118465441455219849, guid: 70d0e17a08656e745bd1cfe1c9c6fbd0, type: 3}
   pickupMessage: Picked up a red folder.
+  pickupSound: {fileID: 0}
+  pickupVolume: 1
 --- !u!114 &861292432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4180,7 +4190,7 @@ GameObject:
   - component: {fileID: 894399267}
   m_Layer: 0
   m_Name: BoardClue 4
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4331,7 +4341,7 @@ GameObject:
   - component: {fileID: 973389575}
   m_Layer: 0
   m_Name: Old Key
-  m_TagString: Untagged
+  m_TagString: Key
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4368,6 +4378,8 @@ MonoBehaviour:
   itemDescription: An old key. It opens a locked room.
   icon: {fileID: 21300000, guid: 50d1aea5fa8d60442bc70230b40cb78a, type: 3}
   pickupMessage: 'Picked up: Old Key'
+  pickupSound: {fileID: 0}
+  pickupVolume: 1
 --- !u!114 &973389576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4834,7 +4846,7 @@ GameObject:
   - component: {fileID: 1169053739}
   m_Layer: 0
   m_Name: BoardClue 3
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6182,7 +6194,7 @@ GameObject:
   - component: {fileID: 1464765121}
   m_Layer: 0
   m_Name: Drawer Cabinet
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6590,7 +6602,7 @@ GameObject:
   - component: {fileID: 1482588279}
   m_Layer: 0
   m_Name: Pinned Document
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7236,7 +7248,7 @@ GameObject:
   - component: {fileID: 1604803638}
   m_Layer: 0
   m_Name: Pinned Document
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7777,7 +7789,7 @@ GameObject:
   - component: {fileID: 1678344434}
   m_Layer: 0
   m_Name: Pinned Document
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8357,6 +8369,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1463034620679714352, guid: f9f592150ff88f34ab5e33ea87454018, type: 3}
   m_PrefabInstance: {fileID: 1397179130737722971}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1794869242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1794869244}
+  - component: {fileID: 1794869243}
+  m_Layer: 0
+  m_Name: Game Sfx
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1794869243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794869242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfc0694ff8720204385ba140ef79e571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSfx
+  tagSounds:
+  - tag: Document
+    clip: {fileID: 8300000, guid: 73852db00c4ed894ebdfcfc64cf029e6, type: 3}
+    volume: 1
+  - tag: Key
+    clip: {fileID: 8300000, guid: fd5516f5054772e4783094dff4e17f0d, type: 3}
+    volume: 1
+  defaultPickupSound: {fileID: 8300000, guid: 73852db00c4ed894ebdfcfc64cf029e6, type: 3}
+  defaultPickupVolume: 1
+--- !u!4 &1794869244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794869242}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1847780682
 GameObject:
   m_ObjectHideFlags: 0
@@ -8571,7 +8636,7 @@ GameObject:
   - component: {fileID: 1943419542}
   m_Layer: 0
   m_Name: Pinned Document
-  m_TagString: Untagged
+  m_TagString: Document
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10954,3 +11019,4 @@ SceneRoots:
   - {fileID: 1637261621}
   - {fileID: 777342305}
   - {fileID: 15131427}
+  - {fileID: 1794869244}

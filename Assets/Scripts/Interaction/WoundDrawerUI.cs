@@ -103,6 +103,7 @@ public class WoundDrawerUI : MonoBehaviour
             StoryFlags.Instance.Set(spot.TakenFlag);
             StoryFlags.Instance.Set("got_" + spot.itemId);
         }
+        if (GameSfx.Instance != null) GameSfx.Instance.PlayPickup(spot.gameObject);   // sound of the drawer's Tag (Key / Document)
         hotspot.SetActive(false);
         SetMessage("You took: " + spot.itemName, "หยิบแล้ว: " + Loc.T(spot.itemName));
 

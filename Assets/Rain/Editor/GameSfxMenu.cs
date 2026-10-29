@@ -58,6 +58,16 @@ public static class GameSfxMenu
             foreach (GameObject g in pin != null ? new[] { bc.gameObject, pin.gameObject } : new[] { bc.gameObject })
                 tagged += TagDocument(g);
         }
+        // drawers with an item inside: key items -> Key, everything else -> Document
+        foreach (DrawerSpot ds in Object.FindObjectsByType<DrawerSpot>(FindObjectsInactive.Include))
+        {
+            if (string.IsNullOrEmpty(ds.itemId) || !ds.gameObject.CompareTag("Untagged")) continue;
+            string s2 = ((ds.itemId ?? "") + " " + (ds.itemName ?? "")).ToLower();
+            Undo.RecordObject(ds.gameObject, "Tag drawer");
+            ds.gameObject.tag = (s2.Contains("key") || s2.Contains("กุญแจ")) ? "Key" : "Document";
+            EditorUtility.SetDirty(ds.gameObject);
+            tagged++;
+        }
         foreach (CodeClue cc in Object.FindObjectsByType<CodeClue>(FindObjectsInactive.Include))
             tagged += TagDocument(cc.gameObject);
 

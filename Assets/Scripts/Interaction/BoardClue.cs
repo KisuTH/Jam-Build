@@ -121,6 +121,7 @@ public class BoardClue : MonoBehaviour
         }
         int digit = LoopManager.DigitForSlot(slot);
         string note = "The " + Ordinals[position] + " digit of the code is " + digit + ".";
+        if (GameSfx.Instance != null) GameSfx.Instance.PlayPickup(gameObject);   // the code paper: sound of this object's Tag
         ShowZoom(digit.ToString(), flavorText + " " + note);
         if (LoopManager.Ensure() != null) LoopManager.Ensure().MarkFound(slot);
         if (CaseNotebook.Instance != null)
@@ -133,6 +134,7 @@ public class BoardClue : MonoBehaviour
         int slot = LoopManager.DrawerSlot;
         int position = LoopManager.PositionForSlot(slot);
         if (position < 0) return;
+        if (GameSfx.Instance != null) GameSfx.Instance.PlayByTag("Document");
         int digit = LoopManager.DigitForSlot(slot);
         string note = "The " + Ordinals[position] + " digit of the code is " + digit + ".";
         string en = "A paper was tucked inside the red file. One number is written on it: " + note;
