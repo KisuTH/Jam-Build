@@ -77,6 +77,7 @@ public class PlayerMovement2D : MonoBehaviour
     public bool IsAutoWalking => autoWalking;
     public bool IsGrounded => isGrounded;
     public bool IsCrouching => isCrouching;
+    public bool IsWalkingOnGround => isGrounded && Mathf.Abs(moveInput) > .01f && (!controlLocked || autoWalking);
     /// <summary>True while Left Shift is held and the player is moving on foot (not crouching).</summary>
     public bool IsRunning => runHeld && !isCrouching && Mathf.Abs(moveInput) > 0.01f;
 
@@ -93,6 +94,7 @@ public class PlayerMovement2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         standingScale = transform.localScale;
+        if (GetComponent<PlayerFootstepAudio>() == null) gameObject.AddComponent<PlayerFootstepAudio>();
 
         if (col == null)
             Debug.LogError("PlayerMovement2D needs a Collider2D (for example BoxCollider2D) on the Player.", this);

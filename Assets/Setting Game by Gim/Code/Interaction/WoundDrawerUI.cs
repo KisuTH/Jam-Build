@@ -213,6 +213,7 @@ public class WoundDrawerUI : MonoBehaviour
         go.transform.SetParent(parent, false);
         TextMeshProUGUI t = go.AddComponent<TextMeshProUGUI>();
         t.fontSize = size;
+        JamBuild.Options.NotebookTextSettings.Apply(t);
         t.alignment = align;
         t.color = new Color(0.92f, 0.92f, 0.92f);
         t.raycastTarget = false;

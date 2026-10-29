@@ -39,6 +39,7 @@ namespace JamBuild.Options
         [SerializeField] private RectTransform turnShadow;
         [SerializeField] private CanvasGroup shadowOpacity;
         [SerializeField] private string mainMenuScene = "MaingameScene";
+        [SerializeField] private AudioClip pageTurnSound;
         [Header("Video")]
         [SerializeField] private UnityEngine.UI.Button resolutionButton;
         [SerializeField] private TextMeshProUGUI resolutionLabel;
@@ -63,6 +64,7 @@ namespace JamBuild.Options
         private int currentPage;
         private int requestedPage;
         private Coroutine turn;
+        private AudioSource pageTurnAudio;
         private bool initialized;
         private bool english;
         private bool prefsDirty;
@@ -82,8 +84,6 @@ namespace JamBuild.Options
         private int displayRequestedFrame;
         private float nextDisplayCheck;
         private bool editorDisplayHintShown;
-        private TextMeshProUGUI[] allText;
-        private float[] baseFontSizes;
         private const string Prefix="NotebookOptions.";
         private static readonly string[] TabNames={"VIDEO","SOUND","CONTROL","ACCESSIBILITY","MENU"};
         private static readonly string[] ShortNames={"VI","SO","CO","AC","ME"};
@@ -97,28 +97,33 @@ namespace JamBuild.Options
         public static Key SavedMoveLeftKey => ReadKey("LeftKey", Key.A);
         public static Key SavedMoveRightKey => ReadKey("RightKey", Key.D);
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void RestoreMainVolume()
+        {
+            AudioListener.volume=Mathf.Clamp01(PlayerPrefs.GetFloat(Prefix+"Volume0",.8f));
+        }
+
         private void Awake()
         {
             if (pages == null || pages.Length != 5) { Debug.LogError("Notebook page references are incomplete.",this); enabled=false; return; }
-            allText=GetComponentsInChildren<TextMeshProUGUI>(true);
-            baseFontSizes=new float[allText.Length];
-            for(int i=0;i<allText.Length;i++) baseFontSizes[i]=allText[i].fontSize;
+            SetupPageSound();
             for(int i=0;i<pages.Length;i++) { int index=i; pages[i].tab.onClick.AddListener(()=>ShowPage(index)); }
             BindChoices(windowModes,SetWindowMode); BindChoices(qualityLevels,SetQuality);
             BindChoices(textSizes,SetTextSize); BindChoices(languages,SetLanguage);
-            for(int i=0;i<volumes.Length;i++) { int index=i; volumes[i].onValueChanged.AddListener(v=>SetVolume(index,v)); }
+            for(int i=0;i<volumes.Length;i++) { int index=i; if(volumes[i]!=null) volumes[i].onValueChanged.AddListener(v=>SetVolume(index,v)); }
             for(int i=0;i<keyButtons.Length;i++) { int index=i; keyButtons[i].onClick.AddListener(()=>BeginRebind(index)); }
             resolutionButton.onClick.AddListener(CycleResolution); backButton.onClick.AddListener(BackToMenu);
             RefreshDisplayFromScreen(false);
             SetTicks(qualityLevels,Mathf.Clamp(PlayerPrefs.GetInt(Prefix+"Quality",2),0,2));
             english=PlayerPrefs.GetInt(Prefix+"Language",0)==1;
             RefreshLanguage();
-            ApplyTextSize(Mathf.Clamp(PlayerPrefs.GetInt(Prefix+"TextSize",1),0,2));
+            SetTicks(textSizes,NotebookTextSettings.SelectedSize);
             leftKey=ReadKey("LeftKey",Key.A); rightKey=ReadKey("RightKey",Key.D); RefreshKeys();
             for(int i=0;i<volumes.Length;i++)
             {
                 float value=Mathf.Clamp01(PlayerPrefs.GetFloat(Prefix+"Volume"+i,i==0?.8f:.5f));
-                volumes[i].SetValueWithoutNotify(value); ApplyVolume(i,value);
+                if(volumes[i]!=null) volumes[i].SetValueWithoutNotify(value);
+                ApplyVolume(i,value);
             }
             initialized=true; ShowImmediate(0);
         }
@@ -126,16 +131,17 @@ namespace JamBuild.Options
         // AudioMixer exposed parameters are applied after all Awake calls have completed.
         private void Start()
         {
-            for(int i=1;i<volumes.Length;i++) ApplyVolume(i,volumes[i].value);
+            for(int i=1;i<volumes.Length;i++) ApplyVolume(i,volumes[i]!=null?volumes[i].value:Mathf.Clamp01(PlayerPrefs.GetFloat(Prefix+"Volume"+i,.5f)));
             if(PlayerPrefs.HasKey(Prefix+"Quality")) ApplyQuality(Mathf.Clamp(PlayerPrefs.GetInt(Prefix+"Quality"),0,2));
         }
         private void OnEnable()
         {
-            if(initialized) { ShowImmediate(currentPage); RefreshDisplayFromScreen(displayPending); }
+            if(initialized) { ShowImmediate(currentPage); RefreshDisplayFromScreen(displayPending); SetTicks(textSizes,NotebookTextSettings.SelectedSize); }
         }
         private void OnDisable()
         {
             StopAllCoroutines(); turn=null; rebinding=-1;
+            if(pageTurnAudio!=null) pageTurnAudio.Stop();
             if(initialized) { ShowImmediate(currentPage); RefreshKeys(); }
             FlushPreferences();
         }
@@ -167,10 +173,28 @@ namespace JamBuild.Options
             if(turn==null && currentPage!=index) turn=StartCoroutine(TurnPages());
         }
 
+        private void SetupPageSound()
+        {
+            // Shared fallback covers the standalone Settings and embedded Pause prefabs.
+            if(pageTurnSound==null) pageTurnSound=Resources.Load<AudioClip>("Audio/soundPaper");
+            if(pageTurnSound==null) return;
+            pageTurnAudio=gameObject.AddComponent<AudioSource>();
+            pageTurnAudio.playOnAwake=false;
+            pageTurnAudio.loop=false;
+            pageTurnAudio.spatialBlend=0f;
+            pageTurnAudio.volume=1f;
+            pageTurnAudio.clip=pageTurnSound;
+            // Pause freezes gameplay audio, while Settings must still be audible.
+            pageTurnAudio.ignoreListenerPause=true;
+            // MAIN already controls AudioListener.volume; do not apply that gain twice.
+            pageTurnAudio.ignoreListenerVolume=false;
+        }
+
         private IEnumerator TurnPages()
         {
             while(requestedPage!=currentPage)
             {
+                if(pageTurnAudio!=null) { pageTurnAudio.Stop(); pageTurnAudio.Play(); }
                 int from=currentPage, to=requestedPage;
                 bool forward=to>from;
                 currentPage=to;
@@ -247,9 +271,9 @@ namespace JamBuild.Options
             else SceneManager.LoadScene(mainMenuScene);
         }
         private static void BindChoices(Choice[] choices,UnityAction<int> action)
-        { for(int i=0;i<choices.Length;i++) {int value=i; choices[i].button.onClick.AddListener(()=>action(value));} }
+        { for(int i=0;i<choices.Length;i++) {int value=i; if(choices[i]?.button!=null) choices[i].button.onClick.AddListener(()=>action(value));} }
         private static void SetTicks(Choice[] choices,int selected)
-        { for(int i=0;i<choices.Length;i++) choices[i].tick.SetActive(i==selected); }
+        { for(int i=0;i<choices.Length;i++) if(choices[i]?.tick!=null) choices[i].tick.SetActive(i==selected); }
         private void CycleResolution()
         {
             var mode=displayPending?requestedMode:Screen.fullScreenMode;
@@ -324,7 +348,7 @@ namespace JamBuild.Options
         { PlayerPrefs.SetFloat(Prefix+"Volume"+index,value); prefsDirty=true; ApplyVolume(index,value); }
         private void ApplyVolume(int index,float value)
         {
-            volumeLabels[index].text=Mathf.RoundToInt(value*100)+"%";
+            if(index<volumeLabels.Length && volumeLabels[index]!=null) volumeLabels[index].text=Mathf.RoundToInt(value*100)+"%";
             if(index==0) AudioListener.volume=value;
             else
             {
@@ -337,16 +361,14 @@ namespace JamBuild.Options
         private void RefreshKeys() { keyLabels[0].text=leftKey.ToString(); keyLabels[1].text=rightKey.ToString(); }
         private static Key ReadKey(string name,Key fallback)
         { int value=PlayerPrefs.GetInt(Prefix+name,(int)fallback); return System.Enum.IsDefined(typeof(Key),value)&&value!=(int)Key.None?(Key)value:fallback; }
-        private void SetTextSize(int value) { SaveInt("TextSize",value); ApplyTextSize(value); }
-        private void ApplyTextSize(int value)
+        private void SetTextSize(int value)
         {
-            float scale=value==0?.9f:value==1?1f:1.15f;
-            for(int i=0;i<allText.Length;i++) allText[i].fontSize=baseFontSizes[i]*scale;
-            SetTicks(textSizes,value);
+            NotebookTextSettings.SetSize(value);
+            SetTicks(textSizes,NotebookTextSettings.SelectedSize);
         }
         private void SetLanguage(int value) { english=value==1; SaveInt("Language",value); RefreshLanguage(); }
         private void RefreshLanguage()
-        { foreach(var item in localizedLabels) item.label.text=english?item.english:item.thai; SetTicks(languages,english?1:0); }
+        { foreach(var item in localizedLabels) if(item?.label!=null) item.label.text=english?item.english:item.thai; SetTicks(languages,english?1:0); }
         private void SaveInt(string name,int value) {PlayerPrefs.SetInt(Prefix+name,value); prefsDirty=true;}
         private void FlushPreferences() {if(prefsDirty) {PlayerPrefs.Save(); prefsDirty=false;}}
     }

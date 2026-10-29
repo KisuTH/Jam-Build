@@ -84,7 +84,7 @@ public class HintSystem : MonoBehaviour
             CaseNotebook.Instance.AddClue("hint_" + used, "Hint " + used, hint);
 
         if (AICaller.Instance != null) AICaller.Instance.Call(CallSituation.HintScolding, 1, hint);
-        else if (DialogueUI.Instance != null) DialogueUI.Instance.Show(hint);
+        else if (DialogueUI.Instance != null) DialogueUI.Instance.ShowHint(hint);
     }
 
     // A clue the player has not found yet; if all are found, a general hint

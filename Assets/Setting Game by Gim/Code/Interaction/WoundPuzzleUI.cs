@@ -351,6 +351,7 @@ public class WoundPuzzleUI : MonoBehaviour
         TextMeshProUGUI t = go.AddComponent<TextMeshProUGUI>();
         t.text = text;
         t.fontSize = size;
+        JamBuild.Options.NotebookTextSettings.Apply(t);
         t.alignment = align;
         t.color = new Color(0.92f, 0.92f, 0.92f);
         t.raycastTarget = false;

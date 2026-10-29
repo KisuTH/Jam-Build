@@ -16,6 +16,7 @@ public class DialogueUI : MonoBehaviour
 
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private ChatboxView chatbox;
     [SerializeField] private float charsPerSecond = 40f;
     [SerializeField] private float autoCloseDelay = 3f;
 
@@ -65,10 +66,22 @@ public class DialogueUI : MonoBehaviour
 
     public void Show(string text)
     {
+        ShowLine("", text);
+    }
+
+    public void ShowHint(string text)
+    {
+        ShowLine(Loc.Thai ? "คำใบ้" : "HINT", text, true);
+    }
+
+    public void ShowLine(string speaker, string text, bool isHint = false)
+    {
         if (string.IsNullOrEmpty(text)) return;
         if (routine != null) StopCoroutine(routine);
 
         text = Loc.T(text);
+        if (chatbox != null) chatbox.Present(speaker, isHint);
+        else if (!string.IsNullOrEmpty(speaker)) text = Loc.T(speaker) + "\n" + text;
         shownFrame = Time.frameCount;
         panel.SetActive(true);
         routine = StartCoroutine(Typewriter(text));

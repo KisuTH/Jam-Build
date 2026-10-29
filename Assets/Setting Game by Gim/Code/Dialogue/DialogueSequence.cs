@@ -45,15 +45,21 @@ public class DialogueSequence : MonoBehaviour
     /// <summary>True while any conversation is on screen (the click interactor waits).</summary>
     public static bool IsAnyPlaying { get; private set; }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetPlaybackState()
+    {
+        // Static fields survive Play Mode when domain reload is disabled.
+        IsAnyPlaying = false;
+    }
+
     [Header("Lines (write the conversation here)")]
     public DialogueLine[] lines = new DialogueLine[]
     {
         new DialogueLine { speaker = "Detective", text = "Write the first line here." }
     };
 
-    [Header("How the speaker is shown")]
-    [Tooltip("{0} = the speaker, {1} = the text. Rich text is fine.")]
-    [TextArea] public string speakerFormat = "<b><color=#FFD27F>{0}</color></b>\n{1}";
+    // Preserve old scene data; ChatboxView now lays out the speaker separately.
+    [HideInInspector] public string speakerFormat = "<b><color=#FFD27F>{0}</color></b>\n{1}";
 
     [Header("When it plays")]
     public bool playOnStart = false;
@@ -79,6 +85,7 @@ public class DialogueSequence : MonoBehaviour
     private bool playing;
     private bool played;
     private int startFrame;
+    private DialogueUI activeUI;
 
     private void Start()
     {
@@ -89,6 +96,14 @@ public class DialogueSequence : MonoBehaviour
             StoryFlags.Instance.OnFlagSet += OnFlag;
             if (StoryFlags.Instance.Has(playWhenFlagIsSet)) Play();
         }
+    }
+
+    private void OnDisable()
+    {
+        if (!playing) return;
+        StopAllCoroutines();
+        // Unity may stop the iterator without running its finally block.
+        ReleaseControl();
     }
 
     private void OnDestroy()
@@ -110,7 +125,7 @@ public class DialogueSequence : MonoBehaviour
     [ContextMenu("Test: Play")]
     public void Play()
     {
-        if (playing || IsAnyPlaying) return;
+        if (!isActiveAndEnabled || playing || IsAnyPlaying) return;
         if (playOnlyOnce && played) return;
         if (lines == null || lines.Length == 0) return;
         if (DialogueUI.Instance == null)
@@ -140,6 +155,7 @@ public class DialogueSequence : MonoBehaviour
         IsAnyPlaying = true;
         played = true;
         DialogueUI ui = DialogueUI.Instance;
+        activeUI = ui;
         ui.ManualMode = true;
         if (lockPlayer) SetPlayerLocked(true);
 
@@ -150,7 +166,11 @@ public class DialogueSequence : MonoBehaviour
                 if (line == null) continue;
 
                 startFrame = Time.frameCount;
-                ui.Show(Format(line));
+                string speaker = Loc.Thai && !string.IsNullOrEmpty(line.speakerThai)
+                    ? Loc.Shape(line.speakerThai) : Loc.T(line.speaker);
+                string text = Loc.Thai && !string.IsNullOrEmpty(line.textThai)
+                    ? Loc.Shape(line.textThai) : Loc.T(line.text);
+                ui.ShowLine(speaker, text);
                 if (line.onLineShown != null) line.onLineShown.Invoke();
 
                 float waited = 0f;
@@ -172,12 +192,7 @@ public class DialogueSequence : MonoBehaviour
         }
         finally
         {
-            // Always runs, even if something goes wrong: give the game back
-            ui.ManualMode = false;
-            ui.Hide();
-            if (lockPlayer) SetPlayerLocked(false);
-            IsAnyPlaying = false;
-            playing = false;
+            ReleaseControl();
         }
 
         if (!string.IsNullOrEmpty(setsFlagWhenDone) && StoryFlags.Instance != null)
@@ -185,12 +200,19 @@ public class DialogueSequence : MonoBehaviour
         if (onFinished != null) onFinished.Invoke();
     }
 
-    private string Format(DialogueLine line)
+    private void ReleaseControl()
     {
-        string sp = Loc.Thai && !string.IsNullOrEmpty(line.speakerThai) ? Loc.Shape(line.speakerThai) : line.speaker;
-        string tx = Loc.Thai && !string.IsNullOrEmpty(line.textThai) ? Loc.Shape(line.textThai) : Loc.T(line.text);
-        if (string.IsNullOrEmpty(sp)) return tx;
-        return string.Format(speakerFormat, sp, tx);
+        // Only the active sequence may release the shared interaction lock.
+        if (!playing) return;
+        playing = false;
+        IsAnyPlaying = false;
+        if (activeUI != null)
+        {
+            activeUI.ManualMode = false;
+            activeUI.Hide();
+        }
+        activeUI = null;
+        if (lockPlayer) SetPlayerLocked(false);
     }
 
     private bool PressedAdvance()

@@ -21,6 +21,7 @@ public class AICaller : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text callerText;
     [SerializeField] private TMP_Text lineText;
+    [SerializeField] private ChatboxView chatbox;
     [SerializeField] private string callerName = "UNKNOWN CALLER";
 
     [Header("Timing")]
@@ -98,6 +99,8 @@ public class AICaller : MonoBehaviour
         if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();
 
         // Ringing
+        bool isHint = situation == CallSituation.HintScolding || situation == CallSituation.HintsUsedUp;
+        if (chatbox != null) chatbox.Present("INCOMING CALL...", isHint);
         if (panel != null) panel.SetActive(true);
         if (callerText != null) callerText.text = Loc.T("INCOMING CALL...");
         if (lineText != null) lineText.text = "";
@@ -111,6 +114,7 @@ public class AICaller : MonoBehaviour
         yield return new WaitForSeconds(ringTime);
 
         if (callerText != null) callerText.text = Loc.T(callerName);
+        if (chatbox != null) chatbox.Present(callerName, isHint);
 
         // The lines
         List<string> lines = PickLines(situation, lineCount);

@@ -64,7 +64,7 @@ public class BagButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void SetHovered(bool hovered)
     {
-        if (outline != null) outline.enabled = hovered;
+        if (outline != null) outline.SetHovered(hovered);
     }
 
     public void RefreshIcon()

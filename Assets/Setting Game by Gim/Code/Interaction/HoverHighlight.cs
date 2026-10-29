@@ -45,6 +45,7 @@ public class HoverHighlight : MonoBehaviour
 
     private Interactable2D FindTarget()
     {
+        if (Time.timeScale <= 0f) return null;
         Mouse mouse = Mouse.current;
         if (mouse == null) return null;
         if (cam == null) cam = Camera.main;
@@ -171,6 +172,7 @@ public class HoverHighlight : MonoBehaviour
         tx.transform.SetParent(lb.transform, false);
         label = tx.AddComponent<TextMeshProUGUI>();
         label.fontSize = 28;
+        JamBuild.Options.NotebookTextSettings.Apply(label);
         label.alignment = TextAlignmentOptions.Center;
         label.color = new Color(0.75f, 0.93f, 1f);
         label.raycastTarget = false;

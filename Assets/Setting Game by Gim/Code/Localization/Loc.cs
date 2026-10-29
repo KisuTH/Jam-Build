@@ -409,6 +409,7 @@ public static class Loc
         TextMeshProUGUI label = t.AddComponent<TextMeshProUGUI>();
         label.alignment = TextAlignmentOptions.Center;
         label.fontSize = 26;
+        JamBuild.Options.NotebookTextSettings.Apply(label);
         label.color = Color.white;
         label.raycastTarget = false;
         if (thaiFont != null) label.font = thaiFont;
@@ -440,6 +441,8 @@ public class Localizer : MonoBehaviour
         foreach (TMP_Text t in all)
         {
             if (t == null || !t.gameObject.scene.IsValid()) continue;
+            // Reuse this discovery pass for text created after the scene loaded.
+            JamBuild.Options.NotebookTextSettings.Apply(t);
             string cur = t.text;
             if (string.IsNullOrEmpty(cur)) continue;
 

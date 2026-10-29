@@ -209,6 +209,7 @@ public sealed class DeathTransitionUI : MonoBehaviour
         var text = rt.gameObject.AddComponent<TextMeshProUGUI>();
         text.font = style != null ? style.font : TMP_Settings.defaultFontAsset;
         text.fontSize = size;
+        JamBuild.Options.NotebookTextSettings.Apply(text);
         text.alignment = TextAlignmentOptions.Midline;
         text.color = new Color(0.96f, 0.94f, 0.9f, 1f);
         text.textWrappingMode = TextWrappingModes.NoWrap;
