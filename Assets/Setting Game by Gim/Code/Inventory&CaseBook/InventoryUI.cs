@@ -43,7 +43,7 @@ public class InventoryUI : MonoBehaviour
     private void StretchOverCanvas()
     {
         RectTransform rt = transform as RectTransform;
-        if (bagButton == null || rt == null) return;
+        if (bagButton == null || rt == null || bagButton.GetComponent<BagButtonUI>() != null) return;
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
         rt.offsetMin = Vector2.zero;
@@ -69,14 +69,18 @@ public class InventoryUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (bagButton != null) bagButton.onClick.RemoveListener(Toggle);
         if (Inventory.Instance != null)
             Inventory.Instance.OnInventoryChanged -= Refresh;
     }
+
+    public bool ControlsBagButton(UnityEngine.UI.Button button) => bagButton == button;
 
     public void Toggle()
     {
         if (panel == null) return;
         panel.SetActive(!panel.activeSelf);
+        if (bagButton != null) bagButton.GetComponent<BagButtonUI>()?.RefreshIcon();
     }
 
     private void Refresh()
