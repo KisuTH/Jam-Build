@@ -148,6 +148,7 @@ public static class Loc
         { "No more help. You used it all. Goodbye.", "หมดแล้ว เธอใช้จนหมด ลาก่อน" },
         { "Begging for hints again? That is the end of the line.", "ขอคำใบ้อีกแล้วเหรอ จบกันแค่นี้" },
         { "YOU DIED", "คุณตายแล้ว" },
+        { "LOOP", "รอบที่" },
         { "(Somewhere in the room, a phone starts to ring...)", "(ที่ไหนสักแห่งในห้อง โทรศัพท์เริ่มดังขึ้น...)" },
         { "...Something about the portrait on the wall looks different now.", "...รูปภาพบนผนังดูแปลกไปจากเมื่อกี้" },
         { "A cabinet labelled 'M'. The folder for 'Mali' has been cut out with scissors.", "ตู้เก็บเอกสารติดป้าย 'M' แฟ้มของ 'มะลิ' ถูกตัดออกไปด้วยกรรไกร" },

@@ -38,6 +38,8 @@ public class LoopManager : MonoBehaviour
     [SerializeField] private float deathScreenTime = 2.8f;
 
     private bool dying;
+    private DeathTransitionUI activeTransition;
+    private static DeathTransitionUI pendingTransition;
     private readonly bool[] foundSlots = new bool[SpotCount];
 
     public bool IsDying => dying;
@@ -72,6 +74,7 @@ public class LoopManager : MonoBehaviour
     private static void ResetStatics()
     {
         LoopCount = 1;
+        pendingTransition = null;
         Code = null;
         SpotPosition = null;
     }
@@ -99,6 +102,13 @@ public class LoopManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        if (pendingTransition != null)
+        {
+            activeTransition = pendingTransition;
+            pendingTransition = null;
+            dying = true;
+            SetPlayerLocked(true);
+        }
         if (Code == null) GenerateCode();
 
         // The death text is found by name if it was not assigned
@@ -212,29 +222,51 @@ public class LoopManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        if (deathText != null)
-            deathText.text = "YOU DIED\n<size=50%>Return by death... Loop " + (LoopCount + 1) + "</size>";
-        yield return new WaitForSeconds(deathScreenTime);
+        if (deathText != null) deathText.text = "";
+        activeTransition = DeathTransitionUI.Create(transform, deathText, deathFadeColor);
+        yield return activeTransition.Play(LoopCount, LoopCount + 1, deathScreenTime);
 
-        // Next life: a new loop with a NEW code
+        // Commit the next life only after the old number has rolled out and the impact finishes.
         LoopCount++;
         GenerateCode();
+        activeTransition.KeepAcrossReload();
+        pendingTransition = activeTransition;
+        activeTransition = null;
         ReloadScene();
     }
 
     private IEnumerator Intro()
     {
-        // Start the new life from black, then fade in, then the AI phones
-        if (ScreenFlash.Instance != null)
+        SetPlayerLocked(true);
+        if (activeTransition != null)
         {
-            ScreenFlash.Instance.FadeToColor(Color.black, 0.01f);
-            yield return null;
-            yield return new WaitForSeconds(0.3f);
-            ScreenFlash.Instance.FadeToClear(1.2f);
+            yield return activeTransition.RevealGameplay();
+            Destroy(activeTransition.gameObject);
+            activeTransition = null;
         }
-        yield return new WaitForSeconds(1.2f);
+        else
+        {
+            // Compatibility for a scene started directly with an existing loop count.
+            if (ScreenFlash.Instance != null)
+            {
+                ScreenFlash.Instance.FadeToColor(Color.black, 0.01f);
+                yield return null;
+                yield return new WaitForSeconds(0.3f);
+                ScreenFlash.Instance.FadeToClear(1.2f);
+            }
+            yield return new WaitForSeconds(1.2f);
+        }
+        dying = false;
         if (AICaller.Instance != null)
             yield return AICaller.Instance.CallRoutine(CallSituation.LoopStart, 2, false);
+        else
+            SetPlayerLocked(false);
+    }
+
+    private void OnDestroy()
+    {
+        if (activeTransition != null) Destroy(activeTransition.gameObject);
+        if (Instance == this) Instance = null;
     }
 
     private static void ReloadScene()
