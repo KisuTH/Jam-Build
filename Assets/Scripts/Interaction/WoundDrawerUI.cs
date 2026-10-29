@@ -21,6 +21,8 @@ public class WoundDrawerUI : MonoBehaviour
     private RawImage picture;
     private Texture2D closedTex, openTex;
     private GameObject hotspot;
+    private Image hotBg, hotIcon;
+    private Outline hotOutline;
     private TMP_Text messageText;
     private readonly System.Collections.Generic.Dictionary<TMP_Text, string[]> bound =
         new System.Collections.Generic.Dictionary<TMP_Text, string[]>();
@@ -42,11 +44,26 @@ public class WoundDrawerUI : MonoBehaviour
     private void Open(DrawerSpot s)
     {
         spot = s;
+        PatchCodeDocument(spot);
         if (root == null) Build();
         Show();
         root.SetActive(true);
         LoopManager.SetPlayerLocked(true);
         if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();
+    }
+
+    // The red file in this drawer is now "the document that tells one digit of the passcode": same paper picture (item_6)
+    // as the notice boards, and a new name. (The item id stays, so story flags still work.)
+    private static Sprite codePaper;
+    private static void PatchCodeDocument(DrawerSpot s)
+    {
+        if (s == null || s.drawerId != "wound_drawer") return;
+        s.itemName = "Code Document";
+        s.itemDescription = "A document found in the drawer. One digit of the passcode is written on it.";
+        if (codePaper == null)
+            foreach (Sprite sp in Resources.LoadAll<Sprite>("WoundPuzzle/wound_items"))
+                if (sp != null && sp.name == "item_6") { codePaper = sp; break; }
+        if (codePaper != null) { s.icon = codePaper; s.iconResource = ""; }
     }
 
     // Draws the right state: closed / open with something inside / open and empty
@@ -57,6 +74,11 @@ public class WoundDrawerUI : MonoBehaviour
         bool taken = Has(spot.TakenFlag);
         picture.texture = unlocked ? openTex : closedTex;
         hotspot.SetActive(unlocked && hasItem && !taken);
+        // show the item's picture inside the drawer (the yellow box only appears if the item has no picture)
+        Sprite ic = hasItem ? spot.GetIcon() : null;
+        hotIcon.sprite = ic;
+        hotIcon.enabled = ic != null;
+        hotBg.color = ic != null ? new Color(1f, 0.95f, 0.6f, 0f) : new Color(1f, 0.95f, 0.6f, 0.12f);
 
         if (!unlocked)
             SetMessage(spot.lockedEnglish, spot.lockedThai);
@@ -83,6 +105,13 @@ public class WoundDrawerUI : MonoBehaviour
         }
         hotspot.SetActive(false);
         SetMessage("You took: " + spot.itemName, "หยิบแล้ว: " + Loc.T(spot.itemName));
+
+        // the dressing-room drawer hides one digit of the passcode: a paper inside the file
+        if (spot.drawerId == "wound_drawer")
+        {
+            Close();
+            BoardClue.RevealDrawerDigit();
+        }
     }
 
     public void Close()
@@ -93,6 +122,13 @@ public class WoundDrawerUI : MonoBehaviour
 
     private void Update()
     {
+        // white outline around the item when the mouse is over it
+        if (hotOutline != null && root != null && root.activeSelf)
+        {
+            bool over = hotspot.activeSelf && hotIcon.enabled && Mouse.current != null &&
+                RectTransformUtility.RectangleContainsScreenPoint(hotIcon.rectTransform, Mouse.current.position.ReadValue());
+            hotOutline.enabled = over;
+        }
         if (root != null && root.activeSelf && Keyboard.current != null &&
             Keyboard.current.escapeKey.wasPressedThisFrame)
             Close();
@@ -162,6 +198,7 @@ public class WoundDrawerUI : MonoBehaviour
         hs.transform.SetParent(picGO.transform, false);
         Image hsImg = hs.AddComponent<Image>();
         hsImg.color = new Color(1f, 0.95f, 0.6f, 0.12f);   // faint glow so the player sees it can be clicked
+        hotBg = hsImg;
         RectTransform hr = hsImg.rectTransform;
         hr.anchorMin = new Vector2(0.42f, 0.20f);
         hr.anchorMax = new Vector2(0.76f, 0.46f);
@@ -169,6 +206,23 @@ public class WoundDrawerUI : MonoBehaviour
         Button b = hs.AddComponent<Button>();
         b.targetGraphic = hsImg;
         b.onClick.AddListener(Take);
+
+        // the item picture, lying in the drawer
+        GameObject ig = new GameObject("ItemPicture", typeof(RectTransform));
+        ig.transform.SetParent(hs.transform, false);
+        hotIcon = ig.AddComponent<Image>();
+        hotIcon.preserveAspect = true;
+        hotIcon.raycastTarget = false;
+        RectTransform ir = hotIcon.rectTransform;
+        ir.anchorMin = ir.anchorMax = ir.pivot = new Vector2(0.5f, 0.5f);
+        ir.sizeDelta = new Vector2(180f, 180f);   // fixed size: the picture keeps its shape inside it
+        ir.anchoredPosition = new Vector2(0f, 38f);   // up, so it looks like it lies inside the drawer
+        ir.localRotation = Quaternion.Euler(0, 0, -12f);
+        hotOutline = ig.AddComponent<Outline>();
+        hotOutline.effectColor = Color.white;
+        hotOutline.effectDistance = new Vector2(4f, 4f);
+        hotOutline.enabled = false;
+        hotIcon.enabled = false;
         hotspot = hs;
 
         messageText = NewText("Message", root.transform, 34, TextAlignmentOptions.Center);

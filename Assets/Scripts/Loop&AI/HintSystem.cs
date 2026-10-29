@@ -42,7 +42,62 @@ public class HintSystem : MonoBehaviour
 
     private void Start()
     {
+        StyleButton();
         UpdateLabel();
+    }
+
+    // The hint button in the prefab is a plain white box with white text, so it looks blank.
+    // Give it the dark-red look of the other HUD buttons, find its label and make sure a click asks for a hint.
+    private void StyleButton()
+    {
+        UnityEngine.UI.Button btn = null;
+        foreach (UnityEngine.UI.Button b in FindObjectsByType<UnityEngine.UI.Button>(FindObjectsInactive.Include))
+            if (b.gameObject.name.IndexOf("Hint", System.StringComparison.OrdinalIgnoreCase) >= 0) { btn = b; break; }
+        if (btn == null) return;
+
+        UnityEngine.UI.Image img = btn.GetComponent<UnityEngine.UI.Image>();
+        if (img != null)
+        {
+            if (img.sprite == null) img.color = new Color(0.32f, 0.12f, 0.12f, 0.95f);
+            else { img.color = Color.white; img.preserveAspect = true; }
+        }
+
+        if (buttonLabel == null) buttonLabel = btn.GetComponentInChildren<TMP_Text>(true);
+        if (buttonLabel != null)
+        {
+            buttonLabel.color = Color.white;
+            buttonLabel.enableAutoSizing = true;
+            buttonLabel.fontSizeMin = 12;
+            buttonLabel.fontSizeMax = 26;
+            MatchCaseBookText(btn, buttonLabel);
+            buttonLabel.alignment = TextAlignmentOptions.Center;
+            buttonLabel.raycastTarget = false;
+        }
+
+        bool wired = false;
+        for (int i = 0; i < btn.onClick.GetPersistentEventCount(); i++)
+            if (btn.onClick.GetPersistentTarget(i) == this) wired = true;
+        if (!wired) { btn.onClick.RemoveListener(AskForHint); btn.onClick.AddListener(AskForHint); }
+    }
+
+    // Make the hint label the same size / font as the Case Book button's label
+    private static void MatchCaseBookText(UnityEngine.UI.Button hint, TMP_Text label)
+    {
+        foreach (UnityEngine.UI.Button b in FindObjectsByType<UnityEngine.UI.Button>(FindObjectsInactive.Include))
+        {
+            if (b == hint) continue;
+            TMP_Text t = b.GetComponentInChildren<TMP_Text>(true);
+            string n = b.gameObject.name.ToLower();
+            string tx = t != null ? t.text.ToLower() : "";
+            bool isCase = n.Contains("case") || n.Contains("notebook") || tx.Contains("case") || tx.Contains("notebook");
+            if (!isCase || t == null) continue;
+            label.enableAutoSizing = t.enableAutoSizing;
+            if (t.enableAutoSizing) { label.fontSizeMin = t.fontSizeMin; label.fontSizeMax = t.fontSizeMax; }
+            label.fontSize = t.fontSize;
+            label.font = t.font;
+            label.fontStyle = t.fontStyle;
+            return;
+        }
     }
 
     private void Update()
@@ -92,6 +147,8 @@ public class HintSystem : MonoBehaviour
     {
         int slot = LoopManager.Ensure().PickUnfoundSlot();
         if (slot < 0) return allFoundHint;
+        string where = LoopManager.SlotLocation[slot];
+        if (!string.IsNullOrEmpty(where)) return "Look at " + where + ".";
         if (clueLocations == null || slot >= clueLocations.Length || string.IsNullOrEmpty(clueLocations[slot]))
             return "Search again. Something has not been checked yet.";
         return "Look at " + clueLocations[slot] + ".";

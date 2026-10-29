@@ -19,7 +19,10 @@ public class LoopManager : MonoBehaviour
 
     public const int CodeLength = 4;
     /// <summary>How many places in the level CAN hide a digit. Each loop only CodeLength of them really do.</summary>
-    public const int SpotCount = 7;
+    public const int SpotCount = 8;
+    /// <summary>The code spot that is the dressing-room drawer (always hides one digit; the notice boards 0..6 hide the other CodeLength-1).</summary>
+    public const int DrawerSlot = 7;
+    public const string DrawerLocation = "the drawer in the dressing room (it opens after the wound puzzle)";
 
     /// <summary>Which loop we are in (1 = the first life).</summary>
     public static int LoopCount = 1;
@@ -30,6 +33,24 @@ public class LoopManager : MonoBehaviour
     /// or -1 = nothing here this loop. Different spots are chosen every loop.
     /// </summary>
     public static int[] SpotPosition;
+
+    // Which code spots exist in the scene right now (CodeClue / BoardClue register here).
+    // Digits are only given to spots that exist, so a scene with only 5 boards still works.
+    private static readonly int[] registered = new int[SpotCount];
+    /// <summary>Where each spot is (set by BoardClue), used by the hint system.</summary>
+    public static readonly string[] SlotLocation = new string[SpotCount];
+
+    public static void RegisterSlot(int slot, string location = null)
+    {
+        slot = Mathf.Clamp(slot, 0, SpotCount - 1);
+        registered[slot]++;
+        if (!string.IsNullOrEmpty(location)) SlotLocation[slot] = location;
+    }
+    public static void UnregisterSlot(int slot)
+    {
+        slot = Mathf.Clamp(slot, 0, SpotCount - 1);
+        if (registered[slot] > 0) registered[slot]--;
+    }
 
     [Header("Death screen")]
     [Tooltip("Big text in the middle of the screen (TextMeshPro, can be empty at start).")]
@@ -82,6 +103,8 @@ public class LoopManager : MonoBehaviour
         pendingTransition = null;
         Code = null;
         SpotPosition = null;
+        for (int i = 0; i < SpotCount; i++) { registered[i] = 0; SlotLocation[i] = null; }
+        SlotLocation[DrawerSlot] = DrawerLocation;
     }
 
     /// <summary>
@@ -114,7 +137,8 @@ public class LoopManager : MonoBehaviour
             dying = true;
             SetPlayerLocked(true);
         }
-        if (Code == null) GenerateCode();
+
+        // (the code is made lazily, after every clue has registered)
 
         // The death text is found by name if it was not assigned
         if (deathText == null)
@@ -126,6 +150,7 @@ public class LoopManager : MonoBehaviour
 
     private void Start()
     {
+        if (Code == null) GenerateCode();
         if (deathText != null) deathText.text = "";
         if (LoopCount > 1) StartCoroutine(Intro());
     }
@@ -137,9 +162,15 @@ public class LoopManager : MonoBehaviour
         Code = new int[CodeLength];
         for (int i = 0; i < CodeLength; i++) Code[i] = Random.Range(0, 10);
 
-        // Pick CodeLength different spots out of SpotCount, and give each one a digit position (shuffled)
+        // ONE digit is always in the dressing-room drawer; the other CodeLength-1 are on different notice boards (0..DrawerSlot-1)
+        int boardsNeeded = CodeLength - 1;
         System.Collections.Generic.List<int> spots = new System.Collections.Generic.List<int>();
-        for (int i = 0; i < SpotCount; i++) spots.Add(i);
+        for (int i = 0; i < DrawerSlot; i++) if (registered[i] > 0) spots.Add(i);
+        if (spots.Count < boardsNeeded)   // not enough boards in the scene: fall back to all of them
+        {
+            spots.Clear();
+            for (int i = 0; i < DrawerSlot; i++) spots.Add(i);
+        }
         Shuffle(spots);
 
         System.Collections.Generic.List<int> positions = new System.Collections.Generic.List<int>();
@@ -148,7 +179,9 @@ public class LoopManager : MonoBehaviour
 
         SpotPosition = new int[SpotCount];
         for (int i = 0; i < SpotCount; i++) SpotPosition[i] = -1;       // -1 = nothing here
-        for (int i = 0; i < CodeLength; i++) SpotPosition[spots[i]] = positions[i];
+        SpotPosition[DrawerSlot] = positions[0];                        // the drawer's digit
+        for (int i = 0; i < boardsNeeded; i++) SpotPosition[spots[i]] = positions[i + 1];
+        SlotLocation[DrawerSlot] = DrawerLocation;
     }
 
     private static void Shuffle(System.Collections.Generic.List<int> list)

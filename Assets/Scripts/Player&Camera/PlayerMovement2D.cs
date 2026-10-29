@@ -25,6 +25,8 @@ public class PlayerMovement2D : MonoBehaviour
     [Header("Jump")]
     [Tooltip("How high the jump goes, in world units.")]
     [SerializeField] private float jumpHeight = 2.2f;
+    [Tooltip("Multiplies Jump Height (1 = as set above). Raise it for a higher jump.")]
+    [SerializeField] private float jumpHeightMultiplier = 1.6f;
 
     [Header("Crouch")]
     [Tooltip("0.6 = crouching makes the player 60% as tall.")]
@@ -43,6 +45,7 @@ public class PlayerMovement2D : MonoBehaviour
 
     // Used by room transitions: the game can lock the keys and walk the player by itself
     private bool controlLocked;
+    private float autoLastX, autoStuckTime, autoAge;   // detects an automatic walk that is blocked (wall) so it ends early
     private bool autoWalking;
     private float autoTargetX;
     private float autoStopDistance;
@@ -126,6 +129,9 @@ public class PlayerMovement2D : MonoBehaviour
         autoTargetX = targetX;
         autoStopDistance = stopDistance;
         autoTimeLeft = maxSeconds;
+        autoLastX = transform.position.x;
+        autoStuckTime = 0f;
+        autoAge = 0f;
         autoWalking = true;
         jumpQueued = false;
     }
@@ -145,7 +151,13 @@ public class PlayerMovement2D : MonoBehaviour
             autoTimeLeft -= Time.deltaTime;
             float dx = autoTargetX - transform.position.x;
 
-            if (Mathf.Abs(dx) <= autoStopDistance || autoTimeLeft <= 0f)
+            // not getting anywhere (a wall in the way)? stop after a very short time instead of waiting for the timeout
+            autoAge += Time.deltaTime;
+            if (autoAge > 0.4f && Mathf.Abs(transform.position.x - autoLastX) < 0.5f * Time.deltaTime) autoStuckTime += Time.deltaTime;
+            else autoStuckTime = 0f;
+            autoLastX = transform.position.x;
+
+            if (Mathf.Abs(dx) <= autoStopDistance || autoTimeLeft <= 0f || autoStuckTime > 0.25f)
             {
                 autoWalking = false;
                 moveInput = 0f;
@@ -200,7 +212,7 @@ public class PlayerMovement2D : MonoBehaviour
         if (jumpQueued && isGrounded && !isCrouching)
         {
             float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
-            v.y = Mathf.Sqrt(2f * gravity * jumpHeight);
+            v.y = Mathf.Sqrt(2f * gravity * jumpHeight * jumpHeightMultiplier);
         }
         jumpQueued = false;
 

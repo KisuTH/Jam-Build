@@ -14,7 +14,7 @@ public class HoverHighlight : MonoBehaviour
 {
     private enum Kind { Inspect, Take, Door, Drawer, Use, Continue }
 
-    private static readonly Color Cyan = new Color(0.35f, 0.8f, 1f, 1f);
+    private static readonly Color Cyan = new Color(1f, 1f, 1f, 1f);
 
     private Canvas canvas;
     private RectTransform frame;
@@ -23,6 +23,18 @@ public class HoverHighlight : MonoBehaviour
     private RectTransform labelBox;
     private TextMeshProUGUI label;
     private Camera cam;
+
+    // silhouette outline (copies of the sprite in flat white, behind the real sprite)
+    private Material outlineMat;
+    private bool outlineMatTried;
+    private GameObject outlineHolder;
+    private readonly System.Collections.Generic.List<SpriteRenderer> outlinePool = new System.Collections.Generic.List<SpriteRenderer>();
+    private const float OutlinePixels = 3.5f;
+    private static readonly Vector2[] Dirs =
+    {
+        new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1),
+        new Vector2(0.7f, 0.7f), new Vector2(-0.7f, 0.7f), new Vector2(0.7f, -0.7f), new Vector2(-0.7f, -0.7f)
+    };
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Boot()
@@ -40,7 +52,86 @@ public class HoverHighlight : MonoBehaviour
 
         Collider2D col = target.GetComponent<Collider2D>();
         if (col == null) { Hide(); return; }
-        Show(col.bounds, Classify(target));
+        Bounds b = col.bounds;
+        System.Collections.Generic.List<SpriteRenderer> srs = GatherSprites(target, b);
+        bool outlined = srs.Count > 0 && GetOutlineMaterial() != null;
+        Show(b, Classify(target), !outlined);
+        if (outlined) DrawOutline(srs); else HideOutline();
+    }
+
+    // The visible sprites of the target (the character / item itself), not a huge background it may contain
+    private System.Collections.Generic.List<SpriteRenderer> GatherSprites(Interactable2D t, Bounds colBounds)
+    {
+        var list = new System.Collections.Generic.List<SpriteRenderer>();
+        float colArea = Mathf.Max(0.0001f, colBounds.size.x * colBounds.size.y);
+        foreach (SpriteRenderer sr in t.GetComponentsInChildren<SpriteRenderer>(false))
+        {
+            if (!sr.enabled || sr.sprite == null || sr.color.a < 0.05f) continue;
+            Vector3 sz = sr.bounds.size;
+            if (sz.x * sz.y > colArea * 3f) continue;
+            list.Add(sr);
+            if (list.Count >= 6) break;
+        }
+        return list;
+    }
+
+    private Material GetOutlineMaterial()
+    {
+        if (outlineMat != null) return outlineMat;
+        if (outlineMatTried) return null;
+        outlineMatTried = true;
+        Shader sh = Resources.Load<Shader>("Shaders/HoverOutline");
+        if (sh == null) sh = Shader.Find("Rain/HoverOutline");
+        if (sh != null && sh.isSupported)
+        {
+            outlineMat = new Material(sh);
+            outlineMat.color = Color.white;
+        }
+        return outlineMat;
+    }
+
+    private void DrawOutline(System.Collections.Generic.List<SpriteRenderer> srs)
+    {
+        if (outlineHolder == null)
+        {
+            outlineHolder = new GameObject("HoverOutline");
+            outlineHolder.transform.SetParent(transform, false);
+        }
+        outlineHolder.SetActive(true);
+
+        float wpp = 2f * cam.orthographicSize / Mathf.Max(1, Screen.height);
+        float d = OutlinePixels * wpp;
+        int need = srs.Count * Dirs.Length;
+        while (outlinePool.Count < need)
+        {
+            GameObject g = new GameObject("o");
+            g.transform.SetParent(outlineHolder.transform, false);
+            SpriteRenderer r = g.AddComponent<SpriteRenderer>();
+            r.sharedMaterial = outlineMat;
+            outlinePool.Add(r);
+        }
+        int k = 0;
+        foreach (SpriteRenderer src in srs)
+        {
+            for (int i = 0; i < Dirs.Length; i++, k++)
+            {
+                SpriteRenderer o = outlinePool[k];
+                o.gameObject.SetActive(true);
+                o.sprite = src.sprite;
+                o.flipX = src.flipX; o.flipY = src.flipY;
+                o.sortingLayerID = src.sortingLayerID;
+                o.sortingOrder = src.sortingOrder - 1;
+                Transform ot = o.transform;
+                ot.SetPositionAndRotation(src.transform.position + (Vector3)(Dirs[i] * d), src.transform.rotation);
+                ot.localScale = src.transform.lossyScale;
+            }
+        }
+        for (; k < outlinePool.Count; k++) outlinePool[k].gameObject.SetActive(false);
+    }
+
+    private void HideOutline()
+    {
+        if (outlineHolder != null && outlineHolder.activeSelf) outlineHolder.SetActive(false);
     }
 
     private Interactable2D FindTarget()
@@ -102,7 +193,7 @@ public class HoverHighlight : MonoBehaviour
 
     // ---------- drawing ----------
 
-    private void Show(Bounds b, Kind kind)
+    private void Show(Bounds b, Kind kind, bool drawFrame = true)
     {
         if (canvas == null) Build();
 
@@ -115,6 +206,7 @@ public class HoverHighlight : MonoBehaviour
         x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
 
         canvas.gameObject.SetActive(true);
+        frame.gameObject.SetActive(drawFrame);
         frame.anchoredPosition = new Vector2(x0, y0);
         frame.sizeDelta = new Vector2(x1 - x0, y1 - y0);
 
@@ -132,6 +224,7 @@ public class HoverHighlight : MonoBehaviour
 
     private void Hide()
     {
+        HideOutline();
         if (canvas != null && canvas.gameObject.activeSelf) canvas.gameObject.SetActive(false);
     }
 
@@ -150,7 +243,7 @@ public class HoverHighlight : MonoBehaviour
         frame.anchorMin = frame.anchorMax = Vector2.zero;
         frame.pivot = Vector2.zero;
 
-        fill = MakeImage("Fill", frame, new Color(Cyan.r, Cyan.g, Cyan.b, 0.10f));
+        fill = MakeImage("Fill", frame, new Color(Cyan.r, Cyan.g, Cyan.b, 0.03f));
         Stretch(fill.rectTransform, 0, 0, 0, 0);
         const float t = 3f;
         edges[0] = MakeImage("Top", frame, Cyan);      SetEdge(edges[0], 0, 1, 1, 1, 0, -t, 0, 0);
@@ -164,7 +257,7 @@ public class HoverHighlight : MonoBehaviour
         labelBox.anchorMin = labelBox.anchorMax = Vector2.zero;
         labelBox.pivot = Vector2.zero;
         Image bg = lb.AddComponent<Image>();
-        bg.color = new Color(0.04f, 0.10f, 0.14f, 0.92f);
+        bg.color = new Color(0.06f, 0.06f, 0.06f, 0.92f);
         bg.raycastTarget = false;
 
         GameObject tx = new GameObject("Text", typeof(RectTransform));
@@ -172,7 +265,7 @@ public class HoverHighlight : MonoBehaviour
         label = tx.AddComponent<TextMeshProUGUI>();
         label.fontSize = 28;
         label.alignment = TextAlignmentOptions.Center;
-        label.color = new Color(0.75f, 0.93f, 1f);
+        label.color = new Color(1f, 1f, 1f);
         label.raycastTarget = false;
         label.textWrappingMode = TextWrappingModes.NoWrap;
         Stretch(label.rectTransform, 0, 0, 0, 0);

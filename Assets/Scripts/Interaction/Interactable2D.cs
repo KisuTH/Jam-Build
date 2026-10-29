@@ -20,6 +20,9 @@ public class Interactable2D : MonoBehaviour
     [Header("Range")]
     [Tooltip("Max distance between the player and this object. 0 = no limit.")]
     public float maxDistance = 2.5f;
+
+    /// <summary>Everything can be reached this many times further than its Max Distance.</summary>
+    public static float RangeMultiplier = 1.8f;
     [TextArea] public string tooFarMessage = "Too far away...";
 
     [Header("Requirement: item (optional)")]
@@ -59,8 +62,15 @@ public class Interactable2D : MonoBehaviour
     {
         if (maxDistance > 0f && player != null)
         {
-            Vector2 closest = col.ClosestPoint(player.position);
-            if (Vector2.Distance(player.position, closest) > maxDistance)
+            // distance from the player's BODY (its collider) to this object, not just from the feet,
+            // and a more generous reach (RangeMultiplier) so the player is not "paralysed"
+            float dist;
+            Collider2D pc = player.GetComponentInChildren<Collider2D>();
+            if (pc != null && pc.enabled && !pc.isTrigger)
+                dist = Mathf.Max(0f, col.Distance(pc).distance);
+            else
+                dist = Vector2.Distance(player.position, col.ClosestPoint(player.position));
+            if (dist > maxDistance * RangeMultiplier)
             {
                 Say(tooFarMessage);
                 return;
@@ -81,11 +91,24 @@ public class Interactable2D : MonoBehaviour
             return;
         }
 
-        if (needsItem && consumeRequiredItem) Inventory.Instance.RemoveItem(requiredItemId);
+        bool unlockedNow = false;
+        if (needsItem && consumeRequiredItem)
+        {
+            Inventory.Instance.RemoveItem(requiredItemId);
+            requiredItemId = "";   // unlocked for good: the key is used up, so the door must not ask for it again
+            unlockedNow = true;
+        }
 
         LogClue();
         if (!string.IsNullOrEmpty(setsFlag) && StoryFlags.Instance != null)
             StoryFlags.Instance.Set(setsFlag);
+
+        // A door: the first click only uses the key to unlock it, the next click walks in
+        if (unlockedNow && GetComponent<RoomDoor>() != null)
+        {
+            Say(Loc.Thai ? Loc.Shape("ใช้กุญแจไขประตูแล้ว") : "Unlocked the door with the key.");
+            return;
+        }
 
         onInteract?.Invoke();
     }

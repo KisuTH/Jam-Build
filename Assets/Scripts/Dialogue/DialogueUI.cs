@@ -36,6 +36,21 @@ public class DialogueUI : MonoBehaviour
     {
         Instance = this;
         if (panel != null) panel.SetActive(false);
+        FitText();
+    }
+
+    // Long texts (e.g. a 4-step notice) must wrap and shrink to fit the box instead of running off it
+    private void FitText()
+    {
+        if (dialogueText == null) return;
+        dialogueText.textWrappingMode = TextWrappingModes.Normal;
+        dialogueText.overflowMode = TextOverflowModes.Overflow;
+        if (!dialogueText.enableAutoSizing)
+        {
+            dialogueText.fontSizeMax = dialogueText.fontSize;
+            dialogueText.fontSizeMin = Mathf.Max(12f, dialogueText.fontSize * 0.5f);
+            dialogueText.enableAutoSizing = true;
+        }
     }
 
     private void Update()
@@ -112,7 +127,8 @@ public class DialogueUI : MonoBehaviour
 
     private IEnumerator AutoClose()
     {
-        yield return new WaitForSeconds(autoCloseDelay);
+        float len = dialogueText != null ? dialogueText.text.Length : 0;
+        yield return new WaitForSeconds(Mathf.Max(autoCloseDelay, len / 14f));   // longer text stays longer
         panel.SetActive(false);
     }
 }

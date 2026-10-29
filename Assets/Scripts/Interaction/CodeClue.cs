@@ -14,6 +14,9 @@ public class CodeClue : MonoBehaviour
     [TextArea] public string flavorText = "Numbers are scratched into the wall:";
     [TextArea] public string nothingText = "Just old scratches and dust. Nothing useful here.";
 
+    private void Awake() { LoopManager.RegisterSlot(slot); }
+    private void OnDestroy() { LoopManager.UnregisterSlot(slot); }
+
     private static readonly string[] Ordinals = { "first", "second", "third", "fourth" };
 
     public void Reveal()

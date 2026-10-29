@@ -23,25 +23,30 @@ public class WoundPuzzleUI : MonoBehaviour
     
     private static WoundPuzzleUI instance;
 
-    // Tools: normalized centre / size on the picture (0..1, origin top-left), and which step it is (0 = decoy)
+    // Tools: the item picture (sprite name in Resources/WoundPuzzle/wound_items), normalised centre on the table
+    // picture (0..1, origin top-left), width as a fraction of the picture width, and which step it is (0 = decoy).
+    // Correct items fly onto the tray (item_0): "land" = where, "landScale" = how big.
     private struct Tool
     {
-        public string en, th; public float x, y, w, h; public int step;
-        public Tool(string en, string th, float x, float y, float w, float h, int step)
-        { this.en = en; this.th = th; this.x = x; this.y = y; this.w = w; this.h = h; this.step = step; }
+        public string en, th, sprite; public float x, y, w; public int step; public Vector2 land; public float landScale;
+        public Tool(string en, string th, string sprite, float x, float y, float w, int step, float lx = 0f, float ly = 0f, float ls = 0.7f)
+        { this.en = en; this.th = th; this.sprite = sprite; this.x = x; this.y = y; this.w = w; this.step = step;
+          this.land = new Vector2(lx, ly); this.landScale = ls; }
     }
 
     private static readonly Tool[] Tools =
     {
-        new Tool("Tray",            "ถาด",               0.352f, 0.333f, 0.215f, 0.193f, 1),
-        new Tool("Bandage roll",    "ผ้าพันแผล",         0.611f, 0.307f, 0.109f, 0.160f, 2),
-        new Tool("Scissors",        "กรรไกร",            0.659f, 0.521f, 0.115f, 0.180f, 3),
-        new Tool("Medicine bottle", "ยา / น้ำยาฆ่าเชื้อ", 0.753f, 0.333f, 0.060f, 0.200f, 4),
-        new Tool("Gauze pads",      "ผ้าก๊อซ",           0.298f, 0.623f, 0.145f, 0.190f, 0),
-        new Tool("Dressing patch",  "แผ่นปิดแผล",        0.537f, 0.482f, 0.137f, 0.173f, 0),
-        new Tool("Antiseptic box",  "กล่องยาฆ่าเชื้อ",   0.477f, 0.714f, 0.143f, 0.213f, 0),
-        new Tool("Old papers",      "กระดาษเก่า",        0.772f, 0.663f, 0.168f, 0.297f, 0),
+        new Tool("Tray",            "ถาด",               "item_0",  0.30f, 0.40f, 0.30f, 1),
+        new Tool("Bandage roll",    "ผ้าพันแผล",         "item_2",  0.64f, 0.30f, 0.11f, 2, 0.24f, 0.40f),
+        new Tool("Scissors",        "กรรไกร",            "item_4",  0.66f, 0.52f, 0.12f, 3, 0.30f, 0.43f),
+        new Tool("Medicine bottle", "ยา / น้ำยาฆ่าเชื้อ", "item_3",  0.77f, 0.33f, 0.06f, 4, 0.37f, 0.40f),
+        new Tool("Gauze pads",      "ผ้าก๊อซ",           "item_8",  0.26f, 0.68f, 0.13f, 0),
+        new Tool("Dressing patch",  "แผ่นปิดแผล",        "item_1",  0.50f, 0.40f, 0.12f, 0),
+        new Tool("Antiseptic box",  "กล่องยาฆ่าเชื้อ",   "item_10", 0.45f, 0.67f, 0.14f, 0),
+        new Tool("Old papers",      "กระดาษเก่า",        "item_6",  0.80f, 0.60f, 0.13f, 0),
     };
+
+    private const float PicW = 1280f, PicH = 720f;   // the table picture on screen (16:9)
 
     private static readonly string[] StepEn = { "Prepare the tray", "Place the bandage", "Prepare the wound tools", "Prepare the medicine" };
     private static readonly string[] StepTh = { "เตรียมถาด", "ใส่ผ้าพันแผล", "เตรียมอุปกรณ์ทำแผล", "เตรียมยา / น้ำยาฆ่าเชื้อ" };
@@ -52,6 +57,9 @@ public class WoundPuzzleUI : MonoBehaviour
     private GameObject[] marks;               // the green highlight + number on each tool
     private TMP_Text[] markNumbers;
     private Sprite tableSprite;
+    private RectTransform[] toolRects;
+    private Sprite[] itemSprites;
+    private Vector2[] homePos;
 
     private int next = 1;                     // which step the player must do now
     private bool solved;
@@ -78,7 +86,7 @@ public class WoundPuzzleUI : MonoBehaviour
         ResetChoices();
         if (solved)
         {
-            for (int i = 0; i < 4; i++) Mark(ToolIndexOfStep(i + 1), i + 1);
+            for (int i = 0; i < 4; i++) Mark(ToolIndexOfStep(i + 1), i + 1, true);
             next = 5;
             FillSlots(4);
             SetMessage("Already solved. The drawer in this room is unlocked.",
@@ -105,6 +113,32 @@ public class WoundPuzzleUI : MonoBehaviour
         if (root != null && root.activeSelf && Keyboard.current != null &&
             Keyboard.current.escapeKey.wasPressedThisFrame)
             Close();
+        UpdateHover();
+    }
+
+    private Outline[] outlines;
+    private RectTransform hoverRect;
+    private TMP_Text hoverText;
+
+    // white outline + the item's name under the cursor
+    private void UpdateHover()
+    {
+        if (outlines == null || hoverRect == null || root == null || !root.activeSelf) return;
+        int hit = -1;
+        if (!solved && Mouse.current != null)
+        {
+            Vector2 mp = Mouse.current.position.ReadValue();
+            for (int i = toolRects.Length - 1; i >= 0; i--)    // the item drawn on top wins
+                if (RectTransformUtility.RectangleContainsScreenPoint(toolRects[i], mp)) { hit = i; break; }
+        }
+        for (int i = 0; i < outlines.Length; i++) if (outlines[i] != null) outlines[i].enabled = (i == hit);
+        if (hit < 0) { hoverRect.gameObject.SetActive(false); return; }
+
+        hoverRect.gameObject.SetActive(true);
+        hoverText.text = L(Tools[hit].en, Tools[hit].th);
+        RectTransform r = toolRects[hit];
+        hoverRect.anchoredPosition = new Vector2(r.anchoredPosition.x, r.anchoredPosition.y - r.sizeDelta.y * r.localScale.y * 0.5f - 8f);
+        hoverRect.SetAsLastSibling();
     }
 
     // ---------- puzzle logic ----------
@@ -114,7 +148,12 @@ public class WoundPuzzleUI : MonoBehaviour
         StopAllCoroutines();
         busy = false;
         next = 1;
-        for (int i = 0; i < marks.Length; i++) marks[i].SetActive(false);
+        for (int i = 0; i < marks.Length; i++)
+        {
+            marks[i].SetActive(false);
+            toolRects[i].anchoredPosition = homePos[i];     // everything goes back onto the table
+            toolRects[i].localScale = Vector3.one;
+        }
         FillSlots(0);
     }
 
@@ -157,12 +196,39 @@ public class WoundPuzzleUI : MonoBehaviour
         SetMessage(en + "  (Read the paper in the room again.)", th + "  (ลองกลับไปอ่านกระดาษในห้องอีกครั้ง)");
     }
 
-    private void Mark(int toolIndex, int number)
+    private void Mark(int toolIndex, int number, bool instant = false)
     {
         if (toolIndex < 0) return;
+        Tool t = Tools[toolIndex];
+        bool flies = t.step >= 2;   // the tray stays; the other tools are put on it
         marks[toolIndex].SetActive(true);
-        marks[toolIndex].GetComponent<Image>().color = new Color(0.2f, 0.8f, 0.3f, 0.35f);
+        marks[toolIndex].GetComponent<Image>().color = flies ? new Color(0.2f, 0.8f, 0.3f, 0f) : new Color(0.2f, 0.8f, 0.3f, 0.35f);
         markNumbers[toolIndex].text = number.ToString();
+        if (!flies) return;
+        Vector2 to = new Vector2(t.land.x * PicW, -t.land.y * PicH);
+        if (instant)
+        {
+            toolRects[toolIndex].anchoredPosition = to;
+            toolRects[toolIndex].localScale = Vector3.one * t.landScale;
+        }
+        else StartCoroutine(Fly(toolRects[toolIndex], to, t.landScale));
+    }
+
+    // the tool slides onto the tray and gets a bit smaller
+    private IEnumerator Fly(RectTransform rt, Vector2 to, float scale)
+    {
+        Vector2 from = rt.anchoredPosition;
+        float s0 = rt.localScale.x, t = 0f, dur = 0.35f;
+        while (t < dur)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / dur));
+            rt.anchoredPosition = Vector2.Lerp(from, to, k);
+            rt.localScale = Vector3.one * Mathf.Lerp(s0, scale, k);
+            yield return null;
+        }
+        rt.anchoredPosition = to;
+        rt.localScale = Vector3.one * scale;
     }
 
     private static int ToolIndexOfStep(int step)
@@ -223,7 +289,13 @@ public class WoundPuzzleUI : MonoBehaviour
 
     private void Build()
     {
-        tableSprite = Resources.Load<Sprite>("WoundPuzzle/wound_table");
+        tableSprite = LoadWhole("WoundPuzzle/wound_table_empty");
+        if (tableSprite == null)
+        {
+            Debug.LogWarning("WoundPuzzleUI: pictures not found. Run  Tools > Rain > Setup Wound Puzzle Pictures.");
+            tableSprite = Resources.Load<Sprite>("WoundPuzzle/wound_table");
+        }
+        itemSprites = Resources.LoadAll<Sprite>("WoundPuzzle/wound_items");
 
         if (EventSystem.current == null)
         {
@@ -267,11 +339,28 @@ public class WoundPuzzleUI : MonoBehaviour
         pr.anchorMin = pr.anchorMax = new Vector2(0, 1);
         pr.pivot = new Vector2(0, 1);
         pr.anchoredPosition = new Vector2(60, -160);
-        pr.sizeDelta = new Vector2(1280, 1280f * 1011f / 1752f);   // keeps the picture's shape
+        pr.sizeDelta = new Vector2(PicW, PicH);   // 16:9, like the picture
 
         marks = new GameObject[Tools.Length];
         markNumbers = new TMP_Text[Tools.Length];
+        toolRects = new RectTransform[Tools.Length];
+        homePos = new Vector2[Tools.Length];
+        outlines = new Outline[Tools.Length];
         for (int i = 0; i < Tools.Length; i++) BuildHotspot(pr, i);
+
+        // the name that shows under the item the cursor is on (always on top of the items)
+        Image tipBg = NewImage("HoverName", pr, new Color(0f, 0f, 0f, 0.8f));
+        tipBg.raycastTarget = false;
+        hoverRect = tipBg.rectTransform;
+        hoverRect.anchorMin = hoverRect.anchorMax = new Vector2(0f, 1f);
+        hoverRect.pivot = new Vector2(0.5f, 1f);
+        hoverRect.sizeDelta = new Vector2(360, 56);
+        hoverText = NewText("Text", tipBg.transform, "", 30, TextAlignmentOptions.Center);
+        hoverText.raycastTarget = false;
+        hoverText.enableAutoSizing = true;
+        hoverText.fontSizeMin = 14; hoverText.fontSizeMax = 30;
+        Stretch(hoverText.rectTransform);
+        tipBg.gameObject.SetActive(false);
 
         // right panel: the 4 steps
         Image panel = NewImage("Steps", root.transform, new Color(0.10f, 0.10f, 0.12f, 1f));
@@ -305,17 +394,48 @@ public class WoundPuzzleUI : MonoBehaviour
         root.SetActive(false);
     }
 
+    private Sprite FindItem(string name)
+    {
+        if (itemSprites != null)
+            foreach (Sprite sp in itemSprites) if (sp != null && sp.name == name) return sp;
+        return null;
+    }
+
+    // a sprite that covers the whole texture (the picture may have been imported as a "multiple" sprite)
+    private static Sprite LoadWhole(string path)
+    {
+        foreach (Sprite sp in Resources.LoadAll<Sprite>(path))
+            if (sp != null && Mathf.Approximately(sp.rect.width, sp.texture.width) && Mathf.Approximately(sp.rect.height, sp.texture.height))
+                return sp;
+        Texture2D tex = Resources.Load<Texture2D>(path);
+        return tex == null ? null : Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+    }
+
     private void BuildHotspot(RectTransform parent, int index)
     {
         Tool t = Tools[index];
         GameObject go = new GameObject("Tool: " + t.en, typeof(RectTransform));
         go.transform.SetParent(parent, false);
         Image img = go.AddComponent<Image>();
-        img.color = new Color(1f, 1f, 1f, 0.001f);   // invisible but clickable
+        Sprite sp = FindItem(t.sprite);
+        img.sprite = sp;
+        img.preserveAspect = true;
+        img.color = sp != null ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.6f);   // grey box if the picture is missing
+        float w = t.w * PicW;
+        float h = sp != null ? w * sp.rect.height / sp.rect.width : w;
         RectTransform rt = img.rectTransform;
-        rt.anchorMin = new Vector2(t.x - t.w / 2f, 1f - (t.y + t.h / 2f));
-        rt.anchorMax = new Vector2(t.x + t.w / 2f, 1f - (t.y - t.h / 2f));
-        rt.offsetMin = rt.offsetMax = Vector2.zero;
+        rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(w, h);
+        homePos[index] = new Vector2(t.x * PicW, -t.y * PicH);
+        rt.anchoredPosition = homePos[index];
+        toolRects[index] = rt;
+
+        Outline ol = img.gameObject.AddComponent<Outline>();
+        ol.effectColor = Color.white;
+        ol.effectDistance = new Vector2(5f, 5f);
+        ol.enabled = false;
+        outlines[index] = ol;
 
         Button b = go.AddComponent<Button>();
         b.targetGraphic = img;
