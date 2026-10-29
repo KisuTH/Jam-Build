@@ -70,6 +70,11 @@ public class LoopManager : MonoBehaviour
     }
 
     // New Play session in the editor: start again from loop 1
+    public static void BeginNewGame()
+    {
+        ResetStatics();
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {

@@ -17,6 +17,7 @@ public sealed class DeathTransitionUI : MonoBehaviour
     private RectTransform deathPage;
     private RectTransform roundPage;
     private RectTransform roundContent;
+    private RectTransform numberViewport;
     private CanvasGroup roundContentAlpha;
     private TMP_Text roundLabel;
     private TMP_Text previousNumber;
@@ -63,6 +64,7 @@ public sealed class DeathTransitionUI : MonoBehaviour
         roundLabel.rectTransform.anchoredPosition = new Vector2(-160f, 0f);
 
         RectTransform viewport = Rect("NumberViewport", roundContent, new Vector2(330f, NumberTravel));
+        numberViewport = viewport;
         viewport.anchoredPosition = new Vector2(205f, 0f);
         viewport.gameObject.AddComponent<UnityEngine.UI.RectMask2D>();
         previousNumber = Text("PreviousRound", viewport, style, 180f, new Vector2(330f, NumberTravel));
@@ -82,6 +84,7 @@ public sealed class DeathTransitionUI : MonoBehaviour
         previousNumber.text = currentRound.ToString(CultureInfo.InvariantCulture);
         nextNumber.text = upcomingRound.ToString(CultureInfo.InvariantCulture);
         Canvas.ForceUpdateCanvases();
+        LayoutRoundCounter();
         roundPage.anchoredPosition = Vector2.down * canvasRect.rect.height;
         roundPage.gameObject.SetActive(true);
 
@@ -139,6 +142,22 @@ public sealed class DeathTransitionUI : MonoBehaviour
             yield return null;
         }
         roundContentAlpha.alpha = 0f;
+    }
+
+    private void LayoutRoundCounter()
+    {
+        // Keep the longer Thai title and multi-digit rounds centred and separated.
+        float labelWidth = roundLabel.preferredWidth + 8f;
+        float numberWidth = Mathf.Max(previousNumber.preferredWidth, nextNumber.preferredWidth) * 1.15f + 24f;
+        const float gap = 28f;
+        roundLabel.rectTransform.sizeDelta = new Vector2(labelWidth, NumberTravel);
+        roundLabel.rectTransform.anchoredPosition = new Vector2(-(numberWidth + gap) * .5f, 0f);
+        numberViewport.sizeDelta = new Vector2(numberWidth, NumberTravel);
+        numberViewport.anchoredPosition = new Vector2((labelWidth + gap) * .5f, 0f);
+        previousNumber.rectTransform.sizeDelta = nextNumber.rectTransform.sizeDelta = numberViewport.sizeDelta;
+        float totalWidth = labelWidth + gap + numberWidth;
+        roundContent.sizeDelta = new Vector2(totalWidth, NumberTravel);
+        roundContent.localScale = Vector3.one * Mathf.Min(1f, Mathf.Max(1f, canvasRect.rect.width - 80f) / totalWidth);
     }
 
     public void KeepAcrossReload()

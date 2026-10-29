@@ -54,6 +54,25 @@ public class PlayerMovement2D : MonoBehaviour
     private bool isCrouching;
     private bool isGrounded;
     private bool runHeld;
+    private Key moveLeftKey = Key.A;
+    private Key moveRightKey = Key.D;
+
+    private void OnEnable()
+    {
+        RefreshMovementBindings();
+        JamBuild.Options.NotebookOptions.ControlsChanged += RefreshMovementBindings;
+    }
+
+    private void OnDisable()
+    {
+        JamBuild.Options.NotebookOptions.ControlsChanged -= RefreshMovementBindings;
+    }
+
+    private void RefreshMovementBindings()
+    {
+        moveLeftKey = JamBuild.Options.NotebookOptions.SavedMoveLeftKey;
+        moveRightKey = JamBuild.Options.NotebookOptions.SavedMoveRightKey;
+    }
 
     public bool IsAutoWalking => autoWalking;
     public bool IsGrounded => isGrounded;
@@ -113,6 +132,12 @@ public class PlayerMovement2D : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale <= 0f)
+        {
+            moveInput = 0f;
+            jumpQueued = crouchHeld = runHeld = false;
+            return;
+        }
         if (autoWalking)
         {
             runHeld = false;
@@ -151,8 +176,8 @@ public class PlayerMovement2D : MonoBehaviour
         }
 
         moveInput = 0f;
-        if (kb.aKey.isPressed) moveInput -= 1f;
-        if (kb.dKey.isPressed) moveInput += 1f;
+        if (kb[moveLeftKey].isPressed) moveInput -= 1f;
+        if (kb[moveRightKey].isPressed) moveInput += 1f;
 
         crouchHeld = kb.sKey.isPressed;
         runHeld = allowRunning && kb.leftShiftKey.isPressed;

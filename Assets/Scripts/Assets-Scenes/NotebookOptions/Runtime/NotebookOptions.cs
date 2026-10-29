@@ -93,6 +93,9 @@ namespace JamBuild.Options
         public bool IsHandlingRebindInput => rebinding >= 0 || rebindHandledFrame == Time.frameCount;
         public Key MoveLeftKey => leftKey;
         public Key MoveRightKey => rightKey;
+        public static event System.Action ControlsChanged;
+        public static Key SavedMoveLeftKey => ReadKey("LeftKey", Key.A);
+        public static Key SavedMoveRightKey => ReadKey("RightKey", Key.D);
 
         private void Awake()
         {
@@ -152,6 +155,7 @@ namespace JamBuild.Options
                 if(rebinding==0) { if(key.keyCode==rightKey) rightKey=leftKey; leftKey=key.keyCode; }
                 else { if(key.keyCode==leftKey) leftKey=rightKey; rightKey=key.keyCode; }
                 SaveInt("LeftKey",(int)leftKey); SaveInt("RightKey",(int)rightKey);
+                ControlsChanged?.Invoke();
                 rebinding=-1; RefreshKeys(); return;
             }
         }
