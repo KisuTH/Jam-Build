@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 /// <summary>
 /// Hints: the player may ask for a hint (button or H key) a limited number of times per life.
@@ -42,19 +45,39 @@ public class HintSystem : MonoBehaviour
 
     private void Start()
     {
+        EnsureEventSystem();
+        AutoWire();
         UpdateLabel();
     }
 
-    private void Update()
+    // The UI can only be clicked when the scene has an EventSystem
+    private static void EnsureEventSystem()
     {
-        if (!openWithHKey) return;
-        Keyboard kb = Keyboard.current;
-        if (kb != null && kb.hKey.wasPressedThisFrame) AskForHint();
+        if (Object.FindAnyObjectByType<EventSystem>() != null) return;
+        GameObject es = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+        es.GetComponent<InputSystemUIInputModule>().AssignDefaultActions();   // without this a code-made module ignores the mouse
+        Debug.Log("HintSystem: the scene had no EventSystem, so one was created (the UI could not be clicked).");
+    }
+
+    // The Canvas and GameSystems are separate prefabs, so the references between them (button -> AskForHint,
+    // HintSystem -> label) are empty. Connect them here by name.
+    private void AutoWire()
+    {
+        foreach (Button b in Object.FindObjectsByType<Button>(FindObjectsInactive.Include))
+        {
+            if (b.gameObject.name != "HintButton") continue;
+            if (buttonLabel == null) buttonLabel = b.GetComponentInChildren<TMP_Text>(true);   // the "Hint [H] (2 left)" label
+            bool wired = false;
+            for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
+                if (b.onClick.GetPersistentTarget(i) == this) wired = true;
+            if (!wired) b.onClick.AddListener(AskForHint);
+        }
     }
 
     /// <summary>Hook this into the hint button's OnClick.</summary>
     public void AskForHint()
     {
+        Debug.Log("HintSystem: AskForHint (used " + used + "/" + maxHints + ")");
         LoopManager loop = LoopManager.Ensure();
         if (loop == null)
         {
@@ -63,9 +86,9 @@ public class HintSystem : MonoBehaviour
         }
 
         // Not while a call is running, the player is dying or the keypad is open
-        if (loop.IsDying) return;
-        if (AICaller.Instance != null && AICaller.Instance.IsCalling) return;
-        if (PasscodeUI.Instance != null && PasscodeUI.Instance.IsOpen) return;
+        if (loop.IsDying) { Debug.Log("HintSystem: ignored (dying)"); return; }
+        if (AICaller.Instance != null && AICaller.Instance.IsCalling) { Debug.Log("HintSystem: ignored (the AI is on the phone)"); return; }
+        if (PasscodeUI.Instance != null && PasscodeUI.Instance.IsOpen) { Debug.Log("HintSystem: ignored (keypad open)"); return; }
 
         // No hints left: the AI loses patience
         if (used >= maxHints)

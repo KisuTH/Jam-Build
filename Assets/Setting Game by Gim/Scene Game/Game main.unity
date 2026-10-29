@@ -776,6 +776,17 @@ Transform:
   - {fileID: 1751019606}
   m_Father: {fileID: 1987040633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &314401807 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 259977063663940176, guid: 247f596bf1efdb641a442ebefc8dd652, type: 3}
+  m_PrefabInstance: {fileID: 870972661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a301facec2b3e6d4cbbbfc86d476f212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HintSystem
 --- !u!1 &316442140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,7 +1072,7 @@ MonoBehaviour:
   moveSpeed: 20
   allowRunning: 0
   runSpeedMultiplier: 1.8
-  jumpHeight: 2.2
+  jumpHeight: 5.2503767
   crouchHeightMultiplier: 0.6
   crouchSpeedMultiplier: 0.5
   groundLayers:
@@ -3198,39 +3209,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
   idle:
     right: {fileID: 0}
-    left: {fileID: 0}
+    left: {fileID: 7400000, guid: 1fbaee3725e43a649b87134c1f0000b4, type: 2}
     holdTime: 0
     sizeMultiplier: 1
   walk:
     right: {fileID: 0}
-    left: {fileID: 7400000, guid: 2d1e79f1e7328734a99446ca3b308d47, type: 2}
+    left: {fileID: 7400000, guid: 15b12937d9a7e574b9862f2d8d0d287f, type: 2}
     holdTime: 0
     sizeMultiplier: 1
   run:
     right: {fileID: 0}
-    left: {fileID: 7400000, guid: 4545daebf5d38b6498feb81fa5612473, type: 2}
+    left: {fileID: 7400000, guid: 6495e5522dee0084394e639874d4e516, type: 2}
     holdTime: 0
     sizeMultiplier: 1
   jump:
     right: {fileID: 0}
     left: {fileID: 7400000, guid: da487b5cc4f95d94396d8d3acdd301de, type: 2}
     holdTime: 0.9166667
-    sizeMultiplier: 1.30568
+    sizeMultiplier: 1.0171899
   crouch:
     right: {fileID: 0}
     left: {fileID: 7400000, guid: 075bf1319ac9e184483788cdf3fafb37, type: 2}
     holdTime: 0.5
-    sizeMultiplier: 1.30568
+    sizeMultiplier: 1.0171899
   crouchWalk:
     right: {fileID: 0}
     left: {fileID: 7400000, guid: bffd40b0eb3b4444585675b0a634f85c, type: 2}
     holdTime: 0
-    sizeMultiplier: 1.2273393
+    sizeMultiplier: 0.95615846
   enterDoor: {fileID: 7400000, guid: 3bd9b2645a824254a8d49038ac258dd8, type: 2}
   exitDoor: {fileID: 7400000, guid: b269814ea7a5cbd41bcdbc71b09b7952, type: 2}
-  doorSizeMultiplier: 1.30568
+  doorSizeMultiplier: 1.0171899
   anchors: []
-  spriteWorldScale: 0.14882655
+  spriteWorldScale: 1.139785
   jumpPlaybackSpeed: 1.6
   crouchPlaybackSpeed: 1.5
   runWalkSpeedUp: 1.7
@@ -3305,7 +3316,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5130826309931025548, guid: ae320395670f8754c829a80a2692b3c4, type: 3}
+  m_Sprite: {fileID: -5843711783135642227, guid: bf9b0b25fd08783438e34ccd7b1f60bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4210,6 +4221,18 @@ PrefabInstance:
     - target: {fileID: 7368932529092925831, guid: 8409a124ea323fa4c9b93a1627d7a737, type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8436594211382875098, guid: 8409a124ea323fa4c9b93a1627d7a737, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 314401807}
+    - target: {fileID: 8436594211382875098, guid: 8409a124ea323fa4c9b93a1627d7a737, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AskForHint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8436594211382875098, guid: 8409a124ea323fa4c9b93a1627d7a737, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8753632737650034403, guid: 8409a124ea323fa4c9b93a1627d7a737, type: 3}
       propertyPath: m_AnchorMax.y

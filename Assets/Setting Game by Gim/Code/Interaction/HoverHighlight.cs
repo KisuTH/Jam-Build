@@ -14,7 +14,7 @@ public class HoverHighlight : MonoBehaviour
 {
     private enum Kind { Inspect, Take, Door, Drawer, Use, Continue, Locked, Unlock }
 
-    private static readonly Color Cyan = new Color(0.35f, 0.8f, 1f, 1f);
+    private static readonly Color Cyan = new Color(1f, 1f, 1f, 1f);
 
     private Canvas canvas;
     private RectTransform frame;
@@ -252,7 +252,7 @@ public class HoverHighlight : MonoBehaviour
         labelBox.anchorMin = labelBox.anchorMax = Vector2.zero;
         labelBox.pivot = Vector2.zero;
         Image bg = lb.AddComponent<Image>();
-        bg.color = new Color(0.04f, 0.10f, 0.14f, 0.92f);
+        bg.color = new Color(0.06f, 0.06f, 0.06f, 0.92f);
         bg.raycastTarget = false;
 
         GameObject tx = new GameObject("Text", typeof(RectTransform));
@@ -260,7 +260,7 @@ public class HoverHighlight : MonoBehaviour
         label = tx.AddComponent<TextMeshProUGUI>();
         label.fontSize = 28;
         label.alignment = TextAlignmentOptions.Center;
-        label.color = new Color(0.75f, 0.93f, 1f);
+        label.color = new Color(1f, 1f, 1f);
         label.raycastTarget = false;
         label.textWrappingMode = TextWrappingModes.NoWrap;
         Stretch(label.rectTransform, 0, 0, 0, 0);

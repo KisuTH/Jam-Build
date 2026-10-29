@@ -118,6 +118,7 @@ public class RoomTransition : MonoBehaviour
             }
             startPos = new Vector3(doorX, startPos.y, startPos.z);
             player.transform.position = startPos;
+            float feetBelow = player.transform.position.y - FeetY(player);   // pivot -> soles, at normal size
 
             if (pa != null) pa.SetDoorPose(PlayerAnimation.DoorPose.Enter);   // back view: walking into the door
             yield return DepthWalk(player.transform, sprites, startPos, baseScale, door, 1f, 0f, stepIntoDoorTime);
@@ -131,6 +132,9 @@ public class RoomTransition : MonoBehaviour
 
             // 4. Move the player and the camera limits to the other side
             Vector3 arrive = door.arrivePoint.position;
+            // The arrive point may float above the floor: put the soles on the floor below it, so the whole walk-out
+            // (and the end of it) happens on the ground and the player never "falls" out of the door.
+            arrive = new Vector3(arrive.x, GroundedY(player, arrive, feetBelow), arrive.z);
             // Start slightly "deeper" in the other doorway (small and invisible), then walk out toward the camera
             player.transform.position = new Vector3(arrive.x, arrive.y + door.depthDistance, startPos.z);
             player.transform.localScale = baseScale * door.depthScale;
@@ -156,6 +160,7 @@ public class RoomTransition : MonoBehaviour
                 body.linearVelocity = Vector2.zero;
             }
             Physics2D.SyncTransforms();
+            SnapToGround(player, body);   // arrive point a bit above the floor -> do not fall (no "landing from a jump" pose)
 
             // A message the first time this door is used
             if (!door.used && !string.IsNullOrEmpty(door.firstTimeMessage) && DialogueUI.Instance != null)
@@ -183,6 +188,62 @@ public class RoomTransition : MonoBehaviour
             busy = false;
             readyTime = Time.time + cooldownAfter;
         }
+    }
+
+    private static float FeetY(GameObject player)
+    {
+        Collider2D col = player.GetComponent<Collider2D>();
+        if (col == null) return player.transform.position.y;
+        BoxCollider2D box = col as BoxCollider2D;
+        if (box != null)
+            return box.transform.TransformPoint(new Vector3(box.offset.x, box.offset.y - box.size.y * 0.5f, 0f)).y;
+        return col.bounds.min.y;
+    }
+
+    // Player pivot height that puts the soles on the first solid floor below the arrive point (or the arrive point's own height)
+    private static float GroundedY(GameObject player, Vector3 arrive, float feetBelow)
+    {
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useTriggers = false;
+        filter.useLayerMask = false;
+        RaycastHit2D[] hits = new RaycastHit2D[16];
+        int n = Physics2D.Raycast(new Vector2(arrive.x, arrive.y + feetBelow), Vector2.down, filter, hits, 60f);
+        float best = float.MaxValue, floorY = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            Collider2D c = hits[i].collider;
+            if (c == null || c.isTrigger || c.transform.IsChildOf(player.transform)) continue;
+            if (hits[i].distance < best) { best = hits[i].distance; floorY = hits[i].point.y; }
+        }
+        if (best == float.MaxValue) return arrive.y;
+        return floorY + feetBelow + 0.01f;
+    }
+
+    // Puts the player's feet on the floor right below the arrive point (looks for solid ground up to maxDrop below).
+    private static void SnapToGround(GameObject player, Rigidbody2D body)
+    {
+        if (body == null) return;
+        Collider2D col = player.GetComponent<Collider2D>();
+        if (col == null) return;
+
+        const float maxDrop = 40f;
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useTriggers = false;
+        filter.useLayerMask = false;
+        RaycastHit2D[] hits = new RaycastHit2D[8];
+        int n = col.Cast(Vector2.down, filter, hits, maxDrop);
+
+        float best = float.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            if (hits[i].collider == null || hits[i].collider.attachedRigidbody == body) continue;
+            if (hits[i].distance < best) best = hits[i].distance;
+        }
+        if (best == float.MaxValue || best < 0.02f) return;
+
+        body.position = new Vector2(body.position.x, body.position.y - best + 0.01f);
+        body.linearVelocity = Vector2.zero;
+        Physics2D.SyncTransforms();
     }
 
     private void EnterRoom(Room room)
