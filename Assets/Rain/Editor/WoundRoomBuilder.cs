@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 public static class WoundRoomBuilder
 {
     private const float CX = 60f;        // centre of the new room (local x). Rooms 1-3 end at 36.
-    private const float WardDoorX = -3.75f;
+    private const float WardDoorX = -6.5f;     // dressing room door (above the Ward bed)
     private const float EntryDoorX = 50f;
 
     [MenuItem("Tools/Rain/Add Wound-Care Room (Room 4)")]
@@ -114,9 +114,14 @@ public static class WoundRoomBuilder
         Color col = new Color(0.30f, 0.45f, 0.40f);
         Interactable2D toRoom = Door(wardContent, "Door C (Ward side) Dressing", WardDoorX, sprite, col, 1.8f);
         LinkDoor(root, toRoom, new Vector2(EntryDoorX, -1.7f), room4, 1f, "The door to the dressing room creaks open...");
-        toRoom.requiredItemId = "wound_room_key";
-        toRoom.consumeRequiredItem = false;
-        toRoom.missingItemMessage = "The dressing room door is locked. I need a key.";
+        // locked: click with the key = "used the key" + unlock, click again = walk in
+        toRoom.onInteract = new UnityEngine.Events.UnityEvent();
+        KeyDoor keyDoor = toRoom.gameObject.AddComponent<KeyDoor>();
+        keyDoor.doorId = "dressing_room";
+        keyDoor.itemId = "wound_room_key";
+        keyDoor.lockedEnglish = "The dressing room door is locked. I need a key.";
+        keyDoor.lockedThai = "ประตูห้องทำแผลล็อกอยู่ ต้องมีกุญแจ";
+        UnityEventTools.AddVoidPersistentListener(toRoom.onInteract, keyDoor.Interact);
         Label(wardContent, "DRESSING ROOM", WardDoorX, 1.5f, 3.2f);
 
         Interactable2D back = Door(h, "Door C (Dressing Room side)", EntryDoorX, sprite, col, 1.8f);
@@ -124,17 +129,52 @@ public static class WoundRoomBuilder
         Label(h, "BACK", EntryDoorX, 1.5f);
 
         BuildPatientRoom(root, wardContent, ward, sprite);
+        int converted = ConvertKeyDoors();
 
         EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         Selection.activeGameObject = holderGO;
-        Debug.Log("Room 4 (Dressing Room) and Room 5 (Patient Room) added. Save the scene (Ctrl+S), press Play, go to the Ward and use the new door at x = -3.75.");
+        Debug.Log("Room 4 (Dressing Room) and Room 5 (Patient Room) added. Key doors converted: " + converted + ". Save the scene (Ctrl+S), press Play, go to the Ward and use the new door at x = -3.75.");
+    }
+
+    // Every door that needs a key works the same way: click with the key = unlock, click again = walk in.
+    [MenuItem("Tools/Rain/Convert Key Doors (click to unlock, click again to enter)")]
+    public static void ConvertKeyDoorsMenu()
+    {
+        int n = ConvertKeyDoors();
+        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        Debug.Log("Key doors converted: " + n + ". Save the scene (Ctrl+S).");
+    }
+
+    private static int ConvertKeyDoors()
+    {
+        int count = 0;
+        foreach (Interactable2D door in Object.FindObjectsByType<Interactable2D>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (string.IsNullOrEmpty(door.requiredItemId)) continue;
+            RoomDoor rd = door.GetComponent<RoomDoor>();
+            if (rd == null || door.GetComponent<KeyDoor>() != null) continue;
+
+            KeyDoor kd = door.gameObject.AddComponent<KeyDoor>();
+            kd.doorId = door.gameObject.name.Replace(' ', '_');
+            kd.itemId = door.requiredItemId;
+            kd.consumeKey = door.consumeRequiredItem;
+            kd.lockedEnglish = door.missingItemMessage;
+            kd.lockedThai = "";   // translated by Loc.cs when the text is known
+
+            door.requiredItemId = "";   // KeyDoor checks the key itself
+            door.onInteract = new UnityEngine.Events.UnityEvent();
+            UnityEventTools.AddVoidPersistentListener(door.onInteract, kd.Interact);
+            EditorUtility.SetDirty(door);
+            count++;
+        }
+        return count;
     }
 
     // Room 5: three patient beds, each with a drawer. One drawer holds the dressing room key.
     private static void BuildPatientRoom(Transform root, Transform wardContent, Room ward, Sprite sprite)
     {
         const float PX = 100f;      // centre of the patient room
-        const float WardPatientDoorX = -6.5f;   // above the Ward bed, between the Bedside Note and the dressing room door
+        const float WardPatientDoorX = -3.75f;   // between the dressing room door and the medicine cabinet
         const float EntryX = 90f;
 
         GameObject holderGO = new GameObject("Content: Room 5");
@@ -157,20 +197,24 @@ public static class WoundRoomBuilder
             "A patient bed. A name tag at the foot has been scratched off."
         };
         float[] bedX = { PX - 6f, PX, PX + 6f };
+        DrawerSpot[] drawers = new DrawerSpot[3];
         for (int i = 0; i < 3; i++)
         {
             Inspect(h, "Patient Bed " + (i + 1), bedX[i], -2.0f, 3f, 1.0f,
                 new Color(0.50f, 0.50f, 0.55f), sprite, bedText[i], "", "", 3f);
 
-            // the drawer (bedside cabinet) next to each bed. The middle one hides the key.
-            bool hasKey = i == 1;
-            DrawerSpot d = MakeDrawer(h, "Bedside Drawer " + (i + 1), bedX[i] + 2.3f, -1.75f, 1.2f, 1.5f, sprite,
-                "bed_drawer_" + (i + 1), "",
-                hasKey ? "wound_room_key" : "", hasKey ? "Dressing Room Key" : "",
-                hasKey ? "A small brass key with a paper tag: 'Dressing Room'." : "");
-            if (hasKey) d.iconResource = "Items/Key";
+            // the drawer (bedside cabinet) next to each bed. RandomKeyPlacer hides the key in one of them.
+            drawers[i] = MakeDrawer(h, "Bedside Drawer " + (i + 1), bedX[i] + 2.3f, -1.75f, 1.2f, 1.5f, sprite,
+                "bed_drawer_" + (i + 1), "", "", "", "");
             Label(h, "BEDSIDE DRAWER", bedX[i] + 2.3f, -0.6f, 2.6f);
         }
+
+        RandomKeyPlacer placer = room5.gameObject.AddComponent<RandomKeyPlacer>();
+        placer.drawers = drawers;
+        placer.itemId = "wound_room_key";
+        placer.itemName = "Dressing Room Key";
+        placer.itemDescription = "A small brass key with a paper tag: 'Dressing Room'.";
+        placer.iconResource = "Items/Key";
 
         // doors: Ward <-> Patient Room
         Color col = new Color(0.45f, 0.40f, 0.30f);

@@ -35,18 +35,13 @@ public class DrawerSpot : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(iconResource))
         {
+            // use the WHOLE picture (even if the file was sliced into several sprites in Unity)
+            Texture2D t = Resources.Load<Texture2D>(iconResource);
+            if (t != null) return Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f), 100f);
+
             Sprite s = Resources.Load<Sprite>(iconResource);
-            if (s == null)
-            {
-                Sprite[] all = Resources.LoadAll<Sprite>(iconResource);
-                if (all != null && all.Length > 0) s = all[0];
-            }
-            if (s == null)
-            {
-                Texture2D t = Resources.Load<Texture2D>(iconResource);
-                if (t != null) s = Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f), 100f);
-            }
             if (s != null) return s;
+            Debug.LogWarning("DrawerSpot: no picture found at Resources/" + iconResource);
         }
         return icon;
     }

@@ -21,6 +21,8 @@ public class WoundDrawerUI : MonoBehaviour
     private RawImage picture;
     private Texture2D closedTex, openTex;
     private GameObject hotspot;
+    private Image itemImage;
+    private readonly System.Collections.Generic.Dictionary<string, Sprite> cutouts = new System.Collections.Generic.Dictionary<string, Sprite>();
     private TMP_Text messageText;
     private readonly System.Collections.Generic.Dictionary<TMP_Text, string[]> bound =
         new System.Collections.Generic.Dictionary<TMP_Text, string[]>();
@@ -57,6 +59,11 @@ public class WoundDrawerUI : MonoBehaviour
         bool taken = Has(spot.TakenFlag);
         picture.texture = unlocked ? openTex : closedTex;
         hotspot.SetActive(unlocked && hasItem && !taken);
+        if (hotspot.activeSelf)
+        {
+            itemImage.sprite = Cutout(spot.itemId, spot.GetIcon());
+            itemImage.enabled = itemImage.sprite != null;
+        }
 
         if (!unlocked)
             SetMessage(spot.lockedEnglish, spot.lockedThai);
@@ -96,6 +103,44 @@ public class WoundDrawerUI : MonoBehaviour
         if (root != null && root.activeSelf && Keyboard.current != null &&
             Keyboard.current.escapeKey.wasPressedThisFrame)
             Close();
+    }
+
+    // Makes a copy of the item picture where the dark background is see-through (so it lies naturally in the drawer)
+    private Sprite Cutout(string key, Sprite src)
+    {
+        if (src == null) return null;
+        Sprite cached;
+        if (cutouts.TryGetValue(key, out cached)) return cached;
+        Sprite result = src;
+        try
+        {
+            Texture2D tex = src.texture;
+            Rect r = src.textureRect;
+            RenderTexture rt = RenderTexture.GetTemporary(tex.width, tex.height, 0, RenderTextureFormat.ARGB32);
+            Graphics.Blit(tex, rt);
+            RenderTexture prev = RenderTexture.active;
+            RenderTexture.active = rt;
+            Texture2D copy = new Texture2D((int)r.width, (int)r.height, TextureFormat.RGBA32, false);
+            copy.ReadPixels(new Rect(r.x, r.y, r.width, r.height), 0, 0);
+            RenderTexture.active = prev;
+            RenderTexture.ReleaseTemporary(rt);
+
+            Color32[] px = copy.GetPixels32();
+            for (int i = 0; i < px.Length; i++)
+            {
+                float m = Mathf.Max(px[i].r, Mathf.Max(px[i].g, px[i].b)) / 255f;
+                px[i].a = (byte)(Mathf.Clamp01((m - 0.06f) / 0.22f) * 255f);
+            }
+            copy.SetPixels32(px);
+            copy.Apply();
+            result = Sprite.Create(copy, new Rect(0, 0, copy.width, copy.height), new Vector2(0.5f, 0.5f), 100f);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning("WoundDrawerUI: could not cut out the item picture: " + e.Message);
+        }
+        cutouts[key] = result;
+        return result;
     }
 
     // ---------- texts that follow the language button ----------
@@ -161,7 +206,7 @@ public class WoundDrawerUI : MonoBehaviour
         GameObject hs = new GameObject("TakeReport", typeof(RectTransform));
         hs.transform.SetParent(picGO.transform, false);
         Image hsImg = hs.AddComponent<Image>();
-        hsImg.color = new Color(1f, 0.95f, 0.6f, 0.12f);   // faint glow so the player sees it can be clicked
+        hsImg.color = new Color(1f, 0.95f, 0.6f, 0.05f);   // faint glow behind the item
         RectTransform hr = hsImg.rectTransform;
         hr.anchorMin = new Vector2(0.42f, 0.20f);
         hr.anchorMax = new Vector2(0.76f, 0.46f);
@@ -170,6 +215,16 @@ public class WoundDrawerUI : MonoBehaviour
         b.targetGraphic = hsImg;
         b.onClick.AddListener(Take);
         hotspot = hs;
+
+        // the item lying in the drawer
+        GameObject ig = new GameObject("Item", typeof(RectTransform));
+        ig.transform.SetParent(hs.transform, false);
+        itemImage = ig.AddComponent<Image>();
+        itemImage.preserveAspect = true;
+        itemImage.raycastTarget = false;
+        Stretch(itemImage.rectTransform);
+        itemImage.rectTransform.offsetMin = new Vector2(30f, 12f);
+        itemImage.rectTransform.offsetMax = new Vector2(-30f, -12f);
 
         messageText = NewText("Message", root.transform, 34, TextAlignmentOptions.Center);
         messageText.color = new Color(0.95f, 0.9f, 0.7f);

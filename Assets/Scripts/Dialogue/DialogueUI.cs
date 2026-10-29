@@ -16,6 +16,8 @@ public class DialogueUI : MonoBehaviour
 
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text dialogueText;
+    [Tooltip("Optional: small label for the speaker's name (the tab of the box). Made by Tools > Rain > Apply Dialogue Box Background.")]
+    [SerializeField] private TMP_Text speakerText;
     [SerializeField] private float charsPerSecond = 40f;
     [SerializeField] private float autoCloseDelay = 3f;
 
@@ -35,6 +37,11 @@ public class DialogueUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        if (speakerText == null && panel != null)
+        {
+            Transform t = panel.transform.Find("SpeakerTag");
+            if (t != null) speakerText = t.GetComponent<TMP_Text>();
+        }
         if (panel != null) panel.SetActive(false);
     }
 
@@ -63,9 +70,32 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
+    /// <summary>True when the box has a separate name tab.</summary>
+    public bool HasSpeakerTag { get { return speakerText != null; } }
+
+    /// <summary>Show a line with the speaker's name in the name tab (falls back to one text if there is no tab).</summary>
+    public void ShowWithSpeaker(string speaker, string text)
+    {
+        if (speakerText == null)
+        {
+            Show(string.IsNullOrEmpty(speaker) ? text : speaker + "\n" + text);
+            return;
+        }
+        bool has = !string.IsNullOrEmpty(speaker);
+        speakerText.gameObject.SetActive(has);
+        if (has) speakerText.text = speaker;
+        ShowInternal(text, false);
+    }
+
     public void Show(string text)
     {
+        ShowInternal(text, true);
+    }
+
+    private void ShowInternal(string text, bool hideTag)
+    {
         if (string.IsNullOrEmpty(text)) return;
+        if (hideTag && speakerText != null) speakerText.gameObject.SetActive(false);
         if (routine != null) StopCoroutine(routine);
 
         text = Loc.T(text);

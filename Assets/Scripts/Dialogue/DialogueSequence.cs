@@ -150,7 +150,8 @@ public class DialogueSequence : MonoBehaviour
                 if (line == null) continue;
 
                 startFrame = Time.frameCount;
-                ui.Show(Format(line));
+                if (ui.HasSpeakerTag) ui.ShowWithSpeaker(SpeakerOf(line), TextOf(line));
+                else ui.Show(Format(line));
                 if (line.onLineShown != null) line.onLineShown.Invoke();
 
                 float waited = 0f;
@@ -183,6 +184,16 @@ public class DialogueSequence : MonoBehaviour
         if (!string.IsNullOrEmpty(setsFlagWhenDone) && StoryFlags.Instance != null)
             StoryFlags.Instance.Set(setsFlagWhenDone);
         if (onFinished != null) onFinished.Invoke();
+    }
+
+    private static string SpeakerOf(DialogueLine line)
+    {
+        return Loc.Thai && !string.IsNullOrEmpty(line.speakerThai) ? Loc.Shape(line.speakerThai) : Loc.T(line.speaker);
+    }
+
+    private static string TextOf(DialogueLine line)
+    {
+        return Loc.Thai && !string.IsNullOrEmpty(line.textThai) ? Loc.Shape(line.textThai) : Loc.T(line.text);
     }
 
     private string Format(DialogueLine line)

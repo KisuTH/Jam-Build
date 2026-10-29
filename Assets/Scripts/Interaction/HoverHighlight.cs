@@ -12,7 +12,7 @@ using UnityEngine.UI;
 /// </summary>
 public class HoverHighlight : MonoBehaviour
 {
-    private enum Kind { Inspect, Take, Door, Drawer, Use, Continue }
+    private enum Kind { Inspect, Take, Door, Drawer, Use, Continue, Locked, Unlock }
 
     private static readonly Color Cyan = new Color(0.35f, 0.8f, 1f, 1f);
 
@@ -40,7 +40,80 @@ public class HoverHighlight : MonoBehaviour
 
         Collider2D col = target.GetComponent<Collider2D>();
         if (col == null) { Hide(); return; }
-        Show(col.bounds, Classify(target));
+
+        // Real artwork (like the NPC): outline its shape. Plain blocks and doors: a frame around the box.
+        SpriteRenderer art = FindArt(target);
+        if (art != null)
+        {
+            DrawOutline(art);
+            Show(art.bounds, Classify(target), false);
+        }
+        else
+        {
+            HideOutline();
+            Show(col.bounds, Classify(target), true);
+        }
+    }
+
+    // The first visible picture on the object that is not just a coloured block
+    private static SpriteRenderer FindArt(Interactable2D t)
+    {
+        foreach (SpriteRenderer sr in t.GetComponentsInChildren<SpriteRenderer>())
+        {
+            if (!sr.enabled || sr.sprite == null) continue;
+            if (sr.sprite.name.StartsWith("WhiteSquare")) continue;
+            return sr;
+        }
+        return null;
+    }
+
+    // ---------- outline that follows the picture's shape ----------
+
+    private SpriteRenderer[] outline;
+    private Material outlineMaterial;
+
+    private void DrawOutline(SpriteRenderer art)
+    {
+        if (outline == null)
+        {
+            outlineMaterial = new Material(Shader.Find("Sprites/Default"));
+            outline = new SpriteRenderer[8];
+            for (int i = 0; i < outline.Length; i++)
+            {
+                GameObject go = new GameObject("Outline" + i);
+                go.transform.SetParent(transform, false);
+                SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+                sr.sharedMaterial = outlineMaterial;
+                sr.color = Cyan;
+                outline[i] = sr;
+            }
+        }
+
+        // about 3 screen pixels thick, whatever the zoom
+        float perPixel = cam != null ? 2f * cam.orthographicSize / Screen.height : 0.01f;
+        float d = 3f * perPixel;
+
+        for (int i = 0; i < outline.Length; i++)
+        {
+            float ang = i * Mathf.PI * 2f / outline.Length;
+            SpriteRenderer sr = outline[i];
+            sr.enabled = true;
+            sr.sprite = art.sprite;
+            sr.flipX = art.flipX;
+            sr.flipY = art.flipY;
+            sr.sortingLayerID = art.sortingLayerID;
+            sr.sortingOrder = art.sortingOrder - 1;
+            Transform t = sr.transform;
+            t.rotation = art.transform.rotation;
+            t.localScale = art.transform.lossyScale;
+            t.position = art.transform.position + new Vector3(Mathf.Cos(ang) * d, Mathf.Sin(ang) * d, 0f);
+        }
+    }
+
+    private void HideOutline()
+    {
+        if (outline == null) return;
+        for (int i = 0; i < outline.Length; i++) outline[i].enabled = false;
     }
 
     private Interactable2D FindTarget()
@@ -66,6 +139,17 @@ public class HoverHighlight : MonoBehaviour
     private static Kind Classify(Interactable2D t)
     {
         if (t.GetComponent<ItemPickup>() != null) return Kind.Take;
+        // Looked up by name (reflection) so this file compiles even if KeyDoor.cs is missing.
+        Component kd = t.GetComponent("KeyDoor");
+        if (kd != null)
+        {
+            System.Type kt = kd.GetType();
+            System.Reflection.PropertyInfo pu = kt.GetProperty("IsUnlocked");
+            System.Reflection.PropertyInfo ph = kt.GetProperty("HasKey");
+            bool unlocked = pu != null && (bool)pu.GetValue(kd, null);
+            bool hasKey = ph != null && (bool)ph.GetValue(kd, null);
+            if (!unlocked) return hasKey ? Kind.Unlock : Kind.Locked;
+        }
         if (t.GetComponent<RoomDoor>() != null) return Kind.Door;
         if (t.GetComponent<DrawerSpot>() != null) return Kind.Drawer;
         if (t.GetComponent<ChapterEnd>() != null) return Kind.Continue;
@@ -94,6 +178,8 @@ public class HoverHighlight : MonoBehaviour
             case Kind.Door: s = th ? "เปิดประตู" : "Open door"; break;
             case Kind.Drawer: s = th ? "เปิดลิ้นชัก" : "Open drawer"; break;
             case Kind.Use: s = th ? "ใช้งาน" : "Use"; break;
+            case Kind.Locked: s = th ? "ล็อกอยู่" : "Locked"; break;
+            case Kind.Unlock: s = th ? "ปลดล็อก" : "Unlock"; break;
             case Kind.Continue: s = th ? "ไปต่อ" : "Continue"; break;
             default: s = th ? "ตรวจสอบ" : "Inspect"; break;
         }
@@ -102,7 +188,7 @@ public class HoverHighlight : MonoBehaviour
 
     // ---------- drawing ----------
 
-    private void Show(Bounds b, Kind kind)
+    private void Show(Bounds b, Kind kind, bool drawFrame)
     {
         if (canvas == null) Build();
 
@@ -115,6 +201,7 @@ public class HoverHighlight : MonoBehaviour
         x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
 
         canvas.gameObject.SetActive(true);
+        frame.gameObject.SetActive(drawFrame);
         frame.anchoredPosition = new Vector2(x0, y0);
         frame.sizeDelta = new Vector2(x1 - x0, y1 - y0);
 
@@ -132,6 +219,7 @@ public class HoverHighlight : MonoBehaviour
 
     private void Hide()
     {
+        HideOutline();
         if (canvas != null && canvas.gameObject.activeSelf) canvas.gameObject.SetActive(false);
     }
 
@@ -150,7 +238,7 @@ public class HoverHighlight : MonoBehaviour
         frame.anchorMin = frame.anchorMax = Vector2.zero;
         frame.pivot = Vector2.zero;
 
-        fill = MakeImage("Fill", frame, new Color(Cyan.r, Cyan.g, Cyan.b, 0.10f));
+        fill = MakeImage("Fill", frame, new Color(Cyan.r, Cyan.g, Cyan.b, 0.03f));
         Stretch(fill.rectTransform, 0, 0, 0, 0);
         const float t = 3f;
         edges[0] = MakeImage("Top", frame, Cyan);      SetEdge(edges[0], 0, 1, 1, 1, 0, -t, 0, 0);
