@@ -30,8 +30,16 @@ public class BoardClue : MonoBehaviour
     [Tooltip("Width of the paper in world units.")]
     public float paperWidth = 0.5f;
 
+    [Header("Story document pinned on this board")]
+    [Tooltip("A document shown full-page when the board is clicked (before the code paper, if any). Assigned by Tools > Rain > Assign Documents To Boards.")]
+    public Sprite documentSprite;
+    [Tooltip("Off (default): the document is only pinned on the board as a picture. On: clicking the board also opens it full-page.")]
+    public bool showDocumentOnClick = false;
+
     private static readonly string[] Ordinals = { "first", "second", "third", "fourth" };
     private int shownNote = -1;
+    private static System.Action afterClose;
+    private static int closedFrame = -1;
 
     private void Awake() { LoopManager.RegisterSlot(slot, HintText()); }
 
@@ -56,6 +64,54 @@ public class BoardClue : MonoBehaviour
     // The digit is NOT drawn on the board: it is only seen in the zoomed paper after clicking.
 
     public void Reveal()
+    {
+        // the pinned document first; the code paper (if this board has a digit) follows when it is closed
+        if (showDocumentOnClick && documentSprite != null) { AddDocumentToCaseBook(); PlayDocumentSound(); ShowDocument(documentSprite, RevealDigit); return; }
+        RevealDigit();
+    }
+
+    /// <summary>Clicking the document pinned on the board (its own Interactable2D) opens it full-page.</summary>
+    public void OpenDocument()
+    {
+        if (documentSprite == null) return;
+        AddDocumentToCaseBook();
+        PlayDocumentSound();
+        ShowDocument(documentSprite, null);
+    }
+
+    private bool docSoundPlayed;
+
+    // The first time the pinned document is taken: the pickup sound of its Tag (GameSfx > Tag Sounds, e.g. "Document")
+    private void PlayDocumentSound()
+    {
+        if (docSoundPlayed || GameSfx.Instance == null) return;
+        docSoundPlayed = true;
+        Transform pin = transform.Find("Pinned Document");
+        GameSfx.Instance.PlayPickup(pin != null ? pin.gameObject : gameObject);
+    }
+
+    /// <summary>Opens a document picture full-page (used by the Case Book's "View document" button).</summary>
+    public static void ViewDocument(Sprite doc)
+    {
+        if (doc != null) ShowDocument(doc, null);
+    }
+
+    // Reading a pinned document writes it into the Case Book (a page with a "View document" button)
+    private void AddDocumentToCaseBook()
+    {
+        if (CaseNotebook.Instance == null || documentSprite == null) return;
+        string n = documentSprite.name;
+        string title = "Pinned Document";
+        if (n.Contains("Doc_2")) title = "Patient Watch Report No. 2";
+        else if (n.Contains("Doc_3")) title = "Patient Watch Report No. 3";
+        else if (n.Contains("Doc_4")) title = "Patient Watch Report No. 4";
+        else if (n.Contains("NoShare")) title = "Internal Incident Log - Not for Distribution";
+        else if (n.Contains("Redact")) title = "Patient History - Restricted Document";
+        CaseNotebook.Instance.AddClue("doc_" + n, title,
+            "A document pinned on a notice board. Press the button below to read it again.", documentSprite);
+    }
+
+    private void RevealDigit()
     {
         int position = LoopManager.PositionForSlot(slot);
         if (position < 0)
@@ -107,6 +163,7 @@ public class BoardClue : MonoBehaviour
     private void ShowZoom(string bigText, string caption)
     {
         if (zoom != null) Destroy(zoom);
+        afterClose = null;
         KeypadLock.EnsureEventSystem();
         if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();
 
@@ -217,16 +274,76 @@ public class BoardClue : MonoBehaviour
         LoopManager.SetPlayerLocked(true);
     }
 
+    private static void ShowDocument(Sprite doc, System.Action then)
+    {
+        if (zoom != null) Destroy(zoom);
+        KeypadLock.EnsureEventSystem();
+        if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();
+
+        zoom = new GameObject("BoardDocument");
+        Canvas canvas = zoom.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 300;   // above the Case Book too
+        UnityEngine.UI.CanvasScaler cs = zoom.AddComponent<UnityEngine.UI.CanvasScaler>();
+        cs.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        cs.referenceResolution = new Vector2(1920, 1080);
+        cs.matchWidthOrHeight = 0.5f;
+        zoom.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+
+        GameObject dim = new GameObject("Dim", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(UnityEngine.UI.Button));
+        dim.transform.SetParent(zoom.transform, false);
+        dim.GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 0.82f);
+        RectTransform dr = dim.GetComponent<RectTransform>();
+        dr.anchorMin = Vector2.zero; dr.anchorMax = Vector2.one; dr.offsetMin = dr.offsetMax = Vector2.zero;
+        UnityEngine.UI.Button btn = dim.GetComponent<UnityEngine.UI.Button>();
+        btn.transition = UnityEngine.UI.Selectable.Transition.None;
+        btn.onClick.AddListener(CloseZoom);
+
+        // the page, as large as fits the screen (keeps its proportions)
+        GameObject paper = new GameObject("Document", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+        paper.transform.SetParent(zoom.transform, false);
+        UnityEngine.UI.Image img = paper.GetComponent<UnityEngine.UI.Image>();
+        img.sprite = doc;
+        img.preserveAspect = true;
+        img.raycastTarget = false;
+        Vector2 sz = doc.bounds.size;
+        float h = 960f, w = h * sz.x / Mathf.Max(0.01f, sz.y);
+        RectTransform pr = paper.GetComponent<RectTransform>();
+        pr.anchorMin = pr.anchorMax = pr.pivot = new Vector2(0.5f, 0.5f);
+        pr.sizeDelta = new Vector2(w, h);
+        pr.anchoredPosition = new Vector2(0, 20);
+
+        GameObject hn = new GameObject("Hint", typeof(RectTransform));
+        hn.transform.SetParent(zoom.transform, false);
+        RectTransform hr = hn.GetComponent<RectTransform>();
+        hr.anchorMin = hr.anchorMax = hr.pivot = new Vector2(0.5f, 0f);
+        hr.sizeDelta = new Vector2(800, 40);
+        hr.anchoredPosition = new Vector2(0, 8);
+        TMPro.TextMeshProUGUI ht = hn.AddComponent<TMPro.TextMeshProUGUI>();
+        ht.text = Loc.T("Click anywhere to close");
+        ht.alignment = TMPro.TextAlignmentOptions.Center;
+        ht.fontSize = 26;
+        ht.color = new Color(1, 1, 1, 0.6f);
+        ht.raycastTarget = false;
+
+        afterClose = then;
+        LoopManager.SetPlayerLocked(true);
+    }
+
     private static void CloseZoom()
     {
         if (zoom != null) Destroy(zoom);
         zoom = null;
+        closedFrame = Time.frameCount;
         LoopManager.SetPlayerLocked(false);
+        System.Action a = afterClose;
+        afterClose = null;
+        if (a != null) a();   // e.g. the code paper after the document
     }
 
     private void Update()
     {
-        if (zoom == null) return;
+        if (zoom == null || Time.frameCount == closedFrame) return;
         UnityEngine.InputSystem.Keyboard kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && (kb.escapeKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
             CloseZoom();

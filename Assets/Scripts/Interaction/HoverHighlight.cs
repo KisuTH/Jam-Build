@@ -146,12 +146,18 @@ public class HoverHighlight : MonoBehaviour
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return null;
 
         Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
+        // innermost wins (a document pinned on a board beats the board)
+        Interactable2D best = null;
+        int bestDepth = -1;
         foreach (Collider2D hit in Physics2D.OverlapPointAll(world))
         {
             Interactable2D t = hit.GetComponentInParent<Interactable2D>();
-            if (t != null) return t;
+            if (t == null) continue;
+            int depth = 0;
+            for (Transform tr = t.transform; tr != null; tr = tr.parent) depth++;
+            if (depth > bestDepth) { best = t; bestDepth = depth; }
         }
-        return null;
+        return best;
     }
 
     private static Kind Classify(Interactable2D t)

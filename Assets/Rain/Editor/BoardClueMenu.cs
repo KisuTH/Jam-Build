@@ -18,6 +18,99 @@ public static class BoardClueMenu
         { Undo.RecordObject(b, "Assign paper"); b.paperSprite = s; EditorUtility.SetDirty(b); }
     }
 
+    private static readonly string[] DocNames = { "Doc_2", "Doc_3", "Doc_4", "Doc_NoShare", "Doc_Redact" };
+    private const string DocFolder = "Assets/Setting Game by Gim/Img/Documents/";
+
+    /// <summary>Gives each notice board ONE of the 5 story documents (boards sorted by slot, one document each).</summary>
+    [MenuItem("Tools/Rain/Assign Documents To Boards")]
+    public static void AssignDocuments()
+    {
+        Sprite[] docs = new Sprite[DocNames.Length];
+        for (int i = 0; i < DocNames.Length; i++)
+        {
+            string path = DocFolder + DocNames[i] + ".png";
+            docs[i] = LoadSprite(path);
+            if (docs[i] == null) { Debug.LogWarning("Document picture not found: " + path); return; }
+        }
+        var boards = new System.Collections.Generic.List<BoardClue>(Object.FindObjectsByType<BoardClue>(FindObjectsInactive.Include));
+        boards.Sort((a, b) => a.slot != b.slot ? a.slot.CompareTo(b.slot) : string.CompareOrdinal(a.name, b.name));
+        for (int i = 0; i < boards.Count; i++)
+        {
+            Undo.RecordObject(boards[i], "Assign document");
+            boards[i].documentSprite = i < docs.Length ? docs[i] : null;
+            EditorUtility.SetDirty(boards[i]);
+            PinDocument(boards[i]);
+            Debug.Log("Board '" + boards[i].name + "' (slot " + boards[i].slot + ") -> " + (i < docs.Length ? DocNames[i] : "(no document left)"));
+        }
+        if (boards.Count != docs.Length)
+            Debug.LogWarning("Found " + boards.Count + " boards but " + docs.Length + " documents.");
+        UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
+    }
+
+    // the document is pinned on the board as a small picture (child "Pinned Document"): move / resize it freely
+    private static void PinDocument(BoardClue b)
+    {
+        Transform pin = b.transform.Find("Pinned Document");
+        if (b.documentSprite == null)
+        {
+            if (pin != null) Undo.DestroyObjectImmediate(pin.gameObject);
+            return;
+        }
+        bool fresh = pin == null;
+        if (fresh)
+        {
+            GameObject go = new GameObject("Pinned Document");
+            Undo.RegisterCreatedObjectUndo(go, "Pin document");
+            go.transform.SetParent(b.transform, false);
+            go.transform.localPosition = new Vector3(b.boardSize.x * 0.2f, 0f, 0f);
+            go.transform.localRotation = Quaternion.Euler(0, 0, Random.Range(-4f, 4f));
+            pin = go.transform;
+        }
+        SpriteRenderer sr = pin.GetComponent<SpriteRenderer>();
+        if (sr == null) sr = Undo.AddComponent<SpriteRenderer>(pin.gameObject);
+        Undo.RecordObject(sr, "Pin document");
+        sr.sprite = b.documentSprite;
+        if (fresh)
+        {
+            // about as big as the white paper notes on the board art (~27% of the board's height), whatever the parent's scale
+            Vector3 ls = b.transform.lossyScale;
+            float wantH = b.boardSize.y * Mathf.Abs(ls.y) * 0.27f;
+            float k = wantH / Mathf.Max(0.01f, b.documentSprite.bounds.size.y);
+            pin.localScale = new Vector3(k / Mathf.Max(0.0001f, Mathf.Abs(ls.x)), k / Mathf.Max(0.0001f, Mathf.Abs(ls.y)), 1f);
+        }
+        KeypadMenu.PutBehindPlayer(sr);
+        EditorUtility.SetDirty(sr);
+
+        // its OWN click area (a bit bigger than the picture): click the document = read it full-page
+        BoxCollider2D col = pin.GetComponent<BoxCollider2D>();
+        if (col == null) col = Undo.AddComponent<BoxCollider2D>(pin.gameObject);
+        Undo.RecordObject(col, "Pin document");
+        col.isTrigger = true;
+        col.offset = b.documentSprite.bounds.center;
+        col.size = b.documentSprite.bounds.size * 1.15f;
+        Interactable2D it = pin.GetComponent<Interactable2D>();
+        if (it == null)
+        {
+            it = Undo.AddComponent<Interactable2D>(pin.gameObject);
+            UnityEventTools.AddPersistentListener(it.onInteract, b.OpenDocument);
+        }
+        it.displayName = "Document";
+        it.maxDistance = 4f;
+        EditorUtility.SetDirty(it);
+    }
+
+    private static Sprite LoadSprite(string path)
+    {
+        Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        if (s != null) return s;
+        TextureImporter ti = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (ti == null) return null;
+        ti.textureType = TextureImporterType.Sprite;
+        ti.spriteImportMode = SpriteImportMode.Single;
+        ti.SaveAndReimport();
+        return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+    }
+
     // ===== Drag a rectangle over each board in the Scene view =====
 
     [MenuItem("Tools/Rain/Draw Board Clues (drag over each board)")]

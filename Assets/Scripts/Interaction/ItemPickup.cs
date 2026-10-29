@@ -14,6 +14,11 @@ public class ItemPickup : MonoBehaviour
     public Sprite icon;
     [TextArea] public string pickupMessage = "Picked up an item";
 
+    [Header("Sound")]
+    [Tooltip("Optional: this item's own sound. Empty = the sound for this object's Tag (see GameSfx > Tag Sounds).")]
+    public AudioClip pickupSound;
+    [Range(0f, 1f)] public float pickupVolume = 1f;
+
     public void Pickup()
     {
         if (Inventory.Instance == null) return;
@@ -25,6 +30,9 @@ public class ItemPickup : MonoBehaviour
         if (StoryFlags.Instance != null) StoryFlags.Instance.Set("got_" + itemId);
 
         if (DialogueUI.Instance != null) DialogueUI.Instance.Show(pickupMessage);
+        if (pickupSound != null) GameSfx.Play(pickupSound, pickupVolume);
+        else if (GameSfx.Instance != null) GameSfx.Instance.PlayPickup(gameObject);
+
         gameObject.SetActive(false);
     }
 }

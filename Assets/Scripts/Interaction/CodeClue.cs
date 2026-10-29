@@ -36,6 +36,7 @@ public class CodeClue : MonoBehaviour
         if (DialogueUI.Instance != null)
             DialogueUI.Instance.Show(flavorText + " " + note);
 
+        if (GameSfx.Instance != null) GameSfx.Instance.PlayPickup(gameObject);   // sound of this object's Tag
         if (LoopManager.Ensure() != null) LoopManager.Ensure().MarkFound(slot);
 
         // Written in the Case Book (a new page each loop, because the book restarts with the scene)

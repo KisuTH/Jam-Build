@@ -8,12 +8,14 @@ public class ClueEntry
     public string id;     // unique name, e.g. "family_portrait"
     public string title;  // shown in bold
     public string text;   // the note
+    public Sprite image;  // optional: a document picture, opened by the "View document" button
 
-    public ClueEntry(string id, string title, string text)
+    public ClueEntry(string id, string title, string text, Sprite image = null)
     {
         this.id = id;
         this.title = title;
         this.text = text;
+        this.image = image;
     }
 }
 
@@ -47,11 +49,11 @@ public class CaseNotebook : MonoBehaviour
     }
 
     /// <summary>Adds a clue. Returns false if it has no id or was already added.</summary>
-    public bool AddClue(string id, string title, string text)
+    public bool AddClue(string id, string title, string text, Sprite image = null)
     {
         if (string.IsNullOrEmpty(id) || HasClue(id)) return false;
 
-        entries.Add(new ClueEntry(id, title, text));
+        entries.Add(new ClueEntry(id, title, text, image));
         OnChanged?.Invoke();
         return true;
     }

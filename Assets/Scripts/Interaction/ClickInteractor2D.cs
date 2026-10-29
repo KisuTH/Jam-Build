@@ -35,14 +35,17 @@ public class ClickInteractor2D : MonoBehaviour
         Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
         Collider2D[] hits = Physics2D.OverlapPointAll(world, interactableLayers);
 
+        // When several overlap (e.g. a document pinned ON a board), the innermost one wins
+        Interactable2D best = null;
+        int bestDepth = -1;
         foreach (Collider2D hit in hits)
         {
             Interactable2D target = hit.GetComponentInParent<Interactable2D>();
-            if (target != null)
-            {
-                target.Interact(player);
-                return;
-            }
+            if (target == null) continue;
+            int depth = 0;
+            for (Transform t = target.transform; t != null; t = t.parent) depth++;
+            if (depth > bestDepth) { best = target; bestDepth = depth; }
         }
+        if (best != null) best.Interact(player);
     }
 }

@@ -235,6 +235,14 @@ public class LoopManager : MonoBehaviour
         StartCoroutine(DieRoutine(monsterFromSide));
     }
 
+    /// <summary>The player dies right now, caught by the ghost (no black monster run).</summary>
+    public void DieByGhost()
+    {
+        if (dying) return;
+        dying = true;
+        StartCoroutine(DieRoutine(0, false));
+    }
+
     private IEnumerator FailRoutine(CallSituation situation, int monsterFromSide)
     {
         if (AICaller.Instance != null)
@@ -242,14 +250,14 @@ public class LoopManager : MonoBehaviour
         yield return DieRoutine(monsterFromSide);
     }
 
-    private IEnumerator DieRoutine(int monsterFromSide = 0)
+    private IEnumerator DieRoutine(int monsterFromSide = 0, bool monster = true)
     {
         SetPlayerLocked(true);
         if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();
 
         // The black monster runs at the player and kills them
         GameObject player = GameObject.FindWithTag("Player");
-        if (player != null) yield return DeathMonster.Attack(player.transform, monsterFromSide);
+        if (player != null && monster) yield return DeathMonster.Attack(player.transform, monsterFromSide);
 
         CameraShake2D.Shake(0.6f, 0.3f);
         if (ScreenFlash.Instance != null)

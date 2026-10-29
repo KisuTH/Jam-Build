@@ -103,6 +103,46 @@ public class CaseNotebookUI : MonoBehaviour
         return book != null ? book.Entries.Count : 0;
     }
 
+    // ===== "View document" button: only on pages whose clue has a document picture =====
+    private GameObject docButton;
+    private Sprite docSprite;
+
+    private void ShowDocumentButton(Sprite image)
+    {
+        docSprite = image;
+        if (image == null)
+        {
+            if (docButton != null) docButton.SetActive(false);
+            return;
+        }
+        if (panel == null) return;
+        if (docButton == null)
+        {
+            docButton = new GameObject("ViewDocumentButton", typeof(RectTransform), typeof(Image), typeof(Button));
+            docButton.transform.SetParent(panel.transform, false);
+            RectTransform rt = docButton.GetComponent<RectTransform>();
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0f);
+            rt.sizeDelta = new Vector2(340f, 64f);
+            rt.anchoredPosition = new Vector2(0f, 36f);
+            docButton.GetComponent<Image>().color = new Color(0.36f, 0.12f, 0.1f, 0.95f);
+            docButton.GetComponent<Button>().onClick.AddListener(() => BoardClue.ViewDocument(docSprite));
+
+            GameObject lbl = new GameObject("Label", typeof(RectTransform));
+            lbl.transform.SetParent(docButton.transform, false);
+            RectTransform lr = lbl.GetComponent<RectTransform>();
+            lr.anchorMin = Vector2.zero; lr.anchorMax = Vector2.one; lr.offsetMin = lr.offsetMax = Vector2.zero;
+            TextMeshProUGUI t = lbl.AddComponent<TextMeshProUGUI>();
+            t.alignment = TextAlignmentOptions.Center;
+            t.fontSize = 30;
+            t.color = Color.white;
+            t.raycastTarget = false;
+            t.text = Loc.T("View document");
+        }
+        else docButton.GetComponentInChildren<TMP_Text>().text = Loc.T("View document");
+        docButton.SetActive(true);
+        docButton.transform.SetAsLastSibling();
+    }
+
     private void Refresh()
     {
         int count = Count();
@@ -120,6 +160,7 @@ public class CaseNotebookUI : MonoBehaviour
         // The clue itself
         if (count == 0)
         {
+            ShowDocumentButton(null);
             if (titleText != null) titleText.text = "";
             if (entriesText != null)
                 entriesText.text = "(No clues yet. Look around and click things.)";
@@ -127,6 +168,7 @@ public class CaseNotebookUI : MonoBehaviour
         }
 
         ClueEntry e = CaseNotebook.Instance.Entries[currentPage];
+        ShowDocumentButton(e.image);
 
         if (titleText != null)
         {
