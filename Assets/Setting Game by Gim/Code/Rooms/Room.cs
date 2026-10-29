@@ -31,7 +31,7 @@ public class Room : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.cyan;
+        Gizmos.color = Color.red;
         Vector3 center = (boundsMin + boundsMax) * 0.5f;
         Vector3 size = boundsMax - boundsMin;
         Gizmos.DrawWireCube(center, size);
