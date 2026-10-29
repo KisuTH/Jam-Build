@@ -7458,6 +7458,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player New
       objectReference: {fileID: 0}
+    - target: {fileID: 6096102906982380701, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
+      propertyPath: idle.left
+      value: 
+      objectReference: {fileID: 7400000, guid: 4b738b7cb7a004745b5663040893016b, type: 2}
+    - target: {fileID: 6096102906982380701, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
+      propertyPath: idle.sizeMultiplier
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6159067136470169277, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
       propertyPath: m_LocalScale.x
       value: 6.370151
