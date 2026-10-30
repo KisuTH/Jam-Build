@@ -28,7 +28,7 @@ public class GhostChaseEvent : MonoBehaviour
     public float ghostSpeed = 3f;
     [Tooltip("How far behind the player the ghost appears.")]
     public float spawnDistance = 7f;
-    [Tooltip("Seconds after the player enters a room before the ghost appears.")]
+    [Tooltip("Seconds after the door transition finishes before the ghost can appear. The countdown pauses while going through a door.")]
     public float spawnDelay = 1.2f;
     [Tooltip("In rooms without a fixed spawn point the ghost appears this far inside the map edge nearest to where the player came in.")]
     public float edgeMargin = 3f;
@@ -196,24 +196,24 @@ public class GhostChaseEvent : MonoBehaviour
     private void UpdateChase(Vector2 p)
     {
         if (ghost == null) return;
+        if (LoopManager.Instance != null && LoopManager.Instance.IsDying) return;
+        // Give the player the full head start after the fade and automatic door walk finish.
+        if (RoomTransition.Instance != null && RoomTransition.Instance.IsBusy) return;
         if (ghostWaiting)
         {
             spawnTimer -= Time.deltaTime;
             if (spawnTimer <= 0f)
             {
-                float sx = ChooseSpawnX(out bool forced);
-                if (forced || Mathf.Abs(sx - p.x) >= minSpawnGap) SpawnGhost(p, sx);
+                float sx = ChooseSpawnX();
+                if (Mathf.Abs(sx - p.x) >= minSpawnGap) SpawnGhost(p, sx);
             }
             return;
         }
         if (!ghost.activeSelf) return;
 
-        if (LoopManager.Instance != null && LoopManager.Instance.IsDying) return;   // the player is already dead
-        bool inDoor = RoomTransition.Instance != null && RoomTransition.Instance.IsBusy;
-
         Vector3 g = ghost.transform.position;
         float d = p.x - g.x;
-        if (!inDoor && Mathf.Abs(d) > catchDistance * 0.5f) g.x += Mathf.Sign(d) * ghostSpeed * Time.deltaTime;
+        if (Mathf.Abs(d) > catchDistance * 0.5f) g.x += Mathf.Sign(d) * ghostSpeed * Time.deltaTime;
         ghost.transform.position = g;
         PlaceFeet();
         if (ghostSprite != null && Mathf.Abs(d) > 0.05f) ghostSprite.flipX = (d > 0f) != !spriteFacesLeft;
@@ -223,7 +223,7 @@ public class GhostChaseEvent : MonoBehaviour
         if (loopSource != null)
             loopSource.volume = Mathf.Lerp(loopMaxVolume, loopMinVolume, Mathf.Clamp01(dist / Mathf.Max(1f, loopHearDistance))) * sfxVolume;
         bool visible = ghostSprite == null || ghostSprite.color.a > 0.5f;
-        if (!inDoor && visible && dist <= catchDistance && PlayerFeetY() - groundY <= catchHeight)
+        if (visible && dist <= catchDistance && PlayerFeetY() - groundY <= catchHeight)
         {
             state = State.Ended;
             StopLoop();
@@ -244,12 +244,10 @@ public class GhostChaseEvent : MonoBehaviour
     //  1. the very first time: the start point (left of the red-folder cabinet),
     //  2. a fixed point set for the room (roomSpawns),
     //  3. otherwise the map edge nearest to where the player came in.
-    private float ChooseSpawnX(out bool forced)
+    private float ChooseSpawnX()
     {
-        forced = false;
         if (!firstSpawnDone && firstSpawnPoint != null && RoomAt(firstSpawnPoint.position) == currentRoom)
         {
-            forced = true;
             return firstSpawnPoint.position.x;
         }
         if (roomSpawns != null)

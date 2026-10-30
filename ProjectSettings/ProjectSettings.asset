@@ -299,7 +299,10 @@ PlayerSettings:
   androidSymbolsSizeThreshold: 800
   m_BuildTargetIcons: []
   m_BuildTargetPlatformIcons: []
-  m_BuildTargetBatching: []
+  m_BuildTargetBatching:
+  - m_BuildTarget: WebGL
+    m_StaticBatching: 0
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs: []
   m_BuildTargetGraphicsJobMode: []
@@ -602,7 +605,7 @@ PlayerSettings:
     Server: UNITY_MCP_READY;UNITY_MCP_DEPS_17
     Standalone: SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY;UNITY_MCP_READY;UNITY_MCP_DEPS_17;UNITY_POST_PROCESSING_STACK_V2
     VisionOS: UNITY_MCP_READY;UNITY_MCP_DEPS_17;UNITY_POST_PROCESSING_STACK_V2
-    WebGL: UNITY_MCP_READY;UNITY_MCP_DEPS_17;UNITY_POST_PROCESSING_STACK_V2
+    WebGL: UNITY_MCP_READY;UNITY_MCP_DEPS_17;UNITY_POST_PROCESSING_STACK_V2;APP_UI_EDITOR_ONLY;SENTIS_ANALYTICS_ENABLED
     Windows Store Apps: UNITY_MCP_READY;UNITY_MCP_DEPS_17
     XboxOne: UNITY_MCP_READY;UNITY_MCP_DEPS_17;UNITY_POST_PROCESSING_STACK_V2
     iPhone: UNITY_MCP_READY;UNITY_MCP_DEPS_17

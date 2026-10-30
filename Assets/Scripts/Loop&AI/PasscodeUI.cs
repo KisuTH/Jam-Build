@@ -74,7 +74,18 @@ public class PasscodeUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        ShadowEnemyVisual.ApplyToUI(leftThreat, -1);
+        ShadowEnemyVisual.ApplyToUI(rightThreat, 1);
+        SetShadowBackdrop(leftView);
+        SetShadowBackdrop(rightView);
         if (panel != null) panel.SetActive(false);
+    }
+
+    private static void SetShadowBackdrop(GameObject view)
+    {
+        if (view == null) return;
+        UnityEngine.UI.Image image = view.GetComponent<UnityEngine.UI.Image>();
+        if (image != null) image.color = new Color(0.12f, 0.12f, 0.14f, image.color.a);
     }
 
     private void Update()

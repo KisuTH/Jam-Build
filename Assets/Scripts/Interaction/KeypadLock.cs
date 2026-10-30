@@ -211,7 +211,9 @@ public class KeypadLock : MonoBehaviour
 
     private void UpdateThreat()
     {
-        if (threat != null) threat.SetActive(view != 0 && attackSide == view);
+        if (threat == null) return;
+        if (attackSide != 0) ShadowEnemyVisual.ApplyToUI(threat, attackSide);
+        threat.SetActive(view != 0 && attackSide == view);
     }
 
     private void UpdateAttacks()
@@ -323,7 +325,7 @@ public class KeypadLock : MonoBehaviour
         cr.pivot = new Vector2(0.5f, 1f); cr.anchoredPosition = new Vector2(0, -30); cr.sizeDelta = new Vector2(0, 90);
 
         // the side view (dark, with the addict when he is there)
-        sideView = NewImage("SideView", root.transform, new Color(0.02f, 0.02f, 0.03f, 0.96f));
+        sideView = NewImage("SideView", root.transform, new Color(0.12f, 0.12f, 0.14f, 0.96f));
         Stretch(sideView.GetComponent<RectTransform>());
         sideView.GetComponent<Image>().raycastTarget = false;
         GameObject sl = new GameObject("Label", typeof(RectTransform));
@@ -336,18 +338,11 @@ public class KeypadLock : MonoBehaviour
         RectTransform slr = sideLabel.rectTransform;
         slr.anchorMin = new Vector2(0.1f, 0.1f); slr.anchorMax = new Vector2(0.9f, 0.2f);
         slr.offsetMin = slr.offsetMax = Vector2.zero;
-        threat = NewImage("Addict", sideView.transform, new Color(0.12f, 0.02f, 0.02f, 1f));
+        threat = NewImage("Addict", sideView.transform, Color.white);
         RectTransform tr = threat.GetComponent<RectTransform>();
         tr.anchorMin = tr.anchorMax = tr.pivot = new Vector2(0.5f, 0.5f);
         tr.sizeDelta = new Vector2(260, 620);
-        threat.GetComponent<Image>().raycastTarget = false;
-        GameObject eyes = new GameObject("Eyes", typeof(RectTransform));
-        eyes.transform.SetParent(threat.transform, false);
-        TMP_Text et = eyes.AddComponent<TextMeshProUGUI>();
-        et.text = ". ."; et.fontSize = 90; et.alignment = TextAlignmentOptions.Center;
-        et.color = new Color(0.9f, 0.1f, 0.1f); et.raycastTarget = false;
-        RectTransform er = et.rectTransform;
-        er.anchorMin = new Vector2(0, 0.7f); er.anchorMax = new Vector2(1, 0.95f); er.offsetMin = er.offsetMax = Vector2.zero;
+        ShadowEnemyVisual.ApplyToUI(threat, 1);
         threat.SetActive(false);
         sideView.SetActive(false);
 
