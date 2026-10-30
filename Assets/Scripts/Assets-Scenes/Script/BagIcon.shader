@@ -4,6 +4,7 @@ Shader "UI/Bag Icon"
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
+        _RedToBrown ("Red Cover To Brown", Range(0,1)) = 0
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
         _StencilOp ("Stencil Operation", Float) = 0
@@ -58,6 +59,7 @@ Shader "UI/Bag Icon"
             };
             sampler2D _MainTex;
             fixed4 _Color;
+            half _RedToBrown;
             fixed4 _TextureSampleAdd;
             float4 _ClipRect;
             v2f vert(appdata v)
@@ -75,6 +77,10 @@ Shader "UI/Bag Icon"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 texel = tex2D(_MainTex, i.uv) + _TextureSampleAdd;
+                // Recolour only red cover pigments; preserve grey page edges and shading.
+                half redMask = saturate((texel.r - max(texel.g, texel.b)) * 10);
+                fixed3 brown = fixed3(texel.r * 1.15, texel.g * .5 + texel.r * .48, texel.b * .5 + texel.r * .2);
+                texel.rgb = lerp(texel.rgb, brown, _RedToBrown * redMask);
                 fixed4 color = fixed4(lerp(texel.rgb, fixed3(1,1,1), i.outline), texel.a) * i.color;
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(i.worldPosition.xy, _ClipRect);

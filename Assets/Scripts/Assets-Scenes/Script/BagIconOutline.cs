@@ -1,25 +1,55 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 // Draw white alpha silhouettes behind the original icon in the same mesh.
 // Unlike UI.Outline, BagIcon.shader ignores the texture's RGB for these copies.
 [RequireComponent(typeof(UnityEngine.UI.Image))]
-public class BagIconOutline : UnityEngine.UI.BaseMeshEffect
+public class BagIconOutline : UnityEngine.UI.BaseMeshEffect, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField, Min(0f)] private float width = 3f;
+    private bool hovered;
+    private UnityEngine.UI.Button button;
     private readonly List<UIVertex> source = new List<UIVertex>();
     private readonly List<UIVertex> outlined = new List<UIVertex>();
 
     protected override void OnEnable()
     {
         base.OnEnable();
+        hovered = false;
+        button = GetComponentInParent<UnityEngine.UI.Button>();
         if (graphic != null && graphic.canvas != null)
             graphic.canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1;
     }
 
+    protected override void OnDisable()
+    {
+        hovered = false;
+        base.OnDisable();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SetHovered(button == null || button.IsInteractable());
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetHovered(false);
+    }
+
+    public void SetHovered(bool value)
+    {
+        // Older bag instances start with this component disabled in the scene.
+        if (!enabled) enabled = true;
+        if (hovered == value) return;
+        hovered = value;
+        if (graphic != null) graphic.SetVerticesDirty();
+    }
+
     public override void ModifyMesh(UnityEngine.UI.VertexHelper vertices)
     {
-        if (!IsActive() || width <= 0f) return;
+        if (!IsActive() || !hovered || width <= 0f) return;
         source.Clear();
         outlined.Clear();
         vertices.GetUIVertexStream(source);
