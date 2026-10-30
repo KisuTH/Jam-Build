@@ -26,6 +26,19 @@ public static class WoundNoticeRandomizer
     };
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void Init()
+    {
+        // also run again every time the scene reloads (every loop), so a new paper is picked each time
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        Apply();
+    }
+
+    private static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        Apply();
+    }
+
     private static void Apply()
     {
         var papers = new List<Interactable2D>();
