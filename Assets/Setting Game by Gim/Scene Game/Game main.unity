@@ -172,7 +172,7 @@ MonoBehaviour:
   fadeTime: 2
   chaseStartSound: {fileID: 0}
   ghostAppearSound: {fileID: 0}
-  chaseLoopSound: {fileID: 0}
+  chaseLoopSound: {fileID: 8300000, guid: 6e072199668b87d4b828f15dfd1def6e, type: 3}
   catchSound: {fileID: 0}
   sfxVolume: 1
   loopMaxVolume: 0.8
