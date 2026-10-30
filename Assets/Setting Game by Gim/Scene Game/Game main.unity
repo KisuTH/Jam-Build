@@ -167,7 +167,7 @@ MonoBehaviour:
   startShakeTime: 1.5
   startShakeStrength: 0.25
   anonTriggerBox: {fileID: 1569116432}
-  endMessage: THE END
+  endMessage: you escape with the evidence
   endSceneName: CreditsScene
   fadeTime: 2
   chaseStartSound: {fileID: 0}
@@ -6601,6 +6601,122 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 16.261, y: 23}
   m_EdgeRadius: 0
+--- !u!1 &304172395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 304172396}
+  - component: {fileID: 304172397}
+  m_Layer: 0
+  m_Name: Spot Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &304172396
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304172395}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: 0.999997, w: 0.0024427343}
+  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1706105445}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &304172397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304172395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.Light2D
+  m_ComponentVersion: 4
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_Light2DProvider:
+    rid: -2
+  m_SelectionSources:
+    rid: 1316650460325347579
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_LightVolumeIntensity: 1
+  m_LightVolumeEnabled: 0
+  m_ApplyToSortingLayers: 00000000
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowsEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowSoftness: 0.3
+  m_ShadowSoftnessFalloffIntensity: 0.5
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 0
+  m_PointLightOuterAngle: 178.74
+  m_PointLightInnerRadius: -0.08502054
+  m_PointLightOuterRadius: 27.918581
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1316650460325347579
+      type: {class: Light2DProviderSources, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_SelectedHashCode: 3
+        m_SelectedSource:
+          rid: 1316650460325347583
+        m_Provider2DCache:
+          rid: 1316650460325347580
+    - rid: 1316650460325347580
+      type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_Cache: []
+    - rid: 1316650460325347583
+      type: {class: Light2DSource_BuiltIn, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data:
+        m_HashCode: 4
+        m_SourceType: 3
+        m_MenuPriority: 0
+        m_MenuName:
+          m_Text: Spot
+          m_Image: {fileID: 2800000, guid: 6eaa9958d83ec43499e946a21edba283, type: 3}
+          m_Tooltip: 
+          m_TextWithWhitespace: "Spot\u200B"
 --- !u!1 &316442140
 GameObject:
   m_ObjectHideFlags: 0
@@ -48670,8 +48786,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -4.47725, y: -5.82935, z: 0}
-    m_Extent: {x: 6.1742496, y: 6.6704497, z: 0}
+    m_Center: {x: -5.2457504, y: -4.0014496, z: 0}
+    m_Extent: {x: 6.02775, y: 9.85145, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -48682,13 +48798,12 @@ MonoBehaviour:
   m_ShapeLightFalloffSize: 0.5
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath:
-  - {x: -9.971426, y: -8.830149, z: 0}
-  - {x: -10.151846, y: 0.021470547, z: 0}
-  - {x: -4.5569706, y: 0.34117723, z: 0}
-  - {x: 1.1977568, y: 0.02147007, z: 0}
-  - {x: 1.1584616, y: -8.930553, z: 0}
-  - {x: -0.083086014, y: -11.939585, z: 0}
-  - {x: -9.502262, y: -12.000746, z: 0}
+  - {x: -9.7539425, y: 5.353357, z: 0}
+  - {x: 0.16321182, y: 4.398392, z: 0}
+  - {x: 0.28307724, y: -8.612232, z: 0}
+  - {x: -1.1176319, y: -13.292452, z: 0}
+  - {x: -10.775549, y: -13.353613, z: 0}
+  - {x: -8.449652, y: -8.734825, z: 0}
   references:
     version: 2
     RefIds:
@@ -48715,7 +48830,7 @@ Transform:
   m_GameObject: {fileID: 2028744196}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.94, y: -0.4607997, z: 0}
+  m_LocalPosition: {x: -11.8, y: -0.4607997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49600,6 +49715,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6332828465807602833, guid: aef34f443333b4846a4a7b498d99c9d4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1065930006}
+    - targetCorrespondingSourceObject: {fileID: 6332828465807602833, guid: aef34f443333b4846a4a7b498d99c9d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 304172396}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aef34f443333b4846a4a7b498d99c9d4, type: 3}
 --- !u!61 &2870007582124061905
