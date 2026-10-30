@@ -156,6 +156,10 @@ PrefabInstance:
       value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 3424541777793538674, guid: 613ced660c3b335478ae773a8378df90, type: 3}
+      propertyPath: m_text
+      value: Pond
+      objectReference: {fileID: 0}
+    - target: {fileID: 3424541777793538674, guid: 613ced660c3b335478ae773a8378df90, type: 3}
       propertyPath: m_fontColor32.rgba
       value: 4279509558
       objectReference: {fileID: 0}
@@ -321,7 +325,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Thack you for playing game demo game jam
+  m_text: Thank you for playing our game demo in game jam
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

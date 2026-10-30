@@ -123,6 +123,14 @@ public class PasscodeUI : MonoBehaviour
             return;
         }
 
+        if (CheatMode.Active)
+        {
+            // cheat mode: the lock opens at once, no code needed
+            if (StoryFlags.Instance != null) StoryFlags.Instance.Set(SolvedFlag);
+            if (DialogueUI.Instance != null) DialogueUI.Instance.Show("[Cheat] The lock clicks open.");
+            return;
+        }
+
         entered = "";
         busy = false;
         attackSide = 0;

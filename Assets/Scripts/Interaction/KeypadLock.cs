@@ -67,6 +67,13 @@ public class KeypadLock : MonoBehaviour
             if (DialogueUI.Instance != null) DialogueUI.Instance.Show("The lock is already open.");
             return;
         }
+        if (CheatMode.Active)
+        {
+            // cheat mode: the lock opens at once, no code needed
+            if (StoryFlags.Instance != null) StoryFlags.Instance.Set(unlockFlag);
+            if (DialogueUI.Instance != null) DialogueUI.Instance.Show("[Cheat] The lock clicks open.");
+            return;
+        }
         if (LoopManager.Ensure() != null && LoopManager.Ensure().IsDying) return;
         Build();
         entered = "";

@@ -28,7 +28,7 @@ public class GhostChaseEvent : MonoBehaviour
     public float ghostSpeed = 3f;
     [Tooltip("How far behind the player the ghost appears.")]
     public float spawnDistance = 7f;
-    [Tooltip("Seconds after the door transition finishes before the ghost can appear. The countdown pauses while going through a door.")]
+    [Tooltip("Seconds after the player enters a room before the ghost appears.")]
     public float spawnDelay = 1.2f;
     [Tooltip("In rooms without a fixed spawn point the ghost appears this far inside the map edge nearest to where the player came in.")]
     public float edgeMargin = 3f;
@@ -55,6 +55,13 @@ public class GhostChaseEvent : MonoBehaviour
     [Header("Camera shake")]
     public float startShakeTime = 1.5f;
     public float startShakeStrength = 0.25f;
+    [Tooltip("The screen shakes each time the ghost appears (fades in).")] public float spawnShakeTime = 0.6f;
+    public float spawnShakeStrength = 0.2f;
+
+    [Header("Fade")]
+    public float fadeInTime = 0.8f;
+    [Tooltip("The ghost fades away this fast when the player goes to the next room.")] public float fadeOutTime = 0.5f;
+    [Tooltip("The ghost stays in place until it has finished fading in (so the fade can be seen).")] public bool standStillWhileFadingIn = true;
 
     [Header("Ending")]
     [Tooltip("The box where Anon stood. Once Anon has gone, walking past it (after the red folder) ends the game. Move it in the Scene view.")]
@@ -65,7 +72,8 @@ public class GhostChaseEvent : MonoBehaviour
     public float fadeTime = 2f;
 
     [Header("Sound effects (drag audio clips here, all optional)")]
-    [Tooltip("Plays once when the red folder is picked up (with the camera shake).")] public AudioClip chaseStartSound;
+    [Tooltip("Starts when the red folder is picked up (with the camera shake). Loops for the whole chase if 'Loop Chase Start Sound' is ticked.")] public AudioClip chaseStartSound;
+    [Tooltip("Ticked = the Chase Start Sound repeats all through the chase, until the ghost catches the player or the game ends.")] public bool loopChaseStartSound = true;
     [Tooltip("Plays each time the ghost appears.")] public AudioClip ghostAppearSound;
     [Tooltip("Loops while the ghost is chasing; louder the closer the ghost is.")] public AudioClip chaseLoopSound;
     [Tooltip("Plays when the ghost catches the player.")] public AudioClip catchSound;
@@ -93,10 +101,34 @@ public class GhostChaseEvent : MonoBehaviour
     private float groundY;
     private float arrivalX;
     private SpriteRenderer ghostSprite;
+    private SpriteRenderer[] ghostRenderers;
+    private float ghostAlpha = 1f;
+
+    // The fade is applied to every picture of the ghost, again after the Animator each frame, so nothing can override it
+    private void SetGhostAlpha(float a)
+    {
+        ghostAlpha = Mathf.Clamp01(a);
+        ApplyGhostAlpha();
+    }
+
+    private void ApplyGhostAlpha()
+    {
+        if (ghostRenderers == null) return;
+        foreach (SpriteRenderer r in ghostRenderers)
+        {
+            if (r == null) continue;
+            Color c = r.color; c.a = ghostAlpha; r.color = c;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (ghost != null && ghost.activeSelf) ApplyGhostAlpha();
+    }
 
     private void Start()
     {
-        if (ghost != null) { ghostSprite = ghost.GetComponentInChildren<SpriteRenderer>(true); ghost.SetActive(false); }
+        if (ghost != null) { ghostSprite = ghost.GetComponentInChildren<SpriteRenderer>(true); ghostRenderers = ghost.GetComponentsInChildren<SpriteRenderer>(true); ghost.SetActive(false); }
         if (anon != null) { spotX = anon.transform.position.x; anonRoom = RoomAt(anon.transform.position); }
         if (StoryFlags.Instance != null) StoryFlags.Instance.OnFlagSet += OnFlag;
         if (chaseLoopSound != null)
@@ -108,6 +140,43 @@ public class GhostChaseEvent : MonoBehaviour
             loopSource.spatialBlend = 0f;
             loopSource.volume = 0f;
         }
+    }
+
+    private AudioSource chaseSource;
+
+    private void StartChaseSound()
+    {
+        if (chaseStartSound == null) return;
+        if (!loopChaseStartSound) { GameSfx.Play(chaseStartSound, sfxVolume); return; }
+        if (chaseSource == null)
+        {
+            chaseSource = gameObject.AddComponent<AudioSource>();
+            chaseSource.playOnAwake = false;
+            chaseSource.spatialBlend = 0f;
+        }
+        chaseSource.clip = chaseStartSound;
+        chaseSource.loop = true;
+        chaseSource.volume = sfxVolume;
+        chaseSource.Play();
+    }
+
+    private void StopChaseSound()
+    {
+        if (chaseSource != null) chaseSource.Stop();
+    }
+
+    // The chase sound pauses while the ghost is gone and carries on from the same place when the ghost appears again
+    private void PauseChaseSound()
+    {
+        if (chaseSource != null && chaseSource.isPlaying) chaseSource.Pause();
+    }
+
+    private void ResumeChaseSound()
+    {
+        if (chaseSource == null || chaseSource.clip == null) return;
+        chaseSource.volume = sfxVolume;
+        chaseSource.UnPause();
+        if (!chaseSource.isPlaying) chaseSource.Play();
     }
 
     private void StartLoop()
@@ -137,7 +206,7 @@ public class GhostChaseEvent : MonoBehaviour
         currentRoom = RoomAt(player.position);
         arrivalX = player.position.x;
         CameraShake2D.Shake(startShakeTime, startShakeStrength);
-        GameSfx.Play(chaseStartSound, sfxVolume);
+        StartChaseSound();
         ghostWaiting = true;
         spawnTimer = startShakeTime + spawnDelay;
     }
@@ -185,10 +254,11 @@ public class GhostChaseEvent : MonoBehaviour
     private void OnRoomChanged()
     {
         if (state != State.Chasing) return;
+        bool wasVisible = ghost != null && ghost.activeSelf;
         HideGhost();
         if (currentRoom == anonRoom) { state = State.AtAnon; ghostWaiting = false; return; }
         ghostWaiting = true;
-        spawnTimer = spawnDelay;
+        spawnTimer = spawnDelay + (wasVisible ? fadeOutTime : 0f);   // the next ghost appears after the old one has faded out
         lastDir = 0f;
         if (player != null) arrivalX = player.position.x;
     }
@@ -196,24 +266,35 @@ public class GhostChaseEvent : MonoBehaviour
     private void UpdateChase(Vector2 p)
     {
         if (ghost == null) return;
-        if (LoopManager.Instance != null && LoopManager.Instance.IsDying) return;
-        // Give the player the full head start after the fade and automatic door walk finish.
-        if (RoomTransition.Instance != null && RoomTransition.Instance.IsBusy) return;
         if (ghostWaiting)
         {
+            // wait until the door is finished: a ghost that appears while the player is still in the doorway would fade out again at once
+            if (RoomTransition.Instance != null && RoomTransition.Instance.IsBusy) return;
             spawnTimer -= Time.deltaTime;
             if (spawnTimer <= 0f)
             {
-                float sx = ChooseSpawnX();
-                if (Mathf.Abs(sx - p.x) >= minSpawnGap) SpawnGhost(p, sx);
+                float sx = ChooseSpawnX(out bool forced);
+                if (forced || Mathf.Abs(sx - p.x) >= minSpawnGap) SpawnGhost(p, sx);
             }
             return;
         }
         if (!ghost.activeSelf) return;
 
+        if (LoopManager.Instance != null && LoopManager.Instance.IsDying) return;   // the player is already dead
+        bool inDoor = RoomTransition.Instance != null && RoomTransition.Instance.IsBusy;
+        if (fadingOut) return;
+        if (inDoor)
+        {
+            HideGhost();
+            ghostWaiting = true;                       // a new ghost comes after the door (also if the room did not change)
+            spawnTimer = spawnDelay + fadeOutTime;
+            arrivalX = p.x;
+            return;
+        }   // the player is leaving through the door: the ghost fades out now, while it can still be seen
+
         Vector3 g = ghost.transform.position;
         float d = p.x - g.x;
-        if (Mathf.Abs(d) > catchDistance * 0.5f) g.x += Mathf.Sign(d) * ghostSpeed * Time.deltaTime;
+        if (!inDoor && !(fadingIn && standStillWhileFadingIn) && Mathf.Abs(d) > catchDistance * 0.5f) g.x += Mathf.Sign(d) * ghostSpeed * Time.deltaTime;
         ghost.transform.position = g;
         PlaceFeet();
         if (ghostSprite != null && Mathf.Abs(d) > 0.05f) ghostSprite.flipX = (d > 0f) != !spriteFacesLeft;
@@ -222,11 +303,12 @@ public class GhostChaseEvent : MonoBehaviour
         float dist = Mathf.Abs(d);
         if (loopSource != null)
             loopSource.volume = Mathf.Lerp(loopMaxVolume, loopMinVolume, Mathf.Clamp01(dist / Mathf.Max(1f, loopHearDistance))) * sfxVolume;
-        bool visible = ghostSprite == null || ghostSprite.color.a > 0.5f;
-        if (visible && dist <= catchDistance && PlayerFeetY() - groundY <= catchHeight)
+        bool visible = ghostSprite == null || ghostAlpha > 0.5f;
+        if (!inDoor && visible && dist <= catchDistance && PlayerFeetY() - groundY <= catchHeight)
         {
             state = State.Ended;
             StopLoop();
+            StopChaseSound();
             GameSfx.Play(catchSound, sfxVolume);
             LoopManager.Ensure().DieByGhost();
             return;
@@ -244,10 +326,12 @@ public class GhostChaseEvent : MonoBehaviour
     //  1. the very first time: the start point (left of the red-folder cabinet),
     //  2. a fixed point set for the room (roomSpawns),
     //  3. otherwise the map edge nearest to where the player came in.
-    private float ChooseSpawnX()
+    private float ChooseSpawnX(out bool forced)
     {
+        forced = false;
         if (!firstSpawnDone && firstSpawnPoint != null && RoomAt(firstSpawnPoint.position) == currentRoom)
         {
+            forced = true;
             return firstSpawnPoint.position.x;
         }
         if (roomSpawns != null)
@@ -267,19 +351,63 @@ public class GhostChaseEvent : MonoBehaviour
         ghost.SetActive(true);
         PlaceFeet();
         GameSfx.Play(ghostAppearSound, sfxVolume);
+        CameraShake2D.Shake(spawnShakeTime, spawnShakeStrength);
         StartLoop();
-        StartCoroutine(FadeIn());
+        ResumeChaseSound();
+        StopFade();
+        SetGhostAlpha(0f);
+        fadeRoutine = StartCoroutine(FadeIn());
     }
+
+    private bool fadingIn;
 
     private IEnumerator FadeIn()
     {
-        if (ghostSprite == null) yield break;
-        for (float t = 0f; t < 0.8f; t += Time.deltaTime)
+        fadingIn = true;
+        if (ghostSprite == null) { fadingIn = false; yield break; }
+        float len = Mathf.Max(0.01f, fadeInTime);
+        for (float t = 0f; t < len; t += Time.deltaTime)
         {
-            Color c = ghostSprite.color; c.a = t / 0.8f; ghostSprite.color = c;
+            SetGhostAlpha(t / len);
             yield return null;
         }
-        Color f = ghostSprite.color; f.a = 1f; ghostSprite.color = f;
+        SetGhostAlpha(1f);
+        fadingIn = false;
+        fadeRoutine = null;
+    }
+
+    // The ghost fades away (and its sound with it), then it is switched off
+    private IEnumerator FadeOutAndHide()
+    {
+        fadingOut = true;
+        if (ghostSprite != null)
+        {
+            float start = ghostAlpha;
+            float loopStart = loopSource != null ? loopSource.volume : 0f;
+            float chaseStart = chaseSource != null ? chaseSource.volume : 0f;
+            float len = Mathf.Max(0.01f, fadeOutTime);
+            for (float t = 0f; t < len; t += Time.deltaTime)
+            {
+                float k = 1f - t / len;
+                SetGhostAlpha(start * k);
+                if (loopSource != null) loopSource.volume = loopStart * k;
+                if (chaseSource != null) chaseSource.volume = chaseStart * k;
+                yield return null;
+            }
+        }
+        StopLoop();
+        PauseChaseSound();
+        if (ghost != null) ghost.SetActive(false);
+        fadingOut = false;
+        fadeRoutine = null;
+    }
+
+    private Coroutine fadeRoutine;
+    private void StopFade()
+    {
+        fadingIn = false;
+        fadingOut = false;
+        if (fadeRoutine != null) { StopCoroutine(fadeRoutine); fadeRoutine = null; }
     }
 
     // The player's feet (bottom of its collider = the floor)
@@ -299,11 +427,14 @@ public class GhostChaseEvent : MonoBehaviour
         ghost.transform.position = pos;
     }
 
+    private bool fadingOut;
+
     private void HideGhost()
     {
-        StopAllCoroutines();
-        StopLoop();
-        if (ghost != null) ghost.SetActive(false);
+        if (fadingOut) return;
+        StopFade();
+        if (ghost != null && ghost.activeSelf) fadeRoutine = StartCoroutine(FadeOutAndHide());
+        else { StopLoop(); PauseChaseSound(); }
     }
 
     // The player came back to Anon's room after the red folder: walking past the trigger box ends the game.
@@ -321,6 +452,7 @@ public class GhostChaseEvent : MonoBehaviour
     {
         state = State.Ended;
         StopLoop();
+        StopChaseSound();
         PlayerMovement2D move = player != null ? player.GetComponent<PlayerMovement2D>() : null;
         if (move != null) move.SetControlLocked(true);
         if (DialogueUI.Instance != null) DialogueUI.Instance.Hide();

@@ -152,7 +152,7 @@ MonoBehaviour:
   anon: {fileID: 1596225075}
   ghost: {fileID: 1011904876}
   firstSpawnPoint: {fileID: 1621444116}
-  ghostSpeed: 15
+  ghostSpeed: 25
   spawnDistance: 7
   spawnDelay: 0.3
   edgeMargin: 3
@@ -166,14 +166,20 @@ MonoBehaviour:
     point: {fileID: 976909999}
   startShakeTime: 1.5
   startShakeStrength: 0.25
+  spawnShakeTime: 0.6
+  spawnShakeStrength: 0.2
+  fadeInTime: 0.8
+  fadeOutTime: 0.5
+  standStillWhileFadingIn: 1
   anonTriggerBox: {fileID: 1569116432}
   endMessage: you escape with the evidence
   endSceneName: CreditsScene
   fadeTime: 2
-  chaseStartSound: {fileID: 0}
-  ghostAppearSound: {fileID: 0}
+  chaseStartSound: {fileID: 8300000, guid: 525aef5ab33ad744ab16082703f268b6, type: 3}
+  loopChaseStartSound: 1
+  ghostAppearSound: {fileID: 8300000, guid: edf0efe427949654fb5a7903fae3ee6f, type: 3}
   chaseLoopSound: {fileID: 8300000, guid: 6e072199668b87d4b828f15dfd1def6e, type: 3}
-  catchSound: {fileID: 0}
+  catchSound: {fileID: 8300000, guid: 94fb6c2e21e6c2641a2f7682fa185ab5, type: 3}
   sfxVolume: 1
   loopMaxVolume: 0.8
   loopMinVolume: 0.15
@@ -6411,6 +6417,7 @@ GameObject:
   m_Component:
   - component: {fileID: 304172396}
   - component: {fileID: 304172397}
+  - component: {fileID: 304172398}
   m_Layer: 0
   m_Name: Spot Light 2D
   m_TagString: Untagged
@@ -6517,6 +6524,25 @@ MonoBehaviour:
           m_Image: {fileID: 2800000, guid: 6eaa9958d83ec43499e946a21edba283, type: 3}
           m_Tooltip: 
           m_TextWithWhitespace: "Spot\u200B"
+--- !u!114 &304172398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304172395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d13280458b822342af2f08c3907a40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightFlicker2D
+  flickerOnStart: 1
+  minOnTime: 0.3
+  maxOnTime: 2.5
+  minOffTime: 0.05
+  maxOffTime: 0.6
+  onIntensity: 1
+  offIntensity: 0.1
 --- !u!1 &316442140
 GameObject:
   m_ObjectHideFlags: 0
@@ -7459,6 +7485,7 @@ GameObject:
   m_Component:
   - component: {fileID: 530131733}
   - component: {fileID: 530131734}
+  - component: {fileID: 530131735}
   m_Layer: 0
   m_Name: Freeform Light 2D
   m_TagString: Untagged
@@ -7557,6 +7584,25 @@ MonoBehaviour:
       type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data:
         m_Cache: []
+--- !u!114 &530131735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530131732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d13280458b822342af2f08c3907a40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightFlicker2D
+  flickerOnStart: 1
+  minOnTime: 0.3
+  maxOnTime: 2.5
+  minOffTime: 0.05
+  maxOffTime: 0.6
+  onIntensity: 1
+  offIntensity: 0.1
 --- !u!1 &574854858
 GameObject:
   m_ObjectHideFlags: 0
@@ -35936,6 +35982,50 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 16.261, y: 23}
   m_EdgeRadius: 0
+--- !u!1 &1549301635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549301637}
+  - component: {fileID: 1549301636}
+  m_Layer: 0
+  m_Name: Cheat Mode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1549301636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549301635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c346a0badc3337149aeb5beaaa8c3253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CheatMode
+--- !u!4 &1549301637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549301635}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1569116431
 GameObject:
   m_ObjectHideFlags: 0
@@ -36337,7 +36427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E19\u0E32\u0E22\u0E21\u0E32\u0E41\u0E25\u0E49\u0E27\u0E2A\u0E34\u0E19\u0E30"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36345,7 +36435,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: " \u0E17\u0E35\u0E48\u0E19\u0E35\u0E48\u0E40\u0E07\u0E35\u0E22\u0E1A\u0E01\u0E27\u0E48\u0E32\u0E17\u0E35\u0E48\u0E04\u0E34\u0E14\u0E19\u0E30\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36353,7 +36443,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E2A\u0E16\u0E32\u0E19\u0E17\u0E35\u0E48\u0E19\u0E35\u0E49\u0E16\u0E39\u0E01\u0E17\u0E34\u0E49\u0E07\u0E44\u0E27\u0E49\u0E44\u0E21\u0E48\u0E21\u0E35\u0E43\u0E04\u0E23
       \u0E40\u0E02\u0E49\u0E32\u0E21\u0E32\u0E43\u0E0A\u0E49\u0E19\u0E32\u0E19\u0E41\u0E25\u0E49\u0E27"
     autoAdvanceAfter: 0
@@ -36362,7 +36452,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E41\u0E25\u0E49\u0E27\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E41\u0E1F\u0E49\u0E21\u0E2A\u0E35\u0E41\u0E14\u0E07\u0E25\u0E30\u0E04\u0E23\u0E31\u0E1A?"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36370,7 +36460,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E19\u0E31\u0E48\u0E19\u0E41\u0E2B\u0E25\u0E30\u0E17\u0E35\u0E48\u0E09\u0E31\u0E19\u0E2D\u0E22\u0E32\u0E01\u0E43\u0E2B\u0E49\u0E19\u0E32\u0E22\u0E15\u0E23\u0E27\u0E08\u0E2A\u0E2D\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36378,7 +36468,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E21\u0E35\u0E43\u0E04\u0E23\u0E25\u0E2D\u0E07\u0E40\u0E02\u0E49\u0E32\u0E44\u0E1B\u0E14\u0E39\u0E41\u0E25\u0E49\u0E27\u0E2B\u0E23\u0E37\u0E2D\u0E22\u0E31\u0E07\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36386,7 +36476,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E43\u0E04\u0E23\u0E2D\u0E22\u0E32\u0E01\u0E40\u0E02\u0E49\u0E32\u0E44\u0E1B\r\n"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36394,7 +36484,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E40\u0E02\u0E49\u0E32\u0E43\u0E08\u0E41\u0E25\u0E49\u0E27\u0E04\u0E23\u0E31\u0E1A
       \u0E41\u0E25\u0E49\u0E27\u0E21\u0E35\u0E2D\u0E30\u0E44\u0E23\u0E2D\u0E35\u0E01\u0E44\u0E2B\u0E21\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
@@ -36403,7 +36493,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E41\u0E25\u0E49\u0E27\u0E25\u0E30"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36411,7 +36501,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E43\u0E0A\u0E48 \u0E16\u0E49\u0E32\u0E04\u0E38\u0E13\u0E40\u0E08\u0E2D\u0E41\u0E1F\u0E49\u0E21\u0E2A\u0E35\u0E41\u0E14\u0E07
       \u0E43\u0E2B\u0E49\u0E23\u0E35\u0E1A\u0E40\u0E2D\u0E32\u0E01\u0E25\u0E31\u0E1A\u0E21\u0E32\u0E43\u0E2B\u0E49\u0E1C\u0E21\u0E14\u0E49\u0E27\u0E22"
     autoAdvanceAfter: 0
@@ -36420,7 +36510,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E41\u0E25\u0E49\u0E27\u0E43\u0E19\u0E41\u0E1F\u0E49\u0E21\u0E19\u0E31\u0E49\u0E19\u0E21\u0E35\u0E2D\u0E30\u0E44\u0E23\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36428,7 +36518,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E09\u0E31\u0E19\u0E40\u0E2D\u0E07\u0E01\u0E47\u0E44\u0E21\u0E48\u0E23\u0E39\u0E49\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E17\u0E31\u0E49\u0E07\u0E2B\u0E21\u0E14"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36436,7 +36526,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E16\u0E49\u0E32\u0E2D\u0E22\u0E48\u0E32\u0E07\u0E19\u0E31\u0E49\u0E19\u0E1C\u0E21\u0E08\u0E30\u0E25\u0E2D\u0E07\u0E2B\u0E32\u0E43\u0E2B\u0E49\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36444,7 +36534,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E41\u0E25\u0E49\u0E27\u0E01\u0E47\u0E23\u0E30\u0E27\u0E31\u0E07\u0E15\u0E31\u0E27\u0E14\u0E49\u0E27\u0E22"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36452,7 +36542,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E21\u0E35\u0E2D\u0E30\u0E44\u0E23\u0E17\u0E35\u0E48\u0E1C\u0E21\u0E04\u0E27\u0E23\u0E23\u0E39\u0E49\u0E2D\u0E35\u0E01\u0E44\u0E2B\u0E21\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36460,7 +36550,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: anon
+  - speaker: Noo
     text: "\u0E09\u0E31\u0E19\u0E1D\u0E32\u0E01\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E19\u0E35\u0E49\u0E01\u0E31\u0E1A\u0E19\u0E32\u0E22\u0E14\u0E49\u0E27\u0E22\u0E04\u0E38\u0E13\u0E19\u0E31\u0E01\u0E2A\u0E37\u0E1A\u0E14\u0E49\u0E27\u0E22"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36468,7 +36558,7 @@ MonoBehaviour:
     onLineShown:
       m_PersistentCalls:
         m_Calls: []
-  - speaker: me
+  - speaker: Shin
     text: "\u0E04\u0E23\u0E31\u0E1A"
     autoAdvanceAfter: 0
     speakerThai: 
@@ -36712,11 +36802,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3026915517164472167, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.63
+      value: -0.04
       objectReference: {fileID: 0}
     - target: {fileID: 3026915517164472167, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.215
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: 3179662848181622764, guid: 35132d85e1f70294e9babccd39e1c50d, type: 3}
       propertyPath: m_Name
@@ -42551,6 +42641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1785714035}
   - component: {fileID: 1785714036}
+  - component: {fileID: 1785714037}
   m_Layer: 0
   m_Name: Freeform Light 2D
   m_TagString: Untagged
@@ -42649,6 +42740,25 @@ MonoBehaviour:
       type: {class: 'Provider2DCache`1[[UnityEngine.Rendering.Universal.Light2DProvider, Unity.RenderPipelines.Universal.2D.Runtime]]', ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data:
         m_Cache: []
+--- !u!114 &1785714037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785714034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d13280458b822342af2f08c3907a40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightFlicker2D
+  flickerOnStart: 1
+  minOnTime: 0.3
+  maxOnTime: 2.5
+  minOffTime: 0.05
+  maxOffTime: 0.6
+  onIntensity: 1
+  offIntensity: 0.1
 --- !u!1 &1794869242
 GameObject:
   m_ObjectHideFlags: 0
@@ -78861,3 +78971,4 @@ SceneRoots:
   - {fileID: 1942987985}
   - {fileID: 7488691857100664786}
   - {fileID: 574854861}
+  - {fileID: 1549301637}
