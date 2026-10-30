@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 // A traced, clickable object in a single-piece menu illustration.
 [AddComponentMenu("UI/Menu Object Hotspot")]
+[RequireComponent(typeof(CanvasRenderer))]
 public class MenuObjectHotspot : MaskableGraphic, ICanvasRaycastFilter,
     IPointerEnterHandler, IPointerExitHandler
 {
