@@ -28,6 +28,7 @@ public static class Loc
 
     public static string T(string english)
     {
+        if (!Thai && !string.IsNullOrEmpty(english) && HasThai(english)) return ThaiToEnglish(english);
         if (!Thai || string.IsNullOrEmpty(english)) return english;
         if (Dict.TryGetValue(english, out string th)) return Shape(th);
         return Shape(Rule(english));
@@ -114,6 +115,43 @@ public static class Loc
         if (m.Success && Dict.ContainsKey(m.Groups[1].Value)) return T(m.Groups[1].Value) + ": " + T(m.Groups[2].Value);
         return s;
     }
+
+
+    // ---- Thai-only lines typed in the scene -> English (shown when the language is English) ----
+    private static bool HasThai(string s)
+    {
+        foreach (char c in s) if (c >= '\u0E00' && c <= '\u0E7F') return true;
+        return false;
+    }
+
+    private static string ThaiToEnglish(string thai)
+    {
+        string k = thai.Replace("\\r\\n", " ").Replace("\r", " ").Replace("\n", " ").Trim();
+        while (k.Contains("  ")) k = k.Replace("  ", " ");
+        return ThaiToEn.TryGetValue(k, out string en) ? en : thai;
+    }
+
+    private static readonly Dictionary<string, string> ThaiToEn = new Dictionary<string, string>
+    {
+        { "นายมาแล้วสินะ", "So you've arrived." },
+        { "ที่นี่เงียบกว่าที่คิดนะครับ", "It's quieter here than I expected." },
+        { "สถานที่นี้ถูกทิ้งไว้ไม่มีใคร เข้ามาใช้นานแล้ว", "This place has been abandoned. No one has used it in a long time." },
+        { "แล้วเรื่องแฟ้มสีแดงละครับ?", "What about the red file?" },
+        { "นั่นแหละที่ฉันอยากให้นายตรวจสอบ", "That's exactly what I want you to investigate." },
+        { "มีใครลองเข้าไปดูแล้วหรือยังครับ", "Has anyone tried going in to look yet?" },
+        { "ไม่มีใครอยากเข้าไป", "No one wants to go in." },
+        { "เข้าใจแล้วครับ แล้วมีอะไรอีกไหมครับ", "I understand. Is there anything else?" },
+        { "ไม่มีแล้วละ", "No, that's all." },
+        { "ใช่ ถ้าคุณเจอแฟ้มสีแดง ให้รีบเอากลับมาให้ผมด้วย", "Yes. If you find the red file, bring it back to me right away." },
+        { "แล้วในแฟ้มนั้นมีอะไรครับ", "What's in that file?" },
+        { "ฉันเองก็ไม่รู้รายละเอียดทั้งหมด", "I don't know all the details myself." },
+        { "ถ้าอย่างนั้นผมจะลองหาให้ครับ", "Then I'll try to find it." },
+        { "แล้วก็ระวังตัวด้วย", "And be careful." },
+        { "มีอะไรที่ผมควรรู้อีกไหมครับ", "Is there anything else I should know?" },
+        { "ฉันฝากเรื่องนี้กับนายด้วยคุณนักสืบด้วย", "I'm counting on you, Detective." },
+        { "ครับ", "Understood." },
+        { "ประตูทางซ้าย จะเปิดได้จาก 1 เลข ใน 0-9", "The left door opens with 1 digit from 0-9." },
+    };
 
     // ---- ADD / EDIT TRANSLATIONS HERE (English text must match exactly) ----
     private static readonly Dictionary<string, string> Dict = new Dictionary<string, string>
