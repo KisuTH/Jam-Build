@@ -1,0 +1,325 @@
+fileFormatVersion: 2
+guid: 5517e34252ae1d849b486cab12f72157
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6786548999741090293
+    second: anim_jogn_idle_shawdow_0
+  - first:
+      213: 4460603134516656837
+    second: anim_jogn_idle_shawdow_1
+  - first:
+      213: -593927982589204026
+    second: anim_jogn_idle_shawdow_2
+  - first:
+      213: -4106702902894018843
+    second: anim_jogn_idle_shawdow_3
+  - first:
+      213: -5360888209298556601
+    second: anim_jogn_idle_shawdow_4
+  - first:
+      213: -7637749463134725675
+    second: anim_jogn_idle_shawdow_5
+  - first:
+      213: -2138317197171980874
+    second: anim_jogn_idle_shawdow_6
+  - first:
+      213: -3135808256483191575
+    second: anim_jogn_idle_shawdow_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_0
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 275
+        width: 450
+        height: 1333
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f9a95ccb5aae2e50800000000000000
+      internalID: 6786548999741090293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_1
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 269
+        width: 451
+        height: 1354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cafbd4eaee37ed30800000000000000
+      internalID: 4460603134516656837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_2
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 272
+        width: 447
+        height: 1353
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c92b9785a1f1c7f0800000000000000
+      internalID: -593927982589204026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_3
+      rect:
+        serializedVersion: 2
+        x: 2125
+        y: 270
+        width: 461
+        height: 1347
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5eebfe2d77f0207c0800000000000000
+      internalID: -4106702902894018843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_4
+      rect:
+        serializedVersion: 2
+        x: 2778
+        y: 275
+        width: 449
+        height: 1349
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 749fd2ca39c4a95b0800000000000000
+      internalID: -5360888209298556601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_5
+      rect:
+        serializedVersion: 2
+        x: 3435
+        y: 269
+        width: 446
+        height: 1359
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d99c6e6453410690800000000000000
+      internalID: -7637749463134725675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_6
+      rect:
+        serializedVersion: 2
+        x: 4086
+        y: 271
+        width: 446
+        height: 1355
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b58475a6db2352e0800000000000000
+      internalID: -2138317197171980874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_idle_shawdow_7
+      rect:
+        serializedVersion: 2
+        x: 4738
+        y: 286
+        width: 470
+        height: 1338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e41594410f5b74d0800000000000000
+      internalID: -3135808256483191575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      anim_jogn_idle_shawdow_0: 6786548999741090293
+      anim_jogn_idle_shawdow_1: 4460603134516656837
+      anim_jogn_idle_shawdow_2: -593927982589204026
+      anim_jogn_idle_shawdow_3: -4106702902894018843
+      anim_jogn_idle_shawdow_4: -5360888209298556601
+      anim_jogn_idle_shawdow_5: -7637749463134725675
+      anim_jogn_idle_shawdow_6: -2138317197171980874
+      anim_jogn_idle_shawdow_7: -3135808256483191575
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

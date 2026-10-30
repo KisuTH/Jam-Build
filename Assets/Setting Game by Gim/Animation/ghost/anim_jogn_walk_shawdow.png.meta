@@ -1,0 +1,819 @@
+fileFormatVersion: 2
+guid: 3be2bb58e2fb1b7459f88f015da11bbd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1211545028906014617
+    second: anim_jogn_walk_shawdow_0
+  - first:
+      213: 3949244598371154695
+    second: anim_jogn_walk_shawdow_1
+  - first:
+      213: 7017059157424676430
+    second: anim_jogn_walk_shawdow_2
+  - first:
+      213: 1448560391593099373
+    second: anim_jogn_walk_shawdow_3
+  - first:
+      213: -986765777414328833
+    second: anim_jogn_walk_shawdow_4
+  - first:
+      213: -6423200836248644577
+    second: anim_jogn_walk_shawdow_5
+  - first:
+      213: 2333779469496900555
+    second: anim_jogn_walk_shawdow_6
+  - first:
+      213: 5263002205161327619
+    second: anim_jogn_walk_shawdow_7
+  - first:
+      213: 8068401564335579821
+    second: anim_jogn_walk_shawdow_8
+  - first:
+      213: 8490074876812260715
+    second: anim_jogn_walk_shawdow_9
+  - first:
+      213: 4361553773432236800
+    second: anim_jogn_walk_shawdow_10
+  - first:
+      213: 5421991203254030514
+    second: anim_jogn_walk_shawdow_11
+  - first:
+      213: -5735438387401096082
+    second: anim_jogn_walk_shawdow_12
+  - first:
+      213: -2915152145639077938
+    second: anim_jogn_walk_shawdow_13
+  - first:
+      213: -7533639791842068635
+    second: anim_jogn_walk_shawdow_14
+  - first:
+      213: 3278507529012017621
+    second: anim_jogn_walk_shawdow_15
+  - first:
+      213: -5397398424651619050
+    second: anim_jogn_walk_shawdow_16
+  - first:
+      213: -6585489409813543031
+    second: anim_jogn_walk_shawdow_17
+  - first:
+      213: -4708131564153728837
+    second: anim_jogn_walk_shawdow_18
+  - first:
+      213: 1762296469655900766
+    second: anim_jogn_walk_shawdow_19
+  - first:
+      213: 5023049631142832460
+    second: anim_jogn_walk_shawdow_20
+  - first:
+      213: 1012142477961290833
+    second: anim_jogn_walk_shawdow_21
+  - first:
+      213: -4928304407266031815
+    second: anim_jogn_walk_shawdow_22
+  - first:
+      213: -6108255530412391808
+    second: anim_jogn_walk_shawdow_23
+  - first:
+      213: 331933228923333580
+    second: anim_jogn_walk_shawdow_24
+  - first:
+      213: -568953324241019653
+    second: anim_jogn_walk_shawdow_25
+  - first:
+      213: 2413541098592617152
+    second: anim_jogn_walk_shawdow_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_0
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1649
+        width: 488
+        height: 1356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9975555e8c540d010800000000000000
+      internalID: 1211545028906014617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_1
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 1653
+        width: 347
+        height: 1398
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70bfa09c9098ec630800000000000000
+      internalID: 3949244598371154695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_2
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1649
+        width: 506
+        height: 1356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4e133e202a916160800000000000000
+      internalID: 7017059157424676430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_3
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 1648
+        width: 689
+        height: 1361
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d608b9850025a1410800000000000000
+      internalID: 1448560391593099373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_4
+      rect:
+        serializedVersion: 2
+        x: 2603
+        y: 2813
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffde4b8e0cd4e42f0800000000000000
+      internalID: -986765777414328833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_5
+      rect:
+        serializedVersion: 2
+        x: 2607
+        y: 1649
+        width: 495
+        height: 1356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f14586afed43cd6a0800000000000000
+      internalID: -6423200836248644577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_6
+      rect:
+        serializedVersion: 2
+        x: 3315
+        y: 1652
+        width: 349
+        height: 1399
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcb56770010436020800000000000000
+      internalID: 2333779469496900555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_7
+      rect:
+        serializedVersion: 2
+        x: 3867
+        y: 1649
+        width: 506
+        height: 1356
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30c0dbafe90f90940800000000000000
+      internalID: 5263002205161327619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_8
+      rect:
+        serializedVersion: 2
+        x: 4450
+        y: 1648
+        width: 682
+        height: 1361
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da2ad6b7978b8ff60800000000000000
+      internalID: 8068401564335579821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_9
+      rect:
+        serializedVersion: 2
+        x: 2540
+        y: 2799
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b65fcdc3e1ec2d570800000000000000
+      internalID: 8490074876812260715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_10
+      rect:
+        serializedVersion: 2
+        x: 2544
+        y: 2801
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00b61366c0a578c30800000000000000
+      internalID: 4361553773432236800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_11
+      rect:
+        serializedVersion: 2
+        x: 2550
+        y: 2803
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b0df3db548ce3b40800000000000000
+      internalID: 5421991203254030514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_12
+      rect:
+        serializedVersion: 2
+        x: 2575
+        y: 2805
+        width: 15
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6481df9c21a760b0800000000000000
+      internalID: -5735438387401096082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_13
+      rect:
+        serializedVersion: 2
+        x: 2507
+        y: 2774
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec707f4919c4b87d0800000000000000
+      internalID: -2915152145639077938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_14
+      rect:
+        serializedVersion: 2
+        x: 2517
+        y: 2785
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56771853682237790800000000000000
+      internalID: -7533639791842068635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_15
+      rect:
+        serializedVersion: 2
+        x: 2491
+        y: 2764
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d974343a399f7d20800000000000000
+      internalID: 3278507529012017621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_16
+      rect:
+        serializedVersion: 2
+        x: 2447
+        y: 2294
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 615236bbab69815b0800000000000000
+      internalID: -5397398424651619050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_17
+      rect:
+        serializedVersion: 2
+        x: 2456
+        y: 2292
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98787ffe544ab94a0800000000000000
+      internalID: -6585489409813543031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_18
+      rect:
+        serializedVersion: 2
+        x: 2460
+        y: 2290
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb010d2894b59aeb0800000000000000
+      internalID: -4708131564153728837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_19
+      rect:
+        serializedVersion: 2
+        x: 2472
+        y: 2286
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e52d3c65d4fe47810800000000000000
+      internalID: 1762296469655900766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_20
+      rect:
+        serializedVersion: 2
+        x: 2483
+        y: 2284
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c49ec69b60575b540800000000000000
+      internalID: 5023049631142832460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_21
+      rect:
+        serializedVersion: 2
+        x: 2491
+        y: 2271
+        width: 50
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15467fc983adb0e00800000000000000
+      internalID: 1012142477961290833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_22
+      rect:
+        serializedVersion: 2
+        x: 2550
+        y: 2266
+        width: 24
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9378aebb0452b9bb0800000000000000
+      internalID: -4928304407266031815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_23
+      rect:
+        serializedVersion: 2
+        x: 2570
+        y: 2247
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 082447045fd1b3ba0800000000000000
+      internalID: -6108255530412391808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_24
+      rect:
+        serializedVersion: 2
+        x: 2572
+        y: 2232
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccbaf1753834b9400800000000000000
+      internalID: 331933228923333580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_25
+      rect:
+        serializedVersion: 2
+        x: 2576
+        y: 2222
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfc16de47fbaa18f0800000000000000
+      internalID: -568953324241019653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: anim_jogn_walk_shawdow_26
+      rect:
+        serializedVersion: 2
+        x: 2582
+        y: 2199
+        width: 23
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c24b6877de9e7120800000000000000
+      internalID: 2413541098592617152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      anim_jogn_walk_shawdow_0: 1211545028906014617
+      anim_jogn_walk_shawdow_1: 3949244598371154695
+      anim_jogn_walk_shawdow_10: 4361553773432236800
+      anim_jogn_walk_shawdow_11: 5421991203254030514
+      anim_jogn_walk_shawdow_12: -5735438387401096082
+      anim_jogn_walk_shawdow_13: -2915152145639077938
+      anim_jogn_walk_shawdow_14: -7533639791842068635
+      anim_jogn_walk_shawdow_15: 3278507529012017621
+      anim_jogn_walk_shawdow_16: -5397398424651619050
+      anim_jogn_walk_shawdow_17: -6585489409813543031
+      anim_jogn_walk_shawdow_18: -4708131564153728837
+      anim_jogn_walk_shawdow_19: 1762296469655900766
+      anim_jogn_walk_shawdow_2: 7017059157424676430
+      anim_jogn_walk_shawdow_20: 5023049631142832460
+      anim_jogn_walk_shawdow_21: 1012142477961290833
+      anim_jogn_walk_shawdow_22: -4928304407266031815
+      anim_jogn_walk_shawdow_23: -6108255530412391808
+      anim_jogn_walk_shawdow_24: 331933228923333580
+      anim_jogn_walk_shawdow_25: -568953324241019653
+      anim_jogn_walk_shawdow_26: 2413541098592617152
+      anim_jogn_walk_shawdow_3: 1448560391593099373
+      anim_jogn_walk_shawdow_4: -986765777414328833
+      anim_jogn_walk_shawdow_5: -6423200836248644577
+      anim_jogn_walk_shawdow_6: 2333779469496900555
+      anim_jogn_walk_shawdow_7: 5263002205161327619
+      anim_jogn_walk_shawdow_8: 8068401564335579821
+      anim_jogn_walk_shawdow_9: 8490074876812260715
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
