@@ -41831,7 +41831,7 @@ MonoBehaviour:
   clueId: 
   clueTitle: 
   clueText: 
-  setsFlag: 
+  setsFlag: talked_to_noo
   onInteract:
     m_PersistentCalls:
       m_Calls:
@@ -53606,6 +53606,18 @@ PrefabInstance:
     - target: {fileID: 1801014253202832621, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
       propertyPath: m_Name
       value: Pass Code2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
+      propertyPath: missingFlagsMessage
+      value: I should talk to Noo first.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
+      propertyPath: requiredFlags.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
+      propertyPath: 'requiredFlags.Array.data[0]'
+      value: talked_to_noo
       objectReference: {fileID: 0}
     - target: {fileID: 6958108975714639111, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
       propertyPath: m_LocalPosition.x

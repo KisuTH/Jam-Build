@@ -146,7 +146,14 @@ public class Interactable2D : MonoBehaviour
 
     public void Say(string text)
     {
-        if (DialogueUI.Instance != null) DialogueUI.Instance.Show(text);
+        if (DialogueUI.Instance == null) return;
+        // "Noo: ..." is shown as a line spoken by Noo (name above, text below) instead of the narrator
+        if (text != null && text.StartsWith("Noo: "))
+        {
+            DialogueUI.Instance.ShowLine("Noo", text.Substring(5));
+            return;
+        }
+        DialogueUI.Instance.Show(text);
     }
 
     public void Hide()

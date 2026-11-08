@@ -78,6 +78,8 @@ public class PlayerMovement2D : MonoBehaviour
     }
 
     public bool IsAutoWalking => autoWalking;
+    /// <summary>True while the keys are locked (dialogue, puzzles, cutscenes). The mobile buttons hide meanwhile.</summary>
+    public bool IsControlLocked => controlLocked;
     public bool IsGrounded => isGrounded;
     public bool IsCrouching => isCrouching;
     public bool IsWalkingOnGround => isGrounded && Mathf.Abs(moveInput) > .01f && (!controlLocked || autoWalking);
@@ -181,7 +183,7 @@ public class PlayerMovement2D : MonoBehaviour
         }
 
         Keyboard kb = Keyboard.current;
-        if (kb == null)
+        if (kb == null && !MobileControls.Active)
         {
             runHeld = false;
             moveInput = 0f;
@@ -190,12 +192,25 @@ public class PlayerMovement2D : MonoBehaviour
         }
 
         moveInput = 0f;
-        if (kb[moveLeftKey].isPressed) moveInput -= 1f;
-        if (kb[moveRightKey].isPressed) moveInput += 1f;
+        crouchHeld = false;
+        runHeld = false;
+        if (kb != null)
+        {
+            if (kb[moveLeftKey].isPressed) moveInput -= 1f;
+            if (kb[moveRightKey].isPressed) moveInput += 1f;
 
-        crouchHeld = kb.sKey.isPressed;
-        runHeld = allowRunning && kb.leftShiftKey.isPressed;
-        if (kb.wKey.wasPressedThisFrame) jumpQueued = true;
+            crouchHeld = kb.sKey.isPressed;
+            runHeld = allowRunning && kb.leftShiftKey.isPressed;
+            if (kb.wKey.wasPressedThisFrame) jumpQueued = true;
+        }
+
+        // On-screen buttons (phones / tablets)
+        if (MobileControls.Active)
+        {
+            moveInput = Mathf.Clamp(moveInput + MobileControls.Move, -1f, 1f);
+            if (MobileControls.Crouch) crouchHeld = true;
+            if (MobileControls.ConsumeJump()) jumpQueued = true;
+        }
     }
 
     private void FixedUpdate()

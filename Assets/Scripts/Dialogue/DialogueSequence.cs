@@ -223,6 +223,9 @@ public class DialogueSequence : MonoBehaviour
         Mouse mouse = Mouse.current;
         if (mouse != null && mouse.leftButton.wasPressedThisFrame) return true;
 
+        Vector2 tapPos; int tapId;
+        if (MobileControls.TapThisFrame(out tapPos, out tapId)) return true;   // touch screen
+
         Keyboard kb = Keyboard.current;
         if (kb == null) return false;
         return kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame;

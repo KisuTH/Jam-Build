@@ -59,7 +59,9 @@ public class DialogueUI : MonoBehaviour
         if (panel == null || !panel.activeSelf || ManualMode) return;
 
         Mouse mouse = Mouse.current;
-        if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+        Vector2 tapPos; int tapId;
+        bool tapped = MobileControls.TapThisFrame(out tapPos, out tapId);   // touch screen
+        if (!tapped && (mouse == null || !mouse.leftButton.wasPressedThisFrame)) return;
 
         // Ignore the same click that opened the box
         if (Time.frameCount == shownFrame) return;

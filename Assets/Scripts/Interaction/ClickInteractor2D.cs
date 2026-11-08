@@ -21,8 +21,16 @@ public class ClickInteractor2D : MonoBehaviour
     private void Update()
     {
         if (Time.timeScale <= 0f) return;
+        // A click (mouse) or a tap (touch screen)
         Mouse mouse = Mouse.current;
-        if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+        Vector2 screenPos;
+        int touchId;
+        bool tapped = MobileControls.TapThisFrame(out screenPos, out touchId);
+        if (!tapped)
+        {
+            if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+            screenPos = mouse.position.ReadValue();
+        }
 
         // Ignore all clicks while a door transition runs (and its short cooldown)
         if (RoomTransition.Instance != null && RoomTransition.Instance.IsBusy) return;
@@ -31,9 +39,10 @@ public class ClickInteractor2D : MonoBehaviour
         if (DialogueSequence.IsAnyPlaying) return;
 
         // Ignore clicks on UI (inventory slots, dialogue box)
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current != null &&
+            (tapped ? EventSystem.current.IsPointerOverGameObject(touchId) : EventSystem.current.IsPointerOverGameObject())) return;
 
-        Vector2 world = cam.ScreenToWorldPoint(mouse.position.ReadValue());
+        Vector2 world = cam.ScreenToWorldPoint(screenPos);
         Collider2D[] hits = Physics2D.OverlapPointAll(world, interactableLayers);
 
         // When several overlap (e.g. a document pinned ON a board), the innermost one wins

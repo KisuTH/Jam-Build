@@ -29,6 +29,8 @@ public static class Loc
     public static string T(string english)
     {
         if (!Thai && !string.IsNullOrEmpty(english) && HasThai(english)) return ThaiToEnglish(english);
+        // ending line of the chase scene: English wording fix (evidences) for text still saved as "...evidence" in the scene
+        if (!Thai && english == "you escape with the evidence") return "You escape with the evidences";
         if (!Thai || string.IsNullOrEmpty(english)) return english;
         if (Dict.TryGetValue(english, out string th)) return Shape(th);
         return Shape(Rule(english));
@@ -157,6 +159,10 @@ public static class Loc
     private static readonly Dictionary<string, string> Dict = new Dictionary<string, string>
     {
         { "INCOMING CALL...", "สายเรียกเข้า..." },
+        { "Wait... come here and talk to me first.", "เดี๋ยวก่อน... มาคุยกับฉันก่อน" },
+        { "you escape with the evidence", "คุณหนีออกมาพร้อมหลักฐาน" },
+        { "you escape with the evidences", "คุณหนีออกมาพร้อมหลักฐาน" },
+        { "You escape with the evidences", "คุณหนีออกมาพร้อมหลักฐาน" },
         { "UNKNOWN CALLER", "ไม่ทราบชื่อผู้โทร" },
         { "WRONG.", "ผิด!" },
         { "WRONG. 2 left", "ผิด! เหลืออีก 2 ครั้ง" },

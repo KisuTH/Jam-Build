@@ -96,6 +96,7 @@ public class GhostChaseEvent : MonoBehaviour
     private float spawnTimer;
     private float nextShake;
     private bool anonGone;
+    private bool anonTalked = true;   // Anon stays until the player has finished talking to him (true = no dialogue found, old behaviour)
     private int entrySide;   // which side of the trigger box the player came in from (0 = not set yet)
     private bool firstSpawnDone;
     private float groundY;
@@ -130,6 +131,11 @@ public class GhostChaseEvent : MonoBehaviour
     {
         if (ghost != null) { ghostSprite = ghost.GetComponentInChildren<SpriteRenderer>(true); ghostRenderers = ghost.GetComponentsInChildren<SpriteRenderer>(true); ghost.SetActive(false); }
         if (anon != null) { spotX = anon.transform.position.x; anonRoom = RoomAt(anon.transform.position); }
+        if (anon != null)
+        {
+            DialogueSequence anonTalk = anon.GetComponentInChildren<DialogueSequence>(true);
+            if (anonTalk != null) { anonTalked = false; anonTalk.onFinished.AddListener(() => anonTalked = true); }
+        }
         if (StoryFlags.Instance != null) StoryFlags.Instance.OnFlagSet += OnFlag;
         if (chaseLoopSound != null)
         {
@@ -238,7 +244,7 @@ public class GhostChaseEvent : MonoBehaviour
         }
 
         // Anon disappears as soon as the player leaves his room (he stays as a trigger box)
-        if (!anonGone && anon != null && currentRoom != null && currentRoom != anonRoom)
+        if (!anonGone && anonTalked && anon != null && currentRoom != null && currentRoom != anonRoom)
         {
             anonGone = true;
             anon.SetActive(false);
