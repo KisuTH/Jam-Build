@@ -53607,18 +53607,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pass Code2
       objectReference: {fileID: 0}
-    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
-      propertyPath: missingFlagsMessage
-      value: I should talk to Noo first.
-      objectReference: {fileID: 0}
-    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
-      propertyPath: requiredFlags.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6883765586447525325, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
-      propertyPath: 'requiredFlags.Array.data[0]'
-      value: talked_to_noo
-      objectReference: {fileID: 0}
     - target: {fileID: 6958108975714639111, guid: 5198a006f6032aa4aa98648dbdacdde3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -18.244299
@@ -70870,8 +70858,9 @@ MonoBehaviour:
   requiredItemId: old_key
   consumeRequiredItem: 1
   missingItemMessage: I can't use this yet... I need something first.
-  requiredFlags: []
-  missingFlagsMessage: I still don't understand enough to do this...
+  requiredFlags:
+  - talked_to_noo
+  missingFlagsMessage: 'Noo: Wait... come here and talk to me first.'
   clueId: 
   clueTitle: 
   clueText: 

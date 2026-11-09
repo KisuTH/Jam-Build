@@ -82,6 +82,21 @@ public static class Loc
         return w == "first" ? "1" : w == "second" ? "2" : w == "third" ? "3" : "4";
     }
 
+    // Place inside a hint, said the way a person would say it (never a scene/object name like "Hall way(Log)" or "Add Box5")
+    private static string HintRoom(string room)
+    {
+        string l = room.Trim().ToLowerInvariant();
+        if (l == "this floor") return "ชั้นนี้";
+        var m = System.Text.RegularExpressions.Regex.Match(l, @"^the (room|hallway) at the (top|upper part|lower part|bottom) of the map$");
+        if (m.Success)
+        {
+            string where = m.Groups[2].Value == "top" ? "ส่วนบนสุดของแมพ" : m.Groups[2].Value == "upper part" ? "ค่อนไปทางบนของแมพ" : m.Groups[2].Value == "lower part" ? "ค่อนไปทางล่างของแมพ" : "ส่วนล่างสุดของแมพ";
+            return (m.Groups[1].Value == "room" ? "ห้องที่อยู่" : "ทางเดินที่อยู่") + where;
+        }
+        if (l.StartsWith("hall")) return "ทางเดิน";
+        return "ห้องนี้";
+    }
+
     // Texts that contain numbers or pieces (counters, hints...)
     private static string Rule(string s)
     {
@@ -104,9 +119,20 @@ public static class Loc
         if (m.Success) return "คำใบ้ " + m.Groups[1].Value;
         m = System.Text.RegularExpressions.Regex.Match(s, @"^Enter the (\d+)-digit code$");
         if (m.Success) return "ใส่รหัส " + m.Groups[1].Value + " หลัก";
-        m = System.Text.RegularExpressions.Regex.Match(s, @"^HINT: Look at (.+)\.( That was your LAST hint\. Ask again and you die\.)?$");
+        m = System.Text.RegularExpressions.Regex.Match(s, @"^HINT: Look at (.+?)\.( That was your LAST hint\. Ask again and you die\.)?$", System.Text.RegularExpressions.RegexOptions.Singleline);
         if (m.Success)
-            return "คำใบ้: ดูที่" + T(m.Groups[1].Value) + (m.Groups[2].Success ? T(m.Groups[2].Value) : "");
+            return "คำใบ้: ดูที่" + T(m.Groups[1].Value) + (m.Groups[2].Success ? " นี่คือคำใบ้ครั้งสุดท้าย ถ้าขออีกคุณตาย" : "");
+        // where a notice board is: "the notice board in <room>, on the left / on the right / in the middle"
+        m = System.Text.RegularExpressions.Regex.Match(s, @"^the notice board in (.+), (on the left|on the right|in the middle)$");
+        if (m.Success)
+        {
+            string place = HintRoom(m.Groups[1].Value);
+            if (m.Groups[2].Value == "on the left") return "กระดานประกาศทางซ้ายของ" + place;
+            if (m.Groups[2].Value == "on the right") return "กระดานประกาศทางขวาของ" + place;
+            return "กระดานประกาศตรงกลาง" + place;
+        }
+        m = System.Text.RegularExpressions.Regex.Match(s, @"^the notice board in (.+)$");
+        if (m.Success) return "กระดานประกาศใน" + HintRoom(m.Groups[1].Value);
         m = System.Text.RegularExpressions.Regex.Match(s, @"^HINT: (.+)$");
         if (m.Success) return "คำใบ้: " + T(m.Groups[1].Value);
         m = System.Text.RegularExpressions.Regex.Match(s, @"^YOU DIED\n<size=50%>Return by death\.\.\. Loop (\d+)</size>$");
@@ -279,6 +305,7 @@ public static class Loc
         { "Wall Writing", "ตัวหนังสือบนผนัง" },
         { "The door will not open. I feel like I'm missing something", "ประตูไม่เปิด เหมือนฉันยังขาดอะไรบางอย่าง" },
         { " That was your LAST hint. Ask again and you die.", " นี่คือคำใบ้ครั้งสุดท้าย ถ้าขออีกคุณตาย" },
+        { "the drawer in the dressing room (it opens after the wound puzzle)", "ลิ้นชักในห้องแต่งตัว... มันคงไม่ยอมเปิดง่ายๆ หรอกนะ" },
         { "the calendar in the Waiting Hall", "ปฏิทินในห้องรอ" },
         { "the clock in the Ward", "นาฬิกาในหอผู้ป่วย" },
         { "the stain on the floor in the Records Room", "คราบบนพื้นในห้องเก็บบันทึก" },

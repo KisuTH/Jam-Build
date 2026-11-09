@@ -55,9 +55,19 @@ public class BoardClue : MonoBehaviour
             float t = Mathf.InverseLerp(r.boundsMin.x, r.boundsMax.x, p.x);
             string side = t < 0.33f ? "on the left" : (t > 0.67f ? "on the right" : "in the middle");
             string place = string.IsNullOrEmpty(name) || name == "Room" ? "this floor" : name;
+            if (place == "this floor" || place.ToLowerInvariant().StartsWith("hall")) place = PlaceByHeight(r, place == "this floor");
             return locationHint + " in " + place + ", " + side;
         }
         return locationHint;
+    }
+    // Rooms with no real name: say WHERE on the map (top / upper / lower / bottom) so two boards are not both "this floor"
+    private static string PlaceByHeight(Room r, bool isRoom)
+    {
+        float lo = float.MaxValue, hi = float.MinValue;
+        foreach (Room o in Room.All) { float cy = (o.boundsMin.y + o.boundsMax.y) * 0.5f; lo = Mathf.Min(lo, cy); hi = Mathf.Max(hi, cy); }
+        float t = hi - lo < 0.01f ? 0.5f : Mathf.InverseLerp(lo, hi, (r.boundsMin.y + r.boundsMax.y) * 0.5f);
+        string band = t > 0.75f ? "the top of the map" : t > 0.5f ? "the upper part of the map" : t > 0.25f ? "the lower part of the map" : "the bottom of the map";
+        return (isRoom ? "the room at " : "the hallway at ") + band;
     }
     private void OnDestroy() { LoopManager.UnregisterSlot(slot); }
 
